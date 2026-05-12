@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<!-- saved from url=(0049)file:///C:/Users/mlope/Downloads/dashboard_3.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mundo Plutón — Administración</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="./dashboard_files/css2" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -274,10 +274,10 @@ tr:hover td{background:rgba(124,58,237,.05)}
     </div>
   </div>
   <div class="nav">
-    <button class="nav-btn active" onclick="showPage('dashboard',this)">Dashboard</button>
-    <button class="nav-btn" onclick="showPage('movimientos',this)">Movimientos</button>
-    <button class="nav-btn" onclick="showPage('ranking',this)">Ranking</button>
-    <button class="nav-btn" onclick="showPage('gastos',this)">Gastos</button>
+    <button class="nav-btn active" onclick="showPage(&#39;dashboard&#39;,this)">Dashboard</button>
+    <button class="nav-btn" onclick="showPage(&#39;movimientos&#39;,this)">Movimientos</button>
+    <button class="nav-btn" onclick="showPage(&#39;ranking&#39;,this)">Ranking</button>
+    <button class="nav-btn" onclick="showPage(&#39;gastos&#39;,this)">Gastos</button>
   </div>
 </div>
 
@@ -285,18 +285,19 @@ tr:hover td{background:rgba(124,58,237,.05)}
 <div class="page active" id="page-dashboard">
   <div class="fbar">
     <label>Desde</label>
-    <input type="date" id="f-desde" onchange="dash()"/>
+    <input type="date" id="f-desde" onchange="dash()">
     <label>Hasta</label>
-    <input type="date" id="f-hasta" onchange="dash()"/>
+    <input type="date" id="f-hasta" onchange="dash()">
     <div class="divider"></div>
-    <button class="qb" onclick="setR('hoy','f')">Hoy</button>
-    <button class="qb" onclick="setR('semana','f')">7 días</button>
-    <button class="qb" onclick="setR('mes','f')">Este mes</button>
+    <button class="qb" onclick="setR(&#39;hoy&#39;,&#39;f&#39;)">Hoy</button>
+    <button class="qb" onclick="setR(&#39;semana&#39;,&#39;f&#39;)">7 días</button>
+    <button class="qb" onclick="setR(&#39;mes&#39;,&#39;f&#39;)">Este mes</button>
     <div class="divider"></div>
-    <button class="qb" onclick="setR('anterior','f')">Mes anterior</button>
+    <button class="qb" onclick="setR(&#39;anterior&#39;,&#39;f&#39;)">Mes anterior</button>
     <div class="divider"></div>
-    <button class="upload-btn" onclick="document.getElementById('csv-input').click()">⬆ Cargar CSV</button>
-    <input type="file" id="csv-input" accept=".csv" onchange="cargarCSV(this)"/>
+    <button class="upload-btn" onclick="document.getElementById(&#39;csv-input&#39;).click()">⬆ Cargar CSV(s)</button>
+    <input type="file" id="csv-input" accept=".csv" multiple="" onchange="cargarCSV(this)">
+    <button class="qb" onclick="limpiarCSV()" id="btn-limpiar" style="display:none;border-color:var(--rd);color:var(--rd)">✕ Limpiar datos</button>
     <span class="csv-tag none" id="csv-status">Sin datos</span>
   </div>
 
@@ -339,14 +340,14 @@ tr:hover td{background:rgba(124,58,237,.05)}
 <!-- ===== MOVIMIENTOS ===== -->
 <div class="page" id="page-movimientos">
   <div class="fbar">
-    <label>Desde</label><input type="date" id="m-desde" onchange="renderMov()"/>
-    <label>Hasta</label><input type="date" id="m-hasta" onchange="renderMov()"/>
+    <label>Desde</label><input type="date" id="m-desde" onchange="renderMov()">
+    <label>Hasta</label><input type="date" id="m-hasta" onchange="renderMov()">
     <div class="divider"></div>
-    <button class="qb" onclick="setR('hoy','m')">Hoy</button>
-    <button class="qb" onclick="setR('semana','m')">7 días</button>
-    <button class="qb" onclick="setR('mes','m')">Este mes</button>
+    <button class="qb" onclick="setR(&#39;hoy&#39;,&#39;m&#39;)">Hoy</button>
+    <button class="qb" onclick="setR(&#39;semana&#39;,&#39;m&#39;)">7 días</button>
+    <button class="qb" onclick="setR(&#39;mes&#39;,&#39;m&#39;)">Este mes</button>
     <div class="divider"></div>
-    <button class="qb" onclick="setR('anterior','m')">Mes anterior</button>
+    <button class="qb" onclick="setR(&#39;anterior&#39;,&#39;m&#39;)">Mes anterior</button>
     <div class="divider"></div>
     <select class="sel" id="m-tipo" onchange="renderMov()">
       <option value="">Todos los tipos</option>
@@ -359,19 +360,19 @@ tr:hover td{background:rgba(124,58,237,.05)}
   <div class="tabla-wrap">
     <div class="tbar">
       <div class="slabel" style="margin:0">Movimientos</div>
-      <input class="tsearch" id="m-search" placeholder="Buscar jugador..." oninput="renderMov()"/>
+      <input class="tsearch" id="m-search" placeholder="Buscar jugador..." oninput="renderMov()">
     </div>
     <div class="tc">
       <table>
         <thead><tr><th>Fecha</th><th>Hora</th><th>Tipo</th><th>Desde</th><th>Hacia</th><th>Monto</th><th>Saldo ant.</th><th>Saldo post.</th></tr></thead>
-        <tbody id="m-body"></tbody>
+        <tbody id="m-body"><tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted)">Cargá un CSV desde el Dashboard</td></tr></tbody>
       </table>
     </div>
     <div class="tfooter">
       <span id="m-info">0 registros</span>
       <div class="pag-btns">
-        <button class="pb" id="m-prev" onclick="cambiarPag(-1)" disabled>← Ant</button>
-        <button class="pb" id="m-next" onclick="cambiarPag(1)" disabled>Sig →</button>
+        <button class="pb" id="m-prev" onclick="cambiarPag(-1)" disabled="">← Ant</button>
+        <button class="pb" id="m-next" onclick="cambiarPag(1)" disabled="">Sig →</button>
       </div>
     </div>
   </div>
@@ -380,14 +381,14 @@ tr:hover td{background:rgba(124,58,237,.05)}
 <!-- ===== RANKING ===== -->
 <div class="page" id="page-ranking">
   <div class="fbar">
-    <label>Desde</label><input type="date" id="r-desde" onchange="renderRanking()"/>
-    <label>Hasta</label><input type="date" id="r-hasta" onchange="renderRanking()"/>
+    <label>Desde</label><input type="date" id="r-desde" onchange="renderRanking()">
+    <label>Hasta</label><input type="date" id="r-hasta" onchange="renderRanking()">
     <div class="divider"></div>
-    <button class="qb" onclick="setR('hoy','r')">Hoy</button>
-    <button class="qb" onclick="setR('semana','r')">7 días</button>
-    <button class="qb" onclick="setR('mes','r')">Este mes</button>
+    <button class="qb" onclick="setR(&#39;hoy&#39;,&#39;r&#39;)">Hoy</button>
+    <button class="qb" onclick="setR(&#39;semana&#39;,&#39;r&#39;)">7 días</button>
+    <button class="qb" onclick="setR(&#39;mes&#39;,&#39;r&#39;)">Este mes</button>
     <div class="divider"></div>
-    <button class="qb" onclick="setR('anterior','r')">Mes anterior</button>
+    <button class="qb" onclick="setR(&#39;anterior&#39;,&#39;r&#39;)">Mes anterior</button>
   </div>
 
   <div class="slabel">Top jugadores</div>
@@ -401,7 +402,7 @@ tr:hover td{background:rgba(124,58,237,.05)}
           <div class="rank-sub">Jugadores con mayor monto depositado</div>
         </div>
       </div>
-      <div class="rank-list" id="rk-dep-monto"></div>
+      <div class="rank-list" id="rk-dep-monto"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin datos para el período</div></div>
     </div>
 
     <!-- TOP CARGAS CANTIDAD -->
@@ -412,7 +413,7 @@ tr:hover td{background:rgba(124,58,237,.05)}
           <div class="rank-sub">Jugadores con más operaciones de carga</div>
         </div>
       </div>
-      <div class="rank-list" id="rk-dep-cant"></div>
+      <div class="rank-list" id="rk-dep-cant"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin datos para el período</div></div>
     </div>
 
     <!-- TOP PREMIOS MONTO -->
@@ -423,7 +424,7 @@ tr:hover td{background:rgba(124,58,237,.05)}
           <div class="rank-sub">Jugadores que más retiraron</div>
         </div>
       </div>
-      <div class="rank-list" id="rk-ret-monto"></div>
+      <div class="rank-list" id="rk-ret-monto"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin datos para el período</div></div>
     </div>
 
     <!-- TOP PREMIOS CANTIDAD -->
@@ -434,7 +435,7 @@ tr:hover td{background:rgba(124,58,237,.05)}
           <div class="rank-sub">Jugadores con más retiros realizados</div>
         </div>
       </div>
-      <div class="rank-list" id="rk-ret-cant"></div>
+      <div class="rank-list" id="rk-ret-cant"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin datos para el período</div></div>
     </div>
 
     <!-- TOP BONOS MONTO -->
@@ -445,7 +446,7 @@ tr:hover td{background:rgba(124,58,237,.05)}
           <div class="rank-sub">Jugadores con más bonificaciones recibidas</div>
         </div>
       </div>
-      <div class="rank-list" id="rk-bon-monto"></div>
+      <div class="rank-list" id="rk-bon-monto"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin datos para el período</div></div>
     </div>
 
     <!-- TOP BONOS CANTIDAD -->
@@ -456,7 +457,40 @@ tr:hover td{background:rgba(124,58,237,.05)}
           <div class="rank-sub">Jugadores con más bonos recibidos</div>
         </div>
       </div>
-      <div class="rank-list" id="rk-bon-cant"></div>
+      <div class="rank-list" id="rk-bon-cant"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin datos para el período</div></div>
+    </div>
+
+    <!-- PROFIT MEJOR (nos conviene) -->
+    <div class="rank-card">
+      <div class="rank-head">
+        <div>
+          <div class="rank-title">📈 Mejor profit para nosotros</div>
+          <div class="rank-sub">Carga − Premio · Los que más nos dejan</div>
+        </div>
+      </div>
+      <div class="rank-list" id="rk-profit-pos"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin datos para el período</div></div>
+    </div>
+
+    <!-- PROFIT PEOR (nos ganan) -->
+    <div class="rank-card">
+      <div class="rank-head">
+        <div>
+          <div class="rank-title">📉 Jugadores que nos ganan más</div>
+          <div class="rank-sub">Carga − Premio · Profit negativo para nosotros</div>
+        </div>
+      </div>
+      <div class="rank-list" id="rk-profit-neg"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin datos para el período</div></div>
+    </div>
+
+    <!-- PROMEDIO DE CARGA -->
+    <div class="rank-card">
+      <div class="rank-head">
+        <div>
+          <div class="rank-title">📊 Mejor promedio de carga</div>
+          <div class="rank-sub">Monto promedio por operación de carga</div>
+        </div>
+      </div>
+      <div class="rank-list" id="rk-promedio"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin datos (mínimo 2 cargas por jugador)</div></div>
     </div>
 
   </div>
@@ -472,12 +506,12 @@ tr:hover td{background:rgba(124,58,237,.05)}
         <div class="gc-title-wrap"><div class="gc-icon" style="background:#fbbf2420">📢</div><div class="gc-name">Publicidad</div></div>
         <div class="gc-total" id="gt-pub">$0</div>
       </div>
-      <div class="gc-items" id="gl-pub"></div>
+      <div class="gc-items" id="gl-pub"><div class="gc-empty">Sin registros aún</div></div>
       <div class="gc-form">
-        <input type="date" id="ga-pub-fecha"/>
-        <input type="text" id="ga-pub-det" placeholder="Detalle"/>
-        <input type="number" id="ga-pub-monto" placeholder="Monto"/>
-        <button class="btn-add" onclick="addGasto('pub')">+ Agregar</button>
+        <input type="date" id="ga-pub-fecha">
+        <input type="text" id="ga-pub-det" placeholder="Detalle">
+        <input type="number" id="ga-pub-monto" placeholder="Monto">
+        <button class="btn-add" onclick="addGasto(&#39;pub&#39;)">+ Agregar</button>
       </div>
     </div>
 
@@ -486,12 +520,12 @@ tr:hover td{background:rgba(124,58,237,.05)}
         <div class="gc-title-wrap"><div class="gc-icon" style="background:#22d3ee20">⚡</div><div class="gc-name">Servicios</div></div>
         <div class="gc-total" id="gt-serv">$0</div>
       </div>
-      <div class="gc-items" id="gl-serv"></div>
+      <div class="gc-items" id="gl-serv"><div class="gc-empty">Sin registros aún</div></div>
       <div class="gc-form">
-        <input type="date" id="ga-serv-fecha"/>
-        <input type="text" id="ga-serv-det" placeholder="Ej: Luz, Internet"/>
-        <input type="number" id="ga-serv-monto" placeholder="Monto"/>
-        <button class="btn-add" onclick="addGasto('serv')">+ Agregar</button>
+        <input type="date" id="ga-serv-fecha">
+        <input type="text" id="ga-serv-det" placeholder="Ej: Luz, Internet">
+        <input type="number" id="ga-serv-monto" placeholder="Monto">
+        <button class="btn-add" onclick="addGasto(&#39;serv&#39;)">+ Agregar</button>
       </div>
     </div>
 
@@ -500,12 +534,12 @@ tr:hover td{background:rgba(124,58,237,.05)}
         <div class="gc-title-wrap"><div class="gc-icon" style="background:#c084fc20">🎰</div><div class="gc-name">Compra de fichas</div></div>
         <div class="gc-total" id="gt-fichas">$0</div>
       </div>
-      <div class="gc-items" id="gl-fichas"></div>
+      <div class="gc-items" id="gl-fichas"><div class="gc-empty">Sin registros aún</div></div>
       <div class="gc-form">
-        <input type="date" id="ga-fichas-fecha"/>
-        <input type="text" id="ga-fichas-det" placeholder="Detalle"/>
-        <input type="number" id="ga-fichas-monto" placeholder="Monto"/>
-        <button class="btn-add" onclick="addGasto('fichas')">+ Agregar</button>
+        <input type="date" id="ga-fichas-fecha">
+        <input type="text" id="ga-fichas-det" placeholder="Detalle">
+        <input type="number" id="ga-fichas-monto" placeholder="Monto">
+        <button class="btn-add" onclick="addGasto(&#39;fichas&#39;)">+ Agregar</button>
       </div>
     </div>
 
@@ -514,12 +548,12 @@ tr:hover td{background:rgba(124,58,237,.05)}
         <div class="gc-title-wrap"><div class="gc-icon" style="background:#4ade8020">👛</div><div class="gc-name">Billeteras</div></div>
         <div class="gc-total" id="gt-bill">$0</div>
       </div>
-      <div class="gc-items" id="gl-bill"></div>
+      <div class="gc-items" id="gl-bill"><div class="gc-empty">Sin registros aún</div></div>
       <div class="gc-form">
-        <input type="date" id="ga-bill-fecha"/>
-        <input type="text" id="ga-bill-det" placeholder="Ej: Mercado Pago"/>
-        <input type="number" id="ga-bill-monto" placeholder="Monto"/>
-        <button class="btn-add" onclick="addGasto('bill')">+ Agregar</button>
+        <input type="date" id="ga-bill-fecha">
+        <input type="text" id="ga-bill-det" placeholder="Ej: Mercado Pago">
+        <input type="number" id="ga-bill-monto" placeholder="Monto">
+        <button class="btn-add" onclick="addGasto(&#39;bill&#39;)">+ Agregar</button>
       </div>
     </div>
 
@@ -561,30 +595,86 @@ function setR(r, prefix) {
 }
 
 // ===== CSV =====
+// archivos cargados: { nombre, rows }
+let archivosCSV = [];
+
 function cargarCSV(input) {
-  const file=input.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=e=>{parsearCSV(e.target.result);input.value='';};
-  reader.readAsText(file,'UTF-8');
+  const files = Array.from(input.files);
+  if (!files.length) return;
+  let pendientes = files.length;
+
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const rows = parsearCSV(e.target.result, file.name);
+      // Reemplazar si ya existe un archivo con el mismo nombre, sino agregar
+      const idx = archivosCSV.findIndex(a => a.nombre === file.name);
+      if (idx >= 0) archivosCSV[idx] = { nombre: file.name, rows };
+      else archivosCSV.push({ nombre: file.name, rows });
+      pendientes--;
+      if (pendientes === 0) {
+        combinarYActualizar();
+        input.value = '';
+      }
+    };
+    reader.readAsText(file, 'UTF-8');
+  });
 }
 
-function parsearCSV(text) {
-  const lines=text.replace(/\r/g,'').split('\n').filter(l=>l.trim());
-  const sep=lines[0].includes(';')?';':',';
-  let start=lines[0].startsWith('sep=')?1:0;
-  const headers=parseL(lines[start],sep);
-  const rows=[];
-  for(let i=start+1;i<lines.length;i++){
-    const vals=parseL(lines[i],sep);
-    if(vals.length<3) continue;
-    const row={};
-    headers.forEach((h,idx)=>{row[h.trim()]=vals[idx]?vals[idx].trim():'';});
+function parsearCSV(text, nombre) {
+  const lines = text.replace(/\r/g,'').split('\n').filter(l=>l.trim());
+  const sep = lines[0].includes(';') ? ';' : ',';
+  let start = lines[0].startsWith('sep=') ? 1 : 0;
+  const headers = parseL(lines[start], sep);
+  const rows = [];
+  for (let i = start+1; i < lines.length; i++) {
+    const vals = parseL(lines[i], sep);
+    if (vals.length < 3) continue;
+    const row = {};
+    headers.forEach((h,idx) => { row[h.trim()] = vals[idx] ? vals[idx].trim() : ''; });
     rows.push(row);
   }
-  movs=rows;
-  const st=document.getElementById('csv-status');
-  st.textContent=rows.length+' registros';
-  st.className='csv-tag ok';
+  return rows;
+}
+
+function combinarYActualizar() {
+  // Combinar todos los archivos y deduplicar por ID
+  const mapa = {};
+  archivosCSV.forEach(a => {
+    a.rows.forEach(row => {
+      const id = row['ID'] || row['id'] || JSON.stringify(row);
+      mapa[id] = row;
+    });
+  });
+  movs = Object.values(mapa);
+
+  // Ordenar por fecha
+  movs.sort((a, b) => {
+    const fa = (a['Fecha'] || '') + (a['Hora'] || '');
+    const fb = (b['Fecha'] || '') + (b['Hora'] || '');
+    return fb.localeCompare(fa);
+  });
+
+  // Actualizar status
+  const st = document.getElementById('csv-status');
+  const totalArchivos = archivosCSV.length;
+  const nombres = archivosCSV.map(a => a.nombre).join(', ');
+  st.textContent = movs.length + ' registros · ' + totalArchivos + ' archivo' + (totalArchivos > 1 ? 's' : '');
+  st.title = nombres;
+  st.className = 'csv-tag ok';
+  document.getElementById('btn-limpiar').style.display = 'inline-block';
+
+  dash(); renderMov(); renderRanking();
+}
+
+function limpiarCSV() {
+  if (!confirm('¿Limpiar todos los archivos cargados?')) return;
+  archivosCSV = [];
+  movs = [];
+  const st = document.getElementById('csv-status');
+  st.textContent = 'Sin datos';
+  st.className = 'csv-tag none';
+  document.getElementById('btn-limpiar').style.display = 'none';
   dash(); renderMov(); renderRanking();
 }
 
@@ -756,6 +846,9 @@ function renderRanking(){
   buildRank('rk-ret-cant',  fil,'Retiro','Hacia','cant','rank-col-pk');
   buildRank('rk-bon-monto', fil,'Bonificacion','Hacia','monto','rank-col-vl');
   buildRank('rk-bon-cant',  fil,'Bonificacion','Hacia','cant','rank-col-vl');
+  buildProfit('rk-profit-pos', fil, 'desc');
+  buildProfit('rk-profit-neg', fil, 'asc');
+  buildPromedio('rk-promedio', fil);
 }
 
 function buildRank(elId, data, tipo, playerField, mode, colorClass){
@@ -830,6 +923,94 @@ function renderCat(cat){
 
 function renderG(){ ['pub','serv','fichas','bill'].forEach(renderCat); }
 
+// ===== RANKING PROFIT Y PROMEDIO =====
+function buildProfit(elId, data, order) {
+  const deps = data.filter(m => m['Tipo'] === 'Deposito');
+  const rets = data.filter(m => m['Tipo'] === 'Retiro');
+  const mapa = {};
+
+  deps.forEach(m => {
+    const p = m['Hacia'] || m['Desde'] || 'Desconocido';
+    if (!mapa[p]) mapa[p] = { cargas: 0, premios: 0 };
+    mapa[p].cargas += pN(m['Monto'] || 0);
+  });
+  rets.forEach(m => {
+    const p = m['Hacia'] || m['Desde'] || 'Desconocido';
+    if (!mapa[p]) mapa[p] = { cargas: 0, premios: 0 };
+    mapa[p].premios += pN(m['Monto'] || 0);
+  });
+
+  let lista = Object.entries(mapa)
+    .map(([name, v]) => ({ name, cargas: v.cargas, premios: v.premios, profit: v.cargas - v.premios }))
+    .filter(item => item.cargas > 0);
+
+  if (order === 'desc') lista.sort((a, b) => b.profit - a.profit);
+  else lista.sort((a, b) => a.profit - b.profit);
+  lista = lista.slice(0, 10);
+
+  const el = document.getElementById(elId);
+  if (!lista.length) {
+    el.innerHTML = '<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin datos para el período</div>';
+    return;
+  }
+
+  el.innerHTML = lista.map((item, i) => {
+    const pos = i + 1;
+    const posCls = pos===1?'pos-1':pos===2?'pos-2':pos===3?'pos-3':'pos-n';
+    const profitColor = item.profit >= 0 ? 'var(--gn)' : 'var(--rd)';
+    return `<div class="rank-row">
+      <div class="rank-pos ${posCls}">${pos}</div>
+      <div>
+        <div class="rank-name">${item.name}</div>
+        <div style="font-size:10px;color:var(--muted);font-family:var(--fm)">C: ${ars(item.cargas)} · P: ${ars(item.premios)}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="rank-main" style="color:${profitColor}">${ars(item.profit)}</div>
+        <div class="rank-sec">profit</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildPromedio(elId, data) {
+  const deps = data.filter(m => m['Tipo'] === 'Deposito');
+  const mapa = {};
+  deps.forEach(m => {
+    const p = m['Hacia'] || m['Desde'] || 'Desconocido';
+    if (!mapa[p]) mapa[p] = { total: 0, cant: 0 };
+    mapa[p].total += pN(m['Monto'] || 0);
+    mapa[p].cant++;
+  });
+
+  const lista = Object.entries(mapa)
+    .map(([name, v]) => ({ name, promedio: v.cant > 0 ? v.total / v.cant : 0, cant: v.cant, total: v.total }))
+    .filter(item => item.cant >= 2)
+    .sort((a, b) => b.promedio - a.promedio)
+    .slice(0, 10);
+
+  const el = document.getElementById(elId);
+  if (!lista.length) {
+    el.innerHTML = '<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin datos (mínimo 2 cargas por jugador)</div>';
+    return;
+  }
+
+  el.innerHTML = lista.map((item, i) => {
+    const pos = i + 1;
+    const posCls = pos===1?'pos-1':pos===2?'pos-2':pos===3?'pos-3':'pos-n';
+    return `<div class="rank-row">
+      <div class="rank-pos ${posCls}">${pos}</div>
+      <div>
+        <div class="rank-name">${item.name}</div>
+        <div style="font-size:10px;color:var(--muted);font-family:var(--fm)">${item.cant} cargas · total ${ars(item.total)}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="rank-main rank-col-cy">${ars(item.promedio)}</div>
+        <div class="rank-sec">promedio</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 // ===== INIT =====
 (function(){
   loadG(); renderG();
@@ -843,5 +1024,6 @@ function renderG(){ ['pub','serv','fichas','bill'].forEach(renderCat); }
   dash(); renderMov(); renderRanking();
 })();
 </script>
-</body>
-</html>
+
+
+</body></html>
