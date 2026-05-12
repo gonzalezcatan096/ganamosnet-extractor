@@ -27,24 +27,11 @@
   .step-num { background: var(--accent); color: #000; font-family: var(--font-head); font-weight: 700; font-size: 13px; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
   .step-text { font-size: 13px; color: var(--text); line-height: 1.6; }
   .step-text strong { color: var(--accent); font-weight: 500; }
-  .bookmark-btn {
-    display: inline-block;
-    background: var(--accent);
-    color: #000;
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: 15px;
-    padding: 12px 24px;
-    border-radius: 8px;
-    text-decoration: none;
-    cursor: grab;
-    margin: 1rem 0 0.5rem;
-    transition: filter 0.15s;
-  }
+  .bookmark-wrap { margin: 1rem 0 0.5rem; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .bookmark-btn { display: inline-block; background: var(--accent); color: #000; font-family: var(--font-head); font-weight: 700; font-size: 15px; padding: 12px 24px; border-radius: 8px; text-decoration: none; cursor: grab; transition: filter 0.15s; }
   .bookmark-btn:hover { filter: brightness(1.1); }
-  .drag-hint { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; margin-top: 4px; }
-  .warning-pill { background: #ffb34018; color: var(--warning); border: 1px solid #ffb34033; border-radius: 8px; padding: 10px 14px; font-size: 12px; margin-bottom: 12px; }
-  img.screenshot { width: 100%; border-radius: 8px; border: 1px solid var(--border); margin-top: 10px; }
+  .drag-hint { font-size: 12px; color: var(--muted); letter-spacing: 0.03em; }
+  .warning-pill { background: #ffb34018; color: var(--warning); border: 1px solid #ffb34033; border-radius: 8px; padding: 10px 14px; font-size: 12px; margin-bottom: 12px; line-height: 1.6; }
   footer { margin-top: 3rem; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; text-align: center; }
 </style>
 </head>
@@ -52,43 +39,43 @@
 
 <div class="logo">Sistema de gestión</div>
 <h1>Instalar <span>Bookmarklet</span></h1>
-<p class="subtitle">Extractor Ganamosnet · Instalación en 3 pasos</p>
+<p class="subtitle">Extractor Ganamosnet · Depósitos · Retiros · Bonificaciones</p>
 
 <div class="wrapper">
 
   <div class="card">
-    <div class="card-title">¿Qué es esto?</div>
+    <div class="card-title">¿Cómo funciona?</div>
     <p style="font-size:13px; color: var(--muted); line-height:1.7;">
-      Un bookmarklet es un botón que guardás en tus favoritos del navegador. Cuando estés logueado en Ganamosnet y lo apretés, abre automáticamente el extractor con tu sesión activa — sin errores de conexión.
+      Instalás este botón en tus favoritos del navegador. Cuando estés logueado en Ganamosnet y lo apretés, abre el extractor usando tu sesión activa y descarga los datos en CSV (que abre directo en Excel).
     </p>
   </div>
 
   <div class="card">
-    <div class="card-title">Cómo instalarlo</div>
+    <div class="card-title">Instalación</div>
 
     <div class="step">
       <div class="step-num">1</div>
       <div class="step-text">
-        Asegurate de tener visible la <strong>barra de favoritos</strong> del navegador.<br/>
-        En Chrome: <strong>Ctrl+Shift+B</strong> (o Cmd+Shift+B en Mac)
+        Activá la barra de favoritos:<br/>
+        <strong>Ctrl+Shift+B</strong> en Windows · <strong>Cmd+Shift+B</strong> en Mac
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-text">
-        <strong>Arrastrá este botón</strong> a tu barra de favoritos:
-        <br/>
-        <a class="bookmark-btn" id="bookmarklet-link" href="#">⬇ Ganamosnet Extractor</a>
-        <br/>
-        <span class="drag-hint">↑ Arrastrá este botón verde a tu barra de favoritos</span>
+        Arrastrá este botón verde a tu barra de favoritos:
+        <div class="bookmark-wrap">
+          <a class="bookmark-btn" id="bm" href="#">⬇ Ganamosnet Extractor</a>
+          <span class="drag-hint">↑ Arrastrá este botón a tu barra de favoritos del navegador</span>
+        </div>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-text">
-        Entrá a <strong>agents.ganamosnet.org</strong>, iniciá sesión normalmente, y después hacé click en el bookmarklet desde tus favoritos. ¡Listo!
+        Entrá a <strong>agents.ganamosnet.org</strong>, iniciá sesión, y hacé click en el botón guardado en favoritos.
       </div>
     </div>
   </div>
@@ -96,10 +83,11 @@
   <div class="card">
     <div class="card-title">Importante</div>
     <div class="warning-pill">
-      ⚠️ El bookmarklet solo funciona cuando ya estás logueado en Ganamosnet. Primero entrás al portal, después apretás el botón.
+      ⚠️ Primero logueate en Ganamosnet, después apretás el bookmarklet.<br/>
+      El archivo descargado es CSV y se abre directamente con Excel.
     </div>
     <p style="font-size:12px; color: var(--muted); line-height:1.6;">
-      Funciona en Chrome, Edge y Firefox. Recomendamos Chrome para mejor compatibilidad.
+      Recomendamos usar <strong style="color:var(--text)">Google Chrome</strong> para mejor compatibilidad.
     </p>
   </div>
 
@@ -107,178 +95,207 @@
 
 <footer>Uso privado · Solo administradores</footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-const code = `(function(){
-  var USER_ID='30721285';
-  var BASE='https://agents.ganamosnet.org/api/agent_admin';
-  var allData=[];
+var code = `(function(){
+  var USER_ID = '30721285';
+  var BASE = 'https://agents.ganamosnet.org/api/agent_admin';
 
   function getToken(){
-    var cookies=document.cookie.split(';');
-    for(var i=0;i<cookies.length;i++){
-      var c=cookies[i].trim();
-      if(c.startsWith('token=')||c.startsWith('access_token=')||c.startsWith('auth_token='))
-        return c.split('=')[1];
+    var keys = ['token','access_token','auth_token','access','key','jwt'];
+    for(var i=0;i<keys.length;i++){
+      var v = localStorage.getItem(keys[i]);
+      if(v && v.length > 10) return v.replace(/^"|"$/g,'');
     }
-    var ls=['token','access_token','auth_token','access','key'];
-    for(var j=0;j<ls.length;j++){
-      var v=localStorage.getItem(ls[j]);
-      if(v) return v;
+    var cookies = document.cookie.split(';');
+    for(var j=0;j<cookies.length;j++){
+      var c = cookies[j].trim();
+      for(var k=0;k<keys.length;k++){
+        if(c.toLowerCase().startsWith(keys[k]+'=')){
+          return c.split('=').slice(1).join('=');
+        }
+      }
     }
     return null;
   }
 
-  function fmt(d){return d.toISOString().split('T')[0];}
+  function fmt(d){ return d.toISOString().split('T')[0]; }
+
+  function csvDownload(data, filename){
+    if(!data.length) return;
+    var headers = Object.keys(data[0]);
+    var rows = data.map(function(r){
+      return headers.map(function(h){
+        var v = r[h] === null || r[h] === undefined ? '' : r[h];
+        return '"' + String(v).replace(/"/g,'""') + '"';
+      }).join(',');
+    });
+    var csv = '\uFEFF' + headers.join(',') + '\n' + rows.join('\n');
+    var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function classifyOp(t){
+    if(t.is_bonus) return 'Bonificacion';
+    if(t.operation === 0 || t.operation === 'deposit') return 'Deposito';
+    if(t.operation === 1 || t.operation === 'withdrawal') return 'Retiro';
+    return String(t.operation || 'Otro');
+  }
 
   function buildUI(){
-    if(document.getElementById('gana-extractor')) return;
-    var overlay=document.createElement('div');
-    overlay.id='gana-extractor';
-    overlay.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:999999;display:flex;align-items:center;justify-content:center;font-family:monospace;';
+    if(document.getElementById('gana-ext')) return;
+    var now = new Date();
+    var firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    var now=new Date();
-    var firstDay=new Date(now.getFullYear(),now.getMonth(),1);
-    var df=fmt(firstDay), dt=fmt(now);
+    var overlay = document.createElement('div');
+    overlay.id = 'gana-ext';
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.88);z-index:2147483647;display:flex;align-items:center;justify-content:center;';
 
-    overlay.innerHTML='<div style="background:#161918;border:1px solid #2a2e2c;border-radius:12px;padding:2rem;width:90%;max-width:480px;color:#e8ede9;">'+
-      '<div style="font-size:11px;letter-spacing:0.15em;color:#6b7570;text-transform:uppercase;margin-bottom:6px;">Ganamosnet</div>'+
-      '<div style="font-size:20px;font-weight:700;color:#00e87a;margin-bottom:1.5rem;">Extractor de Datos</div>'+
+    var box = document.createElement('div');
+    box.style.cssText = 'background:#161918;border:1px solid #2a2e2c;border-radius:14px;padding:1.75rem;width:92%;max-width:460px;color:#e8ede9;font-family:monospace;';
 
-      '<div style="margin-bottom:10px;"><div style="font-size:11px;color:#6b7570;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Desde</div>'+
-      '<input id="gana-from" type="date" value="'+df+'" style="width:100%;background:#1e2220;border:1px solid #2a2e2c;border-radius:6px;color:#e8ede9;font-family:monospace;font-size:14px;padding:8px 10px;outline:none;"/></div>'+
+    box.innerHTML =
+      '<div style="font-size:10px;letter-spacing:0.15em;color:#6b7570;text-transform:uppercase;margin-bottom:4px;">Ganamosnet</div>' +
+      '<div style="font-size:22px;font-weight:700;color:#00e87a;margin-bottom:1.5rem;">Extractor de Datos</div>' +
 
-      '<div style="margin-bottom:10px;"><div style="font-size:11px;color:#6b7570;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Hasta</div>'+
-      '<input id="gana-to" type="date" value="'+dt+'" style="width:100%;background:#1e2220;border:1px solid #2a2e2c;border-radius:6px;color:#e8ede9;font-family:monospace;font-size:14px;padding:8px 10px;outline:none;"/></div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">' +
+        '<div><div style="font-size:10px;color:#6b7570;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Desde</div>' +
+        '<input id="gf" type="date" value="' + fmt(firstDay) + '" style="width:100%;background:#1e2220;border:1px solid #2a2e2c;border-radius:6px;color:#e8ede9;font-family:monospace;font-size:13px;padding:8px 10px;outline:none;box-sizing:border-box;"/></div>' +
+        '<div><div style="font-size:10px;color:#6b7570;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Hasta</div>' +
+        '<input id="gt" type="date" value="' + fmt(now) + '" style="width:100%;background:#1e2220;border:1px solid #2a2e2c;border-radius:6px;color:#e8ede9;font-family:monospace;font-size:13px;padding:8px 10px;outline:none;box-sizing:border-box;"/></div>' +
+      '</div>' +
 
-      '<div style="margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap;">'+
-      '<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;background:#1e2220;border:1px solid #00e87a;border-radius:999px;padding:5px 12px;color:#00e87a;"><input type="checkbox" id="g-dep" checked style="display:none;"/> Depósitos</label>'+
-      '<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;background:#1e2220;border:1px solid #ff5c5c;border-radius:999px;padding:5px 12px;color:#ff5c5c;"><input type="checkbox" id="g-ret" checked style="display:none;"/> Retiros</label>'+
-      '<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;background:#1e2220;border:1px solid #00bfff;border-radius:999px;padding:5px 12px;color:#00bfff;"><input type="checkbox" id="g-bon" checked style="display:none;"/> Bonificaciones</label>'+
-      '</div>'+
+      '<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">' +
+        '<span id="qhoy" style="cursor:pointer;background:#1e2220;border:1px solid #2a2e2c;border-radius:999px;padding:4px 12px;font-size:12px;color:#6b7570;">Hoy</span>' +
+        '<span id="q7" style="cursor:pointer;background:#1e2220;border:1px solid #2a2e2c;border-radius:999px;padding:4px 12px;font-size:12px;color:#6b7570;">7 dias</span>' +
+        '<span id="q30" style="cursor:pointer;background:#1e2220;border:1px solid #2a2e2c;border-radius:999px;padding:4px 12px;font-size:12px;color:#6b7570;">Este mes</span>' +
+      '</div>' +
 
-      '<div id="gana-status" style="font-size:12px;color:#6b7570;margin-bottom:10px;min-height:18px;"></div>'+
-      '<div id="gana-prog-wrap" style="background:#1e2220;border-radius:4px;height:3px;margin-bottom:12px;display:none;"><div id="gana-prog" style="height:100%;background:#00e87a;width:0%;transition:width 0.3s;border-radius:4px;"></div></div>'+
+      '<div id="gst" style="font-size:12px;color:#6b7570;min-height:18px;margin-bottom:8px;"></div>' +
+      '<div id="gpw" style="background:#1e2220;border-radius:4px;height:3px;margin-bottom:12px;display:none;"><div id="gp" style="height:100%;background:#00e87a;width:0%;border-radius:4px;transition:width 0.3s;"></div></div>' +
 
-      '<div id="gana-metrics" style="display:none;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;">'+
-      '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gm-dep" style="font-size:18px;font-weight:700;color:#00e87a;">0</div><div style="font-size:10px;color:#6b7570;text-transform:uppercase;margin-top:2px;">Depósitos</div></div>'+
-      '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gm-ret" style="font-size:18px;font-weight:700;color:#ff5c5c;">0</div><div style="font-size:10px;color:#6b7570;text-transform:uppercase;margin-top:2px;">Retiros</div></div>'+
-      '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gm-bon" style="font-size:18px;font-weight:700;color:#00bfff;">0</div><div style="font-size:10px;color:#6b7570;text-transform:uppercase;margin-top:2px;">Bonos</div></div>'+
-      '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gm-tdep" style="font-size:14px;font-weight:700;color:#00e87a;">$0</div><div style="font-size:10px;color:#6b7570;text-transform:uppercase;margin-top:2px;">Total dep</div></div>'+
-      '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gm-tret" style="font-size:14px;font-weight:700;color:#ff5c5c;">$0</div><div style="font-size:10px;color:#6b7570;text-transform:uppercase;margin-top:2px;">Total ret</div></div>'+
-      '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gm-profit" style="font-size:14px;font-weight:700;color:#00e87a;">$0</div><div style="font-size:10px;color:#6b7570;text-transform:uppercase;margin-top:2px;">Profit</div></div>'+
-      '</div>'+
+      '<div id="gmet" style="display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;">' +
+        '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmd" style="font-size:18px;font-weight:700;color:#00e87a;">0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">DEPOSITOS</div></div>' +
+        '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmr" style="font-size:18px;font-weight:700;color:#ff5c5c;">0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">RETIROS</div></div>' +
+        '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmb" style="font-size:18px;font-weight:700;color:#00bfff;">0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">BONOS</div></div>' +
+        '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmtd" style="font-size:13px;font-weight:700;color:#00e87a;">$0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">TOTAL DEP</div></div>' +
+        '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmtr" style="font-size:13px;font-weight:700;color:#ff5c5c;">$0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">TOTAL RET</div></div>' +
+        '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmpf" style="font-size:13px;font-weight:700;color:#00e87a;">$0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">PROFIT</div></div>' +
+      '</div>' +
 
-      '<div style="display:flex;gap:8px;">'+
-      '<button id="gana-btn" style="flex:1;background:#00e87a;color:#000;font-weight:700;font-size:14px;border:none;border-radius:8px;padding:11px;cursor:pointer;">⬇ Extraer datos</button>'+
-      '<button id="gana-xlsx" style="display:none;flex:1;background:#1e2220;border:1px solid #2a2e2c;color:#e8ede9;font-size:13px;border-radius:8px;padding:11px;cursor:pointer;">📊 Excel</button>'+
-      '<button id="gana-csv" style="display:none;flex:1;background:#1e2220;border:1px solid #2a2e2c;color:#e8ede9;font-size:13px;border-radius:8px;padding:11px;cursor:pointer;">📄 CSV</button>'+
-      '<button onclick="document.getElementById(\'gana-extractor\').remove()" style="background:#1e2220;border:1px solid #2a2e2c;color:#6b7570;font-size:13px;border-radius:8px;padding:11px 14px;cursor:pointer;">✕</button>'+
-      '</div>'+
-    '</div>';
+      '<div style="display:flex;gap:8px;">' +
+        '<button id="gbtn" style="flex:2;background:#00e87a;color:#000;font-weight:700;font-size:14px;border:none;border-radius:8px;padding:12px;cursor:pointer;">⬇ Extraer y descargar CSV</button>' +
+        '<button id="gcerrar" style="flex:0;background:#1e2220;border:1px solid #2a2e2c;color:#6b7570;font-size:13px;border-radius:8px;padding:12px 16px;cursor:pointer;">✕</button>' +
+      '</div>';
 
+    overlay.appendChild(box);
     document.body.appendChild(overlay);
 
-    var data=[];
+    document.getElementById('gcerrar').onclick = function(){ document.getElementById('gana-ext').remove(); };
 
-    function setStatus(msg,col){document.getElementById('gana-status').style.color=col||'#6b7570';document.getElementById('gana-status').textContent=msg;}
-    function setProgress(p){var w=document.getElementById('gana-prog-wrap');var b=document.getElementById('gana-prog');w.style.display=p>0?'block':'none';b.style.width=p+'%';}
+    document.getElementById('qhoy').onclick = function(){
+      var n = new Date(); var s = fmt(n);
+      document.getElementById('gf').value = s; document.getElementById('gt').value = s;
+    };
+    document.getElementById('q7').onclick = function(){
+      var n = new Date(); var f = new Date(); f.setDate(n.getDate()-7);
+      document.getElementById('gf').value = fmt(f); document.getElementById('gt').value = fmt(n);
+    };
+    document.getElementById('q30').onclick = function(){
+      var n = new Date(); var f = new Date(n.getFullYear(), n.getMonth(), 1);
+      document.getElementById('gf').value = fmt(f); document.getElementById('gt').value = fmt(n);
+    };
 
-    function classifyOp(t){
-      if(t.is_bonus) return 'Bonificación';
-      if(t.operation===0||t.operation==='deposit') return 'Depósito';
-      if(t.operation===1||t.operation==='withdrawal') return 'Retiro';
-      return String(t.operation||'Desconocido');
-    }
+    var allData = [];
+    function setSt(msg, col){ var el = document.getElementById('gst'); el.textContent = msg; el.style.color = col || '#6b7570'; }
+    function setProg(p){ document.getElementById('gpw').style.display = p > 0 ? 'block' : 'none'; document.getElementById('gp').style.width = p + '%'; }
 
-    async function fetchPage(token,df,dt,page,isDep,isRet,isBon){
-      var params=new URLSearchParams({date_from:df+'T00:00:00',date_to:dt+'T23:59:59',username:'',role:'0',is_direct_structure:'false',is_higher_transaction_only:'false',is_withdrawal_transfers:isRet?'true':'false',is_deposit_transfers:isDep?'true':'false',is_bonus_deposits:isBon?'true':'false',transfers_only:'true',page:page,count:'100'});
-      var res=await fetch(BASE+'/user/'+USER_ID+'/payment/history/?'+params,{headers:{'Authorization':'Token '+token,'Content-Type':'application/json'}});
-      if(!res.ok) throw new Error('Error al obtener datos ('+res.status+')');
-      var d=await res.json();
-      return d.result||d;
-    }
+    document.getElementById('gbtn').onclick = async function(){
+      var df = document.getElementById('gf').value;
+      var dt = document.getElementById('gt').value;
+      if(!df || !dt){ setSt('Selecciona un rango de fechas', '#ff5c5c'); return; }
 
-    document.getElementById('gana-btn').onclick=async function(){
-      var df=document.getElementById('gana-from').value;
-      var dt=document.getElementById('gana-to').value;
-      var isDep=document.getElementById('g-dep').checked;
-      var isRet=document.getElementById('g-ret').checked;
-      var isBon=document.getElementById('g-bon').checked;
-      if(!df||!dt){setStatus('Seleccioná un rango de fechas','#ff5c5c');return;}
-      var token=getToken();
-      if(!token){setStatus('No se encontró sesión activa. Asegurate de estar logueado en Ganamosnet.','#ff5c5c');return;}
-      this.disabled=true;data=[];
-      document.getElementById('gana-metrics').style.display='none';
-      document.getElementById('gana-xlsx').style.display='none';
-      document.getElementById('gana-csv').style.display='none';
-      try{
-        setStatus('Extrayendo datos...','#00e87a');setProgress(10);
-        var page=0,total=null,fetched=0;
+      var token = getToken();
+      if(!token){ setSt('Sesion no encontrada. Asegurate de estar logueado.', '#ff5c5c'); return; }
+
+      this.disabled = true; allData = [];
+      document.getElementById('gmet').style.display = 'none';
+
+      try {
+        setSt('Conectando...', '#00e87a'); setProg(10);
+        var page = 0, total = null, fetched = 0;
+
         while(true){
-          var result=await fetchPage(token,df,dt,page,isDep,isRet,isBon);
-          var transfers=result.transfers||result||[];
-          if(total===null) total=result.total||result.count||transfers.length;
-          transfers.forEach(function(t){
-            data.push({'ID':t.id,'Fecha':t.created_at?(t.created_at.replace('T',' ').slice(0,19)):'','Tipo':classifyOp(t),'Desde':t.from_user||'','Hacia':t.to_user||'','Iniciador':t.initiator_user||'','Monto':t.amount||0,'Saldo anterior':(t.balance_changes&&t.balance_changes.balance_from)||'','Saldo posterior':(t.balance_changes&&t.balance_changes.balance_to)||'','Nota':t.note||''});
+          var params = new URLSearchParams({
+            date_from: df + 'T00:00:00', date_to: dt + 'T23:59:59',
+            username: '', role: '0', is_direct_structure: 'false',
+            is_higher_transaction_only: 'false', is_withdrawal_transfers: 'true',
+            is_deposit_transfers: 'true', is_bonus_deposits: 'true',
+            transfers_only: 'true', page: page, count: '100'
           });
-          fetched+=transfers.length;
-          setProgress(Math.min(90,10+(fetched/(total||fetched))*80));
-          setStatus('Extrayendo... '+fetched+' registros','#00e87a');
-          if(transfers.length<100||(total&&fetched>=total)) break;
+
+          var res = await fetch(BASE + '/user/' + USER_ID + '/payment/history/?' + params, {
+            headers: { 'Authorization': 'Token ' + token, 'Content-Type': 'application/json' }
+          });
+
+          if(!res.ok) throw new Error('Error HTTP ' + res.status + '. Reintenta logueandote de nuevo.');
+          var json = await res.json();
+          var result = json.result || json;
+          var transfers = result.transfers || result || [];
+          if(total === null) total = result.total || result.count || transfers.length;
+
+          transfers.forEach(function(t){
+            allData.push({
+              'ID': t.id, 'Fecha': t.created_at ? t.created_at.replace('T',' ').slice(0,19) : '',
+              'Tipo': classifyOp(t), 'Desde': t.from_user || '', 'Hacia': t.to_user || '',
+              'Iniciador': t.initiator_user || '', 'Monto': t.amount || 0,
+              'Saldo anterior': (t.balance_changes && t.balance_changes.balance_from) || '',
+              'Saldo posterior': (t.balance_changes && t.balance_changes.balance_to) || '',
+              'Nota': t.note || ''
+            });
+          });
+
+          fetched += transfers.length;
+          setProg(Math.min(90, 10 + (fetched / (total || fetched)) * 80));
+          setSt('Obteniendo... ' + fetched + ' de ' + (total || '?'), '#00e87a');
+          if(transfers.length < 100 || (total && fetched >= total)) break;
           page++;
         }
-        setProgress(100);
-        var deps=data.filter(function(r){return r['Tipo']==='Depósito';});
-        var rets=data.filter(function(r){return r['Tipo']==='Retiro';});
-        var bons=data.filter(function(r){return r['Tipo']==='Bonificación';});
-        var tdep=deps.reduce(function(s,r){return s+Number(r['Monto']);},0);
-        var tret=rets.reduce(function(s,r){return s+Number(r['Monto']);},0);
-        var profit=tdep-tret;
-        document.getElementById('gm-dep').textContent=deps.length.toLocaleString('es-AR');
-        document.getElementById('gm-ret').textContent=rets.length.toLocaleString('es-AR');
-        document.getElementById('gm-bon').textContent=bons.length.toLocaleString('es-AR');
-        document.getElementById('gm-tdep').textContent='$'+Math.round(tdep).toLocaleString('es-AR');
-        document.getElementById('gm-tret').textContent='$'+Math.round(tret).toLocaleString('es-AR');
-        var pel=document.getElementById('gm-profit');
-        pel.textContent=(profit<0?'-$':'$')+Math.round(Math.abs(profit)).toLocaleString('es-AR');
-        pel.style.color=profit<0?'#ff5c5c':'#00e87a';
-        document.getElementById('gana-metrics').style.display='grid';
-        document.getElementById('gana-xlsx').style.display='flex';
-        document.getElementById('gana-csv').style.display='flex';
-        setStatus('✓ '+data.length+' registros extraídos correctamente','#00e87a');
-      }catch(e){setStatus('Error: '+e.message,'#ff5c5c');setProgress(0);}
-      this.disabled=false;
-    };
 
-    document.getElementById('gana-xlsx').onclick=function(){
-      if(!data.length) return;
-      var ws=XLSX.utils.json_to_sheet(data);
-      var wb=XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb,ws,'Movimientos');
-      XLSX.writeFile(wb,'ganamosnet_'+document.getElementById('gana-from').value+'_'+document.getElementById('gana-to').value+'.xlsx');
-    };
+        setProg(100);
+        var deps = allData.filter(function(r){ return r['Tipo']==='Deposito'; });
+        var rets = allData.filter(function(r){ return r['Tipo']==='Retiro'; });
+        var bons = allData.filter(function(r){ return r['Tipo']==='Bonificacion'; });
+        var tdep = deps.reduce(function(s,r){ return s+Number(r['Monto']); },0);
+        var tret = rets.reduce(function(s,r){ return s+Number(r['Monto']); },0);
+        var profit = tdep - tret;
 
-    document.getElementById('gana-csv').onclick=function(){
-      if(!data.length) return;
-      var headers=Object.keys(data[0]);
-      var rows=data.map(function(r){return headers.map(function(h){return JSON.stringify(r[h]||'');}).join(',');});
-      var csv=[headers.join(',')].concat(rows).join('\\n');
-      var blob=new Blob(['\\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
-      var url=URL.createObjectURL(blob);
-      var a=document.createElement('a');
-      a.href=url;a.download='ganamosnet_'+document.getElementById('gana-from').value+'_'+document.getElementById('gana-to').value+'.csv';a.click();
+        document.getElementById('gmd').textContent = deps.length.toLocaleString('es-AR');
+        document.getElementById('gmr').textContent = rets.length.toLocaleString('es-AR');
+        document.getElementById('gmb').textContent = bons.length.toLocaleString('es-AR');
+        document.getElementById('gmtd').textContent = '$'+Math.round(tdep).toLocaleString('es-AR');
+        document.getElementById('gmtr').textContent = '$'+Math.round(tret).toLocaleString('es-AR');
+        var pe = document.getElementById('gmpf');
+        pe.textContent = (profit<0?'-$':'$')+Math.round(Math.abs(profit)).toLocaleString('es-AR');
+        pe.style.color = profit<0?'#ff5c5c':'#00e87a';
+        document.getElementById('gmet').style.display = 'grid';
+
+        csvDownload(allData, 'ganamosnet_'+df+'_'+dt+'.csv');
+        setSt('Listo. ' + allData.length + ' registros descargados.', '#00e87a');
+
+      } catch(e){
+        setSt('Error: ' + e.message, '#ff5c5c'); setProg(0);
+      }
+      this.disabled = false;
     };
   }
 
-  var s=document.createElement('script');
-  s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
-  s.onload=buildUI;
-  document.head.appendChild(s);
-  if(typeof XLSX!=='undefined') buildUI();
+  buildUI();
 })();`;
 
-  document.getElementById('bookmarklet-link').href = 'javascript:' + encodeURIComponent(code);
+document.getElementById('bm').href = 'javascript:' + encodeURIComponent(code);
 </script>
 </body>
 </html>
