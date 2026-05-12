@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ganamosnet — Extractor de Datos</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0f0e;
+    --surface: #161918;
+    --surface2: #1e2220;
+    --border: #2a2e2c;
+    --accent: #00e87a;
+    --accent-dim: #00e87a22;
+    --accent2: #00bfff;
+    --text: #e8ede9;
+    --muted: #6b7570;
+    --danger: #ff5c5c;
+    --danger-dim: #ff5c5c18;
+    --warning: #ffb340;
+    --warning-dim: #ffb34018;
+    --success-dim: #00e87a18;
+    --radius: 10px;
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .logo {
+    font-family: var(--font-head);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-family: var(--font-head);
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+    line-height: 1.1;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .wrapper {
+    width: 100%;
+    max-width: 620px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+  }
+
+  .card-title {
+    font-family: var(--font-head);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  label.field-label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="date"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input[type="text"]:focus,
+  input[type="password"]:focus,
+  input[type="date"]:focus {
+    border-color: var(--accent);
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    cursor: pointer;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field { margin-bottom: 12px; }
+  .field:last-child { margin-bottom: 0; }
+
+  .quick-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+
+  .btn-ghost {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .checkgroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .check-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .check-pill input { display: none; }
+
+  .check-pill.active-dep { border-color: var(--accent); color: var(--accent); background: var(--success-dim); }
+  .check-pill.active-ret { border-color: var(--danger); color: var(--danger); background: var(--danger-dim); }
+  .check-pill.active-bon { border-color: var(--accent2); color: var(--accent2); background: #00bfff18; }
+
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+  .btn-main {
+    width: 100%;
+    background: var(--accent);
+    color: #000;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.05em;
+    border: none;
+    border-radius: var(--radius);
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-main:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .btn-main:active { transform: translateY(0); }
+  .btn-main:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .progress-wrap {
+    background: var(--surface2);
+    border-radius: 4px;
+    height: 3px;
+    overflow: hidden;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.3s;
+    border-radius: 4px;
+  }
+
+  .status-box {
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: none;
+    letter-spacing: 0.02em;
+  }
+
+  .status-box.info { background: var(--accent-dim); color: var(--accent); border: 1px solid #00e87a33; display: block; }
+  .status-box.success { background: var(--success-dim); color: var(--accent); border: 1px solid #00e87a44; display: block; }
+  .status-box.error { background: var(--danger-dim); color: var(--danger); border: 1px solid #ff5c5c33; display: block; }
+
+  .warning-pill {
+    background: var(--warning-dim);
+    color: var(--warning);
+    border: 1px solid #ffb34033;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    margin-bottom: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .metric {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+
+  .metric-val {
+    font-family: var(--font-head);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.1;
+  }
+
+  .metric-val.negative { color: var(--danger); }
+  .metric-val.neutral { color: var(--accent2); }
+
+  .metric-lbl {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .dl-btns { display: flex; gap: 8px; margin-top: 14px; }
+
+  .btn-dl {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .btn-dl:hover { border-color: var(--accent); color: var(--accent); }
+
+  #results-card { display: none; }
+
+  footer {
+    margin-top: 3rem;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="logo">Sistema de gestión</div>
+<h1>Extractor <span>Ganamosnet</span></h1>
+<p class="subtitle">Depósitos · Retiros · Bonificaciones</p>
+
+<div class="wrapper">
+
+  <div class="card">
+    <div class="card-title">Credenciales</div>
+    <div class="warning-pill">
+      🔒 Tus datos se usan solo para conectar con Ganamosnet. No se almacenan en ningún servidor.
+    </div>
+    <div class="field">
+      <label class="field-label" for="username">Usuario</label>
+      <input type="text" id="username" placeholder="Tu usuario de Ganamosnet" autocomplete="username" />
+    </div>
+    <div class="field">
+      <label class="field-label" for="password">Contraseña</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Rango de fechas</div>
+    <div class="grid-2">
+      <div>
+        <label class="field-label" for="date_from">Desde</label>
+        <input type="date" id="date_from" />
+      </div>
+      <div>
+        <label class="field-label" for="date_to">Hasta</label>
+        <input type="date" id="date_to" />
+      </div>
+    </div>
+    <div class="quick-btns">
+      <button class="btn-ghost" onclick="setRange('hoy')">Hoy</button>
+      <button class="btn-ghost" onclick="setRange('semana')">Esta semana</button>
+      <button class="btn-ghost" onclick="setRange('mes')">Este mes</button>
+      <button class="btn-ghost" onclick="setRange('anterior')">Mes anterior</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tipo de movimientos</div>
+    <div class="checkgroup">
+      <label class="check-pill active-dep" id="pill_dep">
+        <input type="checkbox" id="chk_dep" checked onchange="togglePill('dep')" />
+        <span class="dot"></span> Depósitos
+      </label>
+      <label class="check-pill active-ret" id="pill_ret">
+        <input type="checkbox" id="chk_ret" checked onchange="togglePill('ret')" />
+        <span class="dot"></span> Retiros
+      </label>
+      <label class="check-pill active-bon" id="pill_bon">
+        <input type="checkbox" id="chk_bon" checked onchange="togglePill('bon')" />
+        <span class="dot"></span> Bonificaciones
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Formato de descarga</div>
+    <div class="checkgroup">
+      <label class="check-pill active-dep" id="pill_xlsx">
+        <input type="checkbox" id="fmt_xlsx" checked onchange="togglePill('xlsx')" />
+        <span class="dot"></span> Excel (.xlsx)
+      </label>
+      <label class="check-pill active-dep" id="pill_csv">
+        <input type="checkbox" id="fmt_csv" checked onchange="togglePill('csv')" />
+        <span class="dot"></span> CSV
+      </label>
+    </div>
+  </div>
+
+  <button class="btn-main" id="btn_extract" onclick="extraer()">
+    ⬇ Extraer datos
+  </button>
+
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <div class="status-box" id="status_msg"></div>
+
+  <div class="card" id="results-card">
+    <div class="card-title">Resumen de extracción</div>
+    <div class="metrics-grid">
+      <div class="metric">
+        <div class="metric-val" id="m_dep">0</div>
+        <div class="metric-lbl">Depósitos</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val negative" id="m_ret">0</div>
+        <div class="metric-lbl">Retiros</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val neutral" id="m_bon">0</div>
+        <div class="metric-lbl">Bonificaciones</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val" id="m_total_dep">$0</div>
+        <div class="metric-lbl">Total depósitos</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val negative" id="m_total_ret">$0</div>
+        <div class="metric-lbl">Total retiros</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val" id="m_profit">$0</div>
+        <div class="metric-lbl">Profit bruto</div>
+      </div>
+    </div>
+    <div class="dl-btns">
+      <button class="btn-dl" id="btn_xlsx" onclick="descargarXLSX()" style="display:none">
+        📊 Descargar Excel
+      </button>
+      <button class="btn-dl" id="btn_csv" onclick="descargarCSV()" style="display:none">
+        📄 Descargar CSV
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<footer>Uso privado · Solo administradores</footer>
+
+<script>
+const USER_ID = '30721285';
+const BASE = 'https://agents.ganamosnet.org/api/agent_admin';
+let allData = [];
+
+function fmt(d) { return d.toISOString().split('T')[0]; }
+
+function setRange(r) {
+  const now = new Date();
+  let from = new Date(), to = new Date();
+  if (r === 'hoy') { from = now; to = now; }
+  else if (r === 'semana') { from = new Date(now); from.setDate(now.getDate() - now.getDay()); to = now; }
+  else if (r === 'mes') { from = new Date(now.getFullYear(), now.getMonth(), 1); to = now; }
+  else if (r === 'anterior') { from = new Date(now.getFullYear(), now.getMonth()-1, 1); to = new Date(now.getFullYear(), now.getMonth(), 0); }
+  document.getElementById('date_from').value = fmt(from);
+  document.getElementById('date_to').value = fmt(to);
+}
+
+function togglePill(id) {
+  const chk = document.getElementById(id === 'dep' ? 'chk_dep' : id === 'ret' ? 'chk_ret' : id === 'bon' ? 'chk_bon' : id === 'xlsx' ? 'fmt_xlsx' : 'fmt_csv');
+  const pill = document.getElementById('pill_' + id);
+  const activeClass = id === 'ret' ? 'active-ret' : id === 'bon' ? 'active-bon' : 'active-dep';
+  if (chk.checked) pill.classList.add(activeClass);
+  else pill.classList.remove(activeClass);
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById('status_msg');
+  el.textContent = msg;
+  el.className = 'status-box ' + type;
+}
+
+function setProgress(pct) {
+  document.getElementById('progress-wrap').style.display = pct > 0 ? 'block' : 'none';
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function classifyOp(t) {
+  if (t.is_bonus) return 'Bonificación';
+  if (t.operation === 0 || t.operation === 'deposit') return 'Depósito';
+  if (t.operation === 1 || t.operation === 'withdrawal') return 'Retiro';
+  return String(t.operation || 'Desconocido');
+}
+
+async function login(user, pass) {
+  const res = await fetch(`${BASE}/auth/login/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: user, password: pass })
+  });
+  if (!res.ok) throw new Error('Credenciales incorrectas. Verificá usuario y contraseña.');
+  const data = await res.json();
+  const token = data.token || data.access || data.key || (data.result && data.result.token);
+  if (!token) throw new Error('No se pudo obtener el token de sesión.');
+  return token;
+}
+
+async function fetchPage(token, dateFrom, dateTo, page, isDep, isRet, isBon) {
+  const params = new URLSearchParams({
+    date_from: dateFrom + 'T00:00:00',
+    date_to: dateTo + 'T23:59:59',
+    username: '', role: '0',
+    is_direct_structure: 'false',
+    is_higher_transaction_only: 'false',
+    is_withdrawal_transfers: isRet ? 'true' : 'false',
+    is_deposit_transfers: isDep ? 'true' : 'false',
+    is_bonus_deposits: isBon ? 'true' : 'false',
+    transfers_only: 'true',
+    page, count: '100'
+  });
+  const res = await fetch(`${BASE}/user/${USER_ID}/payment/history/?${params}`, {
+    headers: { 'Authorization': `Token ${token}`, 'Content-Type': 'application/json' }
+  });
+  if (!res.ok) throw new Error('Error al obtener los datos del historial.');
+  const data = await res.json();
+  return data.result || data;
+}
+
+async function extraer() {
+  const user = document.getElementById('username').value.trim();
+  const pass = document.getElementById('password').value.trim();
+  const dateFrom = document.getElementById('date_from').value;
+  const dateTo = document.getElementById('date_to').value;
+  const isDep = document.getElementById('chk_dep').checked;
+  const isRet = document.getElementById('chk_ret').checked;
+  const isBon = document.getElementById('chk_bon').checked;
+
+  if (!user || !pass) { setStatus('Ingresá tu usuario y contraseña.', 'error'); return; }
+  if (!dateFrom || !dateTo) { setStatus('Seleccioná un rango de fechas.', 'error'); return; }
+  if (!isDep && !isRet && !isBon) { setStatus('Seleccioná al menos un tipo de movimiento.', 'error'); return; }
+
+  const btn = document.getElementById('btn_extract');
+  btn.disabled = true;
+  document.getElementById('results-card').style.display = 'none';
+  allData = [];
+
+  try {
+    setStatus('Iniciando sesión en Ganamosnet...', 'info');
+    setProgress(10);
+    const token = await login(user, pass);
+
+    setStatus('Extrayendo datos...', 'info');
+    let page = 0, total = null, fetched = 0;
+
+    while (true) {
+      const result = await fetchPage(token, dateFrom, dateTo, page, isDep, isRet, isBon);
+      const transfers = result.transfers || result || [];
+      if (total === null) total = result.total || result.count || transfers.length;
+
+      transfers.forEach(t => {
+        allData.push({
+          'ID Transacción': t.id,
+          'Fecha': t.created_at ? t.created_at.replace('T', ' ').slice(0,19) : '',
+          'Tipo': classifyOp(t),
+          'Desde': t.from_user || '',
+          'Hacia': t.to_user || '',
+          'Iniciador': t.initiator_user || '',
+          'Monto': t.amount || 0,
+          'Saldo anterior': t.balance_changes?.balance_from || '',
+          'Saldo posterior': t.balance_changes?.balance_to || '',
+          'Nota': t.note || ''
+        });
+      });
+
+      fetched += transfers.length;
+      setProgress(Math.min(90, 10 + (fetched / (total || fetched)) * 80));
+      setStatus(`Extrayendo... ${fetched} registros obtenidos`, 'info');
+      if (transfers.length < 100 || (total && fetched >= total)) break;
+      page++;
+    }
+
+    setProgress(100);
+
+    const deps = allData.filter(r => r['Tipo'] === 'Depósito');
+    const rets = allData.filter(r => r['Tipo'] === 'Retiro');
+    const bons = allData.filter(r => r['Tipo'] === 'Bonificación');
+    const totalDep = deps.reduce((s, r) => s + Number(r['Monto']), 0);
+    const totalRet = rets.reduce((s, r) => s + Number(r['Monto']), 0);
+    const profit = totalDep - totalRet;
+
+    document.getElementById('m_dep').textContent = deps.length.toLocaleString('es-AR');
+    document.getElementById('m_ret').textContent = rets.length.toLocaleString('es-AR');
+    document.getElementById('m_bon').textContent = bons.length.toLocaleString('es-AR');
+    document.getElementById('m_total_dep').textContent = '$' + Math.round(totalDep).toLocaleString('es-AR');
+    document.getElementById('m_total_ret').textContent = '$' + Math.round(totalRet).toLocaleString('es-AR');
+
+    const profitEl = document.getElementById('m_profit');
+    profitEl.textContent = (profit < 0 ? '-$' : '$') + Math.round(Math.abs(profit)).toLocaleString('es-AR');
+    profitEl.className = 'metric-val' + (profit < 0 ? ' negative' : '');
+
+    document.getElementById('btn_xlsx').style.display = document.getElementById('fmt_xlsx').checked ? 'flex' : 'none';
+    document.getElementById('btn_csv').style.display = document.getElementById('fmt_csv').checked ? 'flex' : 'none';
+    document.getElementById('results-card').style.display = 'block';
+    setStatus(`✓ Extracción completa — ${allData.length} registros encontrados`, 'success');
+
+  } catch (err) {
+    setStatus('Error: ' + err.message, 'error');
+    setProgress(0);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function descargarXLSX() {
+  if (!allData.length) return;
+  const ws = XLSX.utils.json_to_sheet(allData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Movimientos');
+  const df = document.getElementById('date_from').value;
+  const dt = document.getElementById('date_to').value;
+  XLSX.writeFile(wb, `ganamosnet_${df}_${dt}.xlsx`);
+}
+
+function descargarCSV() {
+  if (!allData.length) return;
+  const headers = Object.keys(allData[0]);
+  const rows = allData.map(r => headers.map(h => JSON.stringify(r[h] ?? '')).join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob(['\uFEFF' + csv, { type: 'text/csv;charset=utf-8;' }]);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const df = document.getElementById('date_from').value;
+  const dt = document.getElementById('date_to').value;
+  a.href = url; a.download = `ganamosnet_${df}_${dt}.csv`; a.click();
+}
+
+setRange('hoy');
+</script>
+</body>
+</html>
