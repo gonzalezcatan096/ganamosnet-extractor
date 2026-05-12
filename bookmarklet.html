@@ -30,7 +30,7 @@
   .bookmark-wrap { margin: 1rem 0 0.5rem; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
   .bookmark-btn { display: inline-block; background: var(--accent); color: #000; font-family: var(--font-head); font-weight: 700; font-size: 15px; padding: 12px 24px; border-radius: 8px; text-decoration: none; cursor: grab; transition: filter 0.15s; }
   .bookmark-btn:hover { filter: brightness(1.1); }
-  .drag-hint { font-size: 12px; color: var(--muted); letter-spacing: 0.03em; }
+  .drag-hint { font-size: 12px; color: var(--warning); letter-spacing: 0.03em; }
   .warning-pill { background: #ffb34018; color: var(--warning); border: 1px solid #ffb34033; border-radius: 8px; padding: 10px 14px; font-size: 12px; margin-bottom: 12px; line-height: 1.6; }
   footer { margin-top: 3rem; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; text-align: center; }
 </style>
@@ -46,17 +46,17 @@
   <div class="card">
     <div class="card-title">¿Cómo funciona?</div>
     <p style="font-size:13px; color: var(--muted); line-height:1.7;">
-      Instalás este botón en tus favoritos del navegador. Cuando estés logueado en Ganamosnet y lo apretés, abre el extractor usando tu sesión activa y descarga los datos en CSV (que abre directo en Excel).
+      Instalás este botón en tus favoritos. Cuando estés logueado en Ganamosnet y lo apretés, abre el extractor usando tu sesión activa y descarga los datos en CSV que podés abrir directo con Excel.
     </p>
   </div>
 
   <div class="card">
-    <div class="card-title">Instalación</div>
+    <div class="card-title">Instalación — solo una vez</div>
 
     <div class="step">
       <div class="step-num">1</div>
       <div class="step-text">
-        Activá la barra de favoritos:<br/>
+        Activá la barra de favoritos del navegador:<br/>
         <strong>Ctrl+Shift+B</strong> en Windows · <strong>Cmd+Shift+B</strong> en Mac
       </div>
     </div>
@@ -64,10 +64,10 @@
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-text">
-        Arrastrá este botón verde a tu barra de favoritos:
+        Arrastrá este botón verde hasta tu barra de favoritos:
         <div class="bookmark-wrap">
           <a class="bookmark-btn" id="bm" href="#">⬇ Ganamosnet Extractor</a>
-          <span class="drag-hint">↑ Arrastrá este botón a tu barra de favoritos del navegador</span>
+          <span class="drag-hint">↑ Arrastrá este botón verde a la barra de favoritos</span>
         </div>
       </div>
     </div>
@@ -75,19 +75,19 @@
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-text">
-        Entrá a <strong>agents.ganamosnet.org</strong>, iniciá sesión, y hacé click en el botón guardado en favoritos.
+        Listo. De ahora en más: entrá a <strong>agents.ganamosnet.org</strong>, logueate, y hacé click en el favorito guardado.
       </div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title">Importante</div>
+    <div class="card-title">Recordá siempre</div>
     <div class="warning-pill">
       ⚠️ Primero logueate en Ganamosnet, después apretás el bookmarklet.<br/>
-      El archivo descargado es CSV y se abre directamente con Excel.
+      Si la sesión expiró, cerrá y volvé a entrar antes de usarlo.
     </div>
     <p style="font-size:12px; color: var(--muted); line-height:1.6;">
-      Recomendamos usar <strong style="color:var(--text)">Google Chrome</strong> para mejor compatibilidad.
+      Recomendamos <strong style="color:var(--text)">Google Chrome</strong> para mejor compatibilidad.
     </p>
   </div>
 
@@ -100,41 +100,29 @@ var code = `(function(){
   var USER_ID = '30721285';
   var BASE = 'https://agents.ganamosnet.org/api/agent_admin';
 
-  function getToken(){
-    var keys = ['token','access_token','auth_token','access','key','jwt'];
-    for(var i=0;i<keys.length;i++){
-      var v = localStorage.getItem(keys[i]);
-      if(v && v.length > 10) return v.replace(/^"|"$/g,'');
-    }
-    var cookies = document.cookie.split(';');
-    for(var j=0;j<cookies.length;j++){
-      var c = cookies[j].trim();
-      for(var k=0;k<keys.length;k++){
-        if(c.toLowerCase().startsWith(keys[k]+'=')){
-          return c.split('=').slice(1).join('=');
-        }
-      }
-    }
+  function getSessionToken(){
+    var match = document.cookie.match(/(?:^|;)\\s*session=([^;]+)/);
+    if(match) return match[1];
     return null;
   }
 
   function fmt(d){ return d.toISOString().split('T')[0]; }
 
-  function csvDownload(data, filename){
-    if(!data.length) return;
-    var headers = Object.keys(data[0]);
-    var rows = data.map(function(r){
+  function csvDownload(rows, filename){
+    if(!rows.length) return;
+    var headers = Object.keys(rows[0]);
+    var lines = rows.map(function(r){
       return headers.map(function(h){
         var v = r[h] === null || r[h] === undefined ? '' : r[h];
         return '"' + String(v).replace(/"/g,'""') + '"';
       }).join(',');
     });
-    var csv = '\uFEFF' + headers.join(',') + '\n' + rows.join('\n');
+    var csv = '\\uFEFF' + headers.join(',') + '\\n' + lines.join('\\n');
     var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url; a.download = filename; a.click();
-    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
   }
 
   function classifyOp(t){
@@ -144,155 +132,157 @@ var code = `(function(){
     return String(t.operation || 'Otro');
   }
 
-  function buildUI(){
-    if(document.getElementById('gana-ext')) return;
-    var now = new Date();
-    var firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+  if(document.getElementById('gana-ext')){ document.getElementById('gana-ext').remove(); return; }
 
-    var overlay = document.createElement('div');
-    overlay.id = 'gana-ext';
-    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.88);z-index:2147483647;display:flex;align-items:center;justify-content:center;';
-
-    var box = document.createElement('div');
-    box.style.cssText = 'background:#161918;border:1px solid #2a2e2c;border-radius:14px;padding:1.75rem;width:92%;max-width:460px;color:#e8ede9;font-family:monospace;';
-
-    box.innerHTML =
-      '<div style="font-size:10px;letter-spacing:0.15em;color:#6b7570;text-transform:uppercase;margin-bottom:4px;">Ganamosnet</div>' +
-      '<div style="font-size:22px;font-weight:700;color:#00e87a;margin-bottom:1.5rem;">Extractor de Datos</div>' +
-
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">' +
-        '<div><div style="font-size:10px;color:#6b7570;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Desde</div>' +
-        '<input id="gf" type="date" value="' + fmt(firstDay) + '" style="width:100%;background:#1e2220;border:1px solid #2a2e2c;border-radius:6px;color:#e8ede9;font-family:monospace;font-size:13px;padding:8px 10px;outline:none;box-sizing:border-box;"/></div>' +
-        '<div><div style="font-size:10px;color:#6b7570;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Hasta</div>' +
-        '<input id="gt" type="date" value="' + fmt(now) + '" style="width:100%;background:#1e2220;border:1px solid #2a2e2c;border-radius:6px;color:#e8ede9;font-family:monospace;font-size:13px;padding:8px 10px;outline:none;box-sizing:border-box;"/></div>' +
-      '</div>' +
-
-      '<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">' +
-        '<span id="qhoy" style="cursor:pointer;background:#1e2220;border:1px solid #2a2e2c;border-radius:999px;padding:4px 12px;font-size:12px;color:#6b7570;">Hoy</span>' +
-        '<span id="q7" style="cursor:pointer;background:#1e2220;border:1px solid #2a2e2c;border-radius:999px;padding:4px 12px;font-size:12px;color:#6b7570;">7 dias</span>' +
-        '<span id="q30" style="cursor:pointer;background:#1e2220;border:1px solid #2a2e2c;border-radius:999px;padding:4px 12px;font-size:12px;color:#6b7570;">Este mes</span>' +
-      '</div>' +
-
-      '<div id="gst" style="font-size:12px;color:#6b7570;min-height:18px;margin-bottom:8px;"></div>' +
-      '<div id="gpw" style="background:#1e2220;border-radius:4px;height:3px;margin-bottom:12px;display:none;"><div id="gp" style="height:100%;background:#00e87a;width:0%;border-radius:4px;transition:width 0.3s;"></div></div>' +
-
-      '<div id="gmet" style="display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;">' +
-        '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmd" style="font-size:18px;font-weight:700;color:#00e87a;">0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">DEPOSITOS</div></div>' +
-        '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmr" style="font-size:18px;font-weight:700;color:#ff5c5c;">0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">RETIROS</div></div>' +
-        '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmb" style="font-size:18px;font-weight:700;color:#00bfff;">0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">BONOS</div></div>' +
-        '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmtd" style="font-size:13px;font-weight:700;color:#00e87a;">$0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">TOTAL DEP</div></div>' +
-        '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmtr" style="font-size:13px;font-weight:700;color:#ff5c5c;">$0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">TOTAL RET</div></div>' +
-        '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmpf" style="font-size:13px;font-weight:700;color:#00e87a;">$0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">PROFIT</div></div>' +
-      '</div>' +
-
-      '<div style="display:flex;gap:8px;">' +
-        '<button id="gbtn" style="flex:2;background:#00e87a;color:#000;font-weight:700;font-size:14px;border:none;border-radius:8px;padding:12px;cursor:pointer;">⬇ Extraer y descargar CSV</button>' +
-        '<button id="gcerrar" style="flex:0;background:#1e2220;border:1px solid #2a2e2c;color:#6b7570;font-size:13px;border-radius:8px;padding:12px 16px;cursor:pointer;">✕</button>' +
-      '</div>';
-
-    overlay.appendChild(box);
-    document.body.appendChild(overlay);
-
-    document.getElementById('gcerrar').onclick = function(){ document.getElementById('gana-ext').remove(); };
-
-    document.getElementById('qhoy').onclick = function(){
-      var n = new Date(); var s = fmt(n);
-      document.getElementById('gf').value = s; document.getElementById('gt').value = s;
-    };
-    document.getElementById('q7').onclick = function(){
-      var n = new Date(); var f = new Date(); f.setDate(n.getDate()-7);
-      document.getElementById('gf').value = fmt(f); document.getElementById('gt').value = fmt(n);
-    };
-    document.getElementById('q30').onclick = function(){
-      var n = new Date(); var f = new Date(n.getFullYear(), n.getMonth(), 1);
-      document.getElementById('gf').value = fmt(f); document.getElementById('gt').value = fmt(n);
-    };
-
-    var allData = [];
-    function setSt(msg, col){ var el = document.getElementById('gst'); el.textContent = msg; el.style.color = col || '#6b7570'; }
-    function setProg(p){ document.getElementById('gpw').style.display = p > 0 ? 'block' : 'none'; document.getElementById('gp').style.width = p + '%'; }
-
-    document.getElementById('gbtn').onclick = async function(){
-      var df = document.getElementById('gf').value;
-      var dt = document.getElementById('gt').value;
-      if(!df || !dt){ setSt('Selecciona un rango de fechas', '#ff5c5c'); return; }
-
-      var token = getToken();
-      if(!token){ setSt('Sesion no encontrada. Asegurate de estar logueado.', '#ff5c5c'); return; }
-
-      this.disabled = true; allData = [];
-      document.getElementById('gmet').style.display = 'none';
-
-      try {
-        setSt('Conectando...', '#00e87a'); setProg(10);
-        var page = 0, total = null, fetched = 0;
-
-        while(true){
-          var params = new URLSearchParams({
-            date_from: df + 'T00:00:00', date_to: dt + 'T23:59:59',
-            username: '', role: '0', is_direct_structure: 'false',
-            is_higher_transaction_only: 'false', is_withdrawal_transfers: 'true',
-            is_deposit_transfers: 'true', is_bonus_deposits: 'true',
-            transfers_only: 'true', page: page, count: '100'
-          });
-
-          var res = await fetch(BASE + '/user/' + USER_ID + '/payment/history/?' + params, {
-            headers: { 'Authorization': 'Token ' + token, 'Content-Type': 'application/json' }
-          });
-
-          if(!res.ok) throw new Error('Error HTTP ' + res.status + '. Reintenta logueandote de nuevo.');
-          var json = await res.json();
-          var result = json.result || json;
-          var transfers = result.transfers || result || [];
-          if(total === null) total = result.total || result.count || transfers.length;
-
-          transfers.forEach(function(t){
-            allData.push({
-              'ID': t.id, 'Fecha': t.created_at ? t.created_at.replace('T',' ').slice(0,19) : '',
-              'Tipo': classifyOp(t), 'Desde': t.from_user || '', 'Hacia': t.to_user || '',
-              'Iniciador': t.initiator_user || '', 'Monto': t.amount || 0,
-              'Saldo anterior': (t.balance_changes && t.balance_changes.balance_from) || '',
-              'Saldo posterior': (t.balance_changes && t.balance_changes.balance_to) || '',
-              'Nota': t.note || ''
-            });
-          });
-
-          fetched += transfers.length;
-          setProg(Math.min(90, 10 + (fetched / (total || fetched)) * 80));
-          setSt('Obteniendo... ' + fetched + ' de ' + (total || '?'), '#00e87a');
-          if(transfers.length < 100 || (total && fetched >= total)) break;
-          page++;
-        }
-
-        setProg(100);
-        var deps = allData.filter(function(r){ return r['Tipo']==='Deposito'; });
-        var rets = allData.filter(function(r){ return r['Tipo']==='Retiro'; });
-        var bons = allData.filter(function(r){ return r['Tipo']==='Bonificacion'; });
-        var tdep = deps.reduce(function(s,r){ return s+Number(r['Monto']); },0);
-        var tret = rets.reduce(function(s,r){ return s+Number(r['Monto']); },0);
-        var profit = tdep - tret;
-
-        document.getElementById('gmd').textContent = deps.length.toLocaleString('es-AR');
-        document.getElementById('gmr').textContent = rets.length.toLocaleString('es-AR');
-        document.getElementById('gmb').textContent = bons.length.toLocaleString('es-AR');
-        document.getElementById('gmtd').textContent = '$'+Math.round(tdep).toLocaleString('es-AR');
-        document.getElementById('gmtr').textContent = '$'+Math.round(tret).toLocaleString('es-AR');
-        var pe = document.getElementById('gmpf');
-        pe.textContent = (profit<0?'-$':'$')+Math.round(Math.abs(profit)).toLocaleString('es-AR');
-        pe.style.color = profit<0?'#ff5c5c':'#00e87a';
-        document.getElementById('gmet').style.display = 'grid';
-
-        csvDownload(allData, 'ganamosnet_'+df+'_'+dt+'.csv');
-        setSt('Listo. ' + allData.length + ' registros descargados.', '#00e87a');
-
-      } catch(e){
-        setSt('Error: ' + e.message, '#ff5c5c'); setProg(0);
-      }
-      this.disabled = false;
-    };
+  var session = getSessionToken();
+  if(!session){
+    alert('No se encontro sesion activa.\\nAsegurate de estar logueado en Ganamosnet y volver a intentarlo.');
+    return;
   }
 
-  buildUI();
+  var now = new Date();
+  var firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  var overlay = document.createElement('div');
+  overlay.id = 'gana-ext';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.88);z-index:2147483647;display:flex;align-items:center;justify-content:center;font-family:monospace;';
+
+  var box = document.createElement('div');
+  box.style.cssText = 'background:#161918;border:1px solid #2a2e2c;border-radius:14px;padding:1.75rem;width:92%;max-width:460px;color:#e8ede9;position:relative;';
+
+  box.innerHTML =
+    '<div style="font-size:10px;letter-spacing:0.15em;color:#6b7570;text-transform:uppercase;margin-bottom:4px;">Ganamosnet</div>' +
+    '<div style="font-size:22px;font-weight:700;color:#00e87a;margin-bottom:1.5rem;">Extractor de Datos</div>' +
+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">' +
+      '<div><div style="font-size:10px;color:#6b7570;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Desde</div>' +
+      '<input id="gf" type="date" value="' + fmt(firstDay) + '" style="width:100%;background:#1e2220;border:1px solid #2a2e2c;border-radius:6px;color:#e8ede9;font-family:monospace;font-size:13px;padding:8px 10px;outline:none;box-sizing:border-box;"/></div>' +
+      '<div><div style="font-size:10px;color:#6b7570;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Hasta</div>' +
+      '<input id="gt" type="date" value="' + fmt(now) + '" style="width:100%;background:#1e2220;border:1px solid #2a2e2c;border-radius:6px;color:#e8ede9;font-family:monospace;font-size:13px;padding:8px 10px;outline:none;box-sizing:border-box;"/></div>' +
+    '</div>' +
+
+    '<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">' +
+      '<span id="qhoy" style="cursor:pointer;background:#1e2220;border:1px solid #2a2e2c;border-radius:999px;padding:4px 12px;font-size:12px;color:#aaa;">Hoy</span>' +
+      '<span id="q7" style="cursor:pointer;background:#1e2220;border:1px solid #2a2e2c;border-radius:999px;padding:4px 12px;font-size:12px;color:#aaa;">7 dias</span>' +
+      '<span id="qmes" style="cursor:pointer;background:#1e2220;border:1px solid #2a2e2c;border-radius:999px;padding:4px 12px;font-size:12px;color:#aaa;">Este mes</span>' +
+      '<span id="qant" style="cursor:pointer;background:#1e2220;border:1px solid #2a2e2c;border-radius:999px;padding:4px 12px;font-size:12px;color:#aaa;">Mes anterior</span>' +
+    '</div>' +
+
+    '<div id="gst" style="font-size:12px;color:#6b7570;min-height:18px;margin-bottom:8px;"></div>' +
+    '<div id="gpw" style="background:#1e2220;border-radius:4px;height:3px;margin-bottom:12px;display:none;"><div id="gp" style="height:100%;background:#00e87a;width:0%;border-radius:4px;transition:width 0.3s;"></div></div>' +
+
+    '<div id="gmet" style="display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;">' +
+      '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmd" style="font-size:18px;font-weight:700;color:#00e87a;">0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">DEPOSITOS</div></div>' +
+      '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmr" style="font-size:18px;font-weight:700;color:#ff5c5c;">0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">RETIROS</div></div>' +
+      '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmb" style="font-size:18px;font-weight:700;color:#00bfff;">0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">BONOS</div></div>' +
+      '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmtd" style="font-size:13px;font-weight:700;color:#00e87a;">$0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">TOTAL DEP</div></div>' +
+      '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmtr" style="font-size:13px;font-weight:700;color:#ff5c5c;">$0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">TOTAL RET</div></div>' +
+      '<div style="background:#1e2220;border-radius:8px;padding:10px;text-align:center;"><div id="gmpf" style="font-size:13px;font-weight:700;color:#00e87a;">$0</div><div style="font-size:10px;color:#6b7570;margin-top:2px;">PROFIT</div></div>' +
+    '</div>' +
+
+    '<div style="display:flex;gap:8px;">' +
+      '<button id="gbtn" style="flex:2;background:#00e87a;color:#000;font-weight:700;font-size:14px;border:none;border-radius:8px;padding:12px;cursor:pointer;">⬇ Extraer y descargar CSV</button>' +
+      '<button id="gcerrar" style="background:#1e2220;border:1px solid #2a2e2c;color:#6b7570;font-size:16px;border-radius:8px;padding:12px 16px;cursor:pointer;">✕</button>' +
+    '</div>';
+
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  document.getElementById('gcerrar').onclick = function(){ document.getElementById('gana-ext').remove(); };
+
+  function setDates(f, t){ document.getElementById('gf').value = fmt(f); document.getElementById('gt').value = fmt(t); }
+  document.getElementById('qhoy').onclick = function(){ var n=new Date(); setDates(n,n); };
+  document.getElementById('q7').onclick = function(){ var n=new Date(),f=new Date(); f.setDate(n.getDate()-7); setDates(f,n); };
+  document.getElementById('qmes').onclick = function(){ var n=new Date(); setDates(new Date(n.getFullYear(),n.getMonth(),1),n); };
+  document.getElementById('qant').onclick = function(){ var n=new Date(); setDates(new Date(n.getFullYear(),n.getMonth()-1,1), new Date(n.getFullYear(),n.getMonth(),0)); };
+
+  function setSt(msg, col){ var el=document.getElementById('gst'); el.textContent=msg; el.style.color=col||'#6b7570'; }
+  function setProg(p){ document.getElementById('gpw').style.display=p>0?'block':'none'; document.getElementById('gp').style.width=p+'%'; }
+
+  document.getElementById('gbtn').onclick = async function(){
+    var df = document.getElementById('gf').value;
+    var dt = document.getElementById('gt').value;
+    if(!df||!dt){ setSt('Selecciona un rango de fechas','#ff5c5c'); return; }
+
+    this.disabled = true;
+    var allData = [];
+    document.getElementById('gmet').style.display = 'none';
+
+    try {
+      setSt('Conectando con Ganamosnet...','#00e87a'); setProg(10);
+      var page=0, total=null, fetched=0;
+
+      while(true){
+        var params = new URLSearchParams({
+          date_from: df+'T00:00:00', date_to: dt+'T23:59:59',
+          username:'', role:'0', is_direct_structure:'false',
+          is_higher_transaction_only:'false',
+          is_withdrawal_transfers:'true', is_deposit_transfers:'true',
+          is_bonus_deposits:'true', transfers_only:'true',
+          page:page, count:'100'
+        });
+
+        var res = await fetch(BASE+'/user/'+USER_ID+'/payment/history/?'+params, {
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if(res.status===401||res.status===403) throw new Error('Sesion expirada. Volvé a loguearte en Ganamosnet.');
+        if(!res.ok) throw new Error('Error HTTP '+res.status);
+
+        var json = await res.json();
+        var result = json.result || json;
+        var transfers = result.transfers || result || [];
+        if(total===null) total = result.total || result.count || transfers.length;
+
+        transfers.forEach(function(t){
+          allData.push({
+            'ID': t.id,
+            'Fecha': t.created_at ? t.created_at.replace('T',' ').slice(0,19) : '',
+            'Tipo': classifyOp(t),
+            'Desde': t.from_user||'',
+            'Hacia': t.to_user||'',
+            'Iniciador': t.initiator_user||'',
+            'Monto': t.amount||0,
+            'Saldo anterior': (t.balance_changes&&t.balance_changes.balance_from)||'',
+            'Saldo posterior': (t.balance_changes&&t.balance_changes.balance_to)||'',
+            'Nota': t.note||''
+          });
+        });
+
+        fetched += transfers.length;
+        setProg(Math.min(90, 10+(fetched/(total||fetched))*80));
+        setSt('Obteniendo... '+fetched+' de '+(total||'?')+' registros','#00e87a');
+        if(transfers.length<100||(total&&fetched>=total)) break;
+        page++;
+      }
+
+      setProg(100);
+      var deps=allData.filter(function(r){return r['Tipo']==='Deposito';});
+      var rets=allData.filter(function(r){return r['Tipo']==='Retiro';});
+      var bons=allData.filter(function(r){return r['Tipo']==='Bonificacion';});
+      var tdep=deps.reduce(function(s,r){return s+Number(r['Monto']);},0);
+      var tret=rets.reduce(function(s,r){return s+Number(r['Monto']);},0);
+      var profit=tdep-tret;
+
+      document.getElementById('gmd').textContent=deps.length.toLocaleString('es-AR');
+      document.getElementById('gmr').textContent=rets.length.toLocaleString('es-AR');
+      document.getElementById('gmb').textContent=bons.length.toLocaleString('es-AR');
+      document.getElementById('gmtd').textContent='$'+Math.round(tdep).toLocaleString('es-AR');
+      document.getElementById('gmtr').textContent='$'+Math.round(tret).toLocaleString('es-AR');
+      var pe=document.getElementById('gmpf');
+      pe.textContent=(profit<0?'-$':'$')+Math.round(Math.abs(profit)).toLocaleString('es-AR');
+      pe.style.color=profit<0?'#ff5c5c':'#00e87a';
+      document.getElementById('gmet').style.display='grid';
+
+      csvDownload(allData,'ganamosnet_'+df+'_'+dt+'.csv');
+      setSt('Listo. '+allData.length+' registros descargados correctamente.','#00e87a');
+
+    } catch(e){
+      setSt('Error: '+e.message,'#ff5c5c'); setProg(0);
+    }
+    this.disabled=false;
+  };
 })();`;
 
 document.getElementById('bm').href = 'javascript:' + encodeURIComponent(code);
