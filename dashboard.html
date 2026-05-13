@@ -224,7 +224,7 @@ tr:hover td{background:rgba(124,58,237,.06)}
       <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/>
     </div>
     <div class="login-error" id="login-error"></div>
-    <button class="login-btn" id="login-btn">Ingresar →</button>
+    <button class="login-btn" onclick="(function(){var u=document.getElementById('login-user').value.trim().toLowerCase();var p=document.getElementById('login-pass').value;var e=document.getElementById('login-error');var ok={'pluton':'plutonadmin2024','admin':'mundo2024'};if(!u||!p){e.style.color='#fbbf24';e.textContent='Ingresa usuario y contrasena';return;}if(ok[u]&&ok[u]===p){document.getElementById('login-overlay').style.display='none';}else{e.style.color='#f87171';e.textContent='Usuario o contrasena incorrectos';document.getElementById('login-pass').value='';}})()">Ingresar →</button>
   </div>
 </div>
 
