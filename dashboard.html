@@ -446,7 +446,10 @@ tr:hover td{background:rgba(124,58,237,.06)}
 
 
 
-<script>
+<script>// Verificar sesion
+if(sessionStorage.getItem('mp_ok')!=='1'){window.location.href='login.html';}
+
+
 var movs=[],gastos={pub:[],serv:[],fichas:[],bill:[],sus:[]},pagMov=0,POR_PAG=50,movFil=[],archivosCSV=[],charts={},tesoro={caja:[],mauricio:[],santiago:[],nancy:[]};
 
 function showPage(id){
@@ -476,7 +479,8 @@ function setR(r,pre){
 }
 
 function parsearCSV(text){
-  var lines=text.replace(//g,'').split('
+  var lines=text.replace(/
+/g,'').split('
 ').filter(function(l){return l.trim();});
   var sep=lines[0].indexOf(';')>=0?';':',';
   var start=lines[0].indexOf('sep=')===0?1:0;
@@ -777,9 +781,6 @@ var _h=fmtD(_n);
   document.getElementById(pre+'-hasta').value=_h;
 });
 dash(); renderMov(); renderRanking();
-
-// Verificar sesion
-if(sessionStorage.getItem('mp_ok')!=='1'){window.location.href='login.html';}
 
 // CSV
 document.getElementById('csv-input').addEventListener('change',function(){
