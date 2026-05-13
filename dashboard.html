@@ -533,38 +533,7 @@ function combinar() {
   st.textContent = movs.length + ' registros · ' + archivosCSV.length + ' archivo' + (archivosCSV.length > 1 ? 's' : '');
   st.className = 'csv-tag ok';
   document.getElementById('btn-limpiar').style.display = 'inline-block';
-  dash(); renderMov(); renderRanking();
-
-// Verificar sesion
-if (sessionStorage.getItem('mp_ok') !== '1') { window.location.href = 'login.html'; }
-
-// Handler CSV - va al final para garantizar que el elemento existe
-var csvInput = document.getElementById('csv-input');
-if (csvInput) {
-  csvInput.addEventListener('change', function() {
-    var files = Array.from(this.files);
-    if(!files.length) return;
-    var cargados = 0;
-    var total = files.length;
-    var input = this;
-    files.forEach(function(file) {
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        var rows = parsearCSV(e.target.result);
-        var idx = archivosCSV.findIndex(function(a){ return a.nombre === file.name; });
-        if(idx >= 0) archivosCSV[idx] = { nombre: file.name, rows: rows };
-        else archivosCSV.push({ nombre: file.name, rows: rows });
-        cargados++;
-        if(cargados === total) { combinar(); input.value = ''; }
-      };
-      reader.onerror = function() {
-        cargados++;
-        if(cargados === total) { combinar(); input.value = ''; }
-      };
-      reader.readAsText(file, 'UTF-8');
-    });
-  });
-} renderGraficas();
+  dash(); renderMov(); renderRanking(); renderGraficas();
 }
 
 function limpiarCSV() {
@@ -954,7 +923,7 @@ var h = fmtD(n);
 });
 dash(); renderMov(); renderRanking();
 
-// Sesion
+// Verificar sesion
 if (sessionStorage.getItem('mp_ok') !== '1') { window.location.href = 'login.html'; }
 
 // CSV handler
