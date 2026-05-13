@@ -482,53 +482,69 @@ tr:hover td{background:rgba(124,58,237,.06)}
 
 <script>
 // ===== LOGIN =====
-// Credenciales - podés agregar mas usuarios en este objeto
 var USUARIOS = {
   'pluton': 'plutonadmin2024',
   'admin':  'mundo2024'
 };
 
 function intentarLogin() {
-  var user = document.getElementById('login-user').value.trim().toLowerCase();
-  var pass = document.getElementById('login-pass').value;
-  var err  = document.getElementById('login-error');
+  var userEl = document.getElementById('login-user');
+  var passEl = document.getElementById('login-pass');
+  var errEl  = document.getElementById('login-error');
+  if(!userEl || !passEl || !errEl) return;
 
-  if(!user || !pass) { err.textContent = 'Completá usuario y contraseña'; return; }
+  var user = userEl.value.trim().toLowerCase();
+  var pass = passEl.value;
 
-  if(USUARIOS[user] && USUARIOS[user] === pass) {
-    sessionStorage.setItem('gana_auth', btoa(user + ':' + Date.now()));
-    document.getElementById('login-overlay').style.display = 'none';
-    err.textContent = '';
+  if(!user || !pass) {
+    errEl.textContent = 'Completá usuario y contraseña';
+    return;
+  }
+
+  if(USUARIOS.hasOwnProperty(user) && USUARIOS[user] === pass) {
+    try { sessionStorage.setItem('gana_auth', '1'); } catch(e){}
+    var overlay = document.getElementById('login-overlay');
+    if(overlay) overlay.style.display = 'none';
+    errEl.textContent = '';
   } else {
-    err.textContent = 'Usuario o contraseña incorrectos';
-    document.getElementById('login-pass').value = '';
-    document.getElementById('login-pass').focus();
+    errEl.textContent = '❌ Usuario o contraseña incorrectos';
+    passEl.value = '';
+    setTimeout(function(){ passEl.focus(); }, 50);
   }
 }
 
 function cerrarSesion() {
   if(confirm('¿Cerrar sesión?')) {
-    sessionStorage.removeItem('gana_auth');
-    document.getElementById('login-overlay').style.display = 'flex';
+    try { sessionStorage.removeItem('gana_auth'); } catch(e){}
+    var overlay = document.getElementById('login-overlay');
+    if(overlay) overlay.style.display = 'flex';
     document.getElementById('login-user').value = '';
     document.getElementById('login-pass').value = '';
     document.getElementById('login-error').textContent = '';
   }
 }
 
-// Verificar si ya hay sesion activa
-(function() {
-  var auth = sessionStorage.getItem('gana_auth');
-  if(auth) {
-    document.getElementById('login-overlay').style.display = 'none';
-  }
-  // Enter en los campos
-  ['login-user','login-pass'].forEach(function(id){
-    document.getElementById(id).addEventListener('keydown', function(e){
+// Init login - esperar a que el DOM este listo
+window.addEventListener('DOMContentLoaded', function() {
+  // Verificar sesion
+  var auth = false;
+  try { auth = sessionStorage.getItem('gana_auth') === '1'; } catch(e){}
+  var overlay = document.getElementById('login-overlay');
+  if(overlay) overlay.style.display = auth ? 'none' : 'flex';
+
+  // Enter en campos
+  var campos = ['login-user', 'login-pass'];
+  campos.forEach(function(id) {
+    var el = document.getElementById(id);
+    if(el) el.addEventListener('keydown', function(e) {
       if(e.key === 'Enter') intentarLogin();
     });
   });
-})();
+
+  // Foco inicial en usuario
+  var userEl = document.getElementById('login-user');
+  if(userEl && (!auth)) userEl.focus();
+});
 
 // ===== ESTADO =====
 var movs = [];
