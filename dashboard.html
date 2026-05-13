@@ -95,16 +95,16 @@ select.sel{background:var(--s2);border:1px solid var(--border2);border-radius:8p
 
 .res-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem}
 @media(max-width:680px){.res-row{grid-template-columns:1fr}}
-.rc{border-radius:14px;padding:2rem 2.5rem;border:1px solid;position:relative;overflow:hidden;backdrop-filter:blur(10px)}
+.rc{border-radius:14px;padding:2.5rem 3rem;border:1px solid;position:relative;overflow:hidden;backdrop-filter:blur(10px);min-height:220px}
 .rc.nw{background:linear-gradient(135deg,#07051a,#100d2e);border-color:var(--v);box-shadow:0 0 40px #7c3aed18}
 .rc.ga{background:linear-gradient(135deg,#020c06,#041208);border-color:var(--gn);box-shadow:0 0 40px #4ade8015}
 .rc-glow{position:absolute;bottom:-30px;right:-30px;width:130px;height:130px;border-radius:50%;filter:blur(50px);opacity:.2}
 .rc.nw .rc-glow{background:var(--v2)} .rc.ga .rc-glow{background:var(--gn)}
-.rc-lbl{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.3rem}
+.rc-lbl{font-size:22px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem}
 .rc.nw .rc-lbl{color:var(--v3)} .rc.ga .rc-lbl{color:var(--gn)}
-.rc-formula{font-size:13px;color:var(--muted);margin-bottom:1.1rem;font-family:var(--fm);line-height:1.9}
+.rc-formula{font-size:16px;color:var(--muted);margin-bottom:1.25rem;font-family:var(--fm);line-height:2}
 .rc-formula .fv{color:var(--text2);font-weight:600}
-.rc-val{font-size:64px;font-weight:800;line-height:1}
+.rc-val{font-size:64px;font-weight:800;line-height:1;letter-spacing:-.03em}
 .rc.nw .rc-val{color:var(--v3)} .rc.ga .rc-val{color:var(--gn)}
 .rc-val.neg{color:var(--rd)!important}
 
@@ -184,49 +184,13 @@ tr:hover td{background:rgba(124,58,237,.06)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 ::-webkit-scrollbar-thumb:hover{background:var(--v)}
 
-/* LOGIN */
-.login-overlay{position:fixed;inset:0;background:radial-gradient(ellipse at center,#0d0825 0%,#03010c 100%);z-index:9999;display:flex;align-items:center;justify-content:center;font-family:var(--fh)}
-.login-box{background:rgba(7,4,26,.95);border:1px solid var(--border2);border-radius:20px;padding:2.5rem 3rem;width:100%;max-width:400px;text-align:center;box-shadow:0 0 80px #7c3aed25,0 0 160px #7c3aed10;position:relative;overflow:hidden}
-.login-box::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,#7c3aed20,transparent 70%);pointer-events:none}
-.login-planet{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#e9d5ff,#9d5ff5 45%,#2d1b69 80%);box-shadow:0 0 32px #7c3aed80;margin:0 auto 1rem;animation:spin-glow 4s ease-in-out infinite alternate}
-.login-logo-img{width:64px;height:64px;border-radius:50%;object-fit:cover;box-shadow:0 0 32px #7c3aed80;margin:0 auto 1rem;display:block}
-.login-title{font-size:26px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:.25rem}
-.login-title span{color:var(--v3)}
-.login-sub{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem}
-.login-field{margin-bottom:1rem;text-align:left}
-.login-field label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.4rem}
-.login-field input{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:var(--fm);font-size:14px;padding:10px 14px;outline:none;transition:border-color .2s}
-.login-field input:focus{border-color:var(--v)}
-.login-error{font-size:12px;color:var(--rd);margin-bottom:1rem;min-height:18px;font-family:var(--fm)}
-.login-btn{width:100%;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;font-family:var(--fh);font-weight:800;font-size:15px;letter-spacing:.05em;padding:12px;border:none;border-radius:10px;cursor:pointer;box-shadow:0 0 24px var(--vg2);transition:all .2s;margin-bottom:.75rem}
-.login-btn:hover{filter:brightness(1.1);box-shadow:0 0 36px #7c3aed60}
-.login-btn:active{transform:scale(.98)}
-.logout-btn{font-family:var(--fh);font-size:12px;font-weight:600;padding:6px 16px;border-radius:999px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
-.logout-btn:hover{border-color:var(--rd);color:var(--rd)}
+
+.logout-btn{width:32px;height:32px;border-radius:50%;background:#f8717125;border:1.5px solid #f87171;color:#f87171;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:16px;transition:all .2s;flex-shrink:0}
+.logout-btn:hover{background:#f87171;color:#fff;box-shadow:0 0 16px #f8717160;transform:scale(1.08)}
 </style>
 </head>
 <body>
 
-
-<div class="login-overlay" id="login-overlay">
-  <div class="login-box">
-    <img class="login-logo-img" src="https://gonzalezcatan096.github.io/ganamosnet-extractor/logo-pluton.jpeg" alt="Plutón"
-      onerror="this.onerror=null;this.style.display='none';document.getElementById('login-planet-fb').style.display='block'"/>
-    <div id="login-planet-fb" class="login-planet" style="display:none"></div>
-    <div class="login-title">MUNDO <span>PLUTÓN</span></div>
-    <div class="login-sub">Panel de administración</div>
-    <div class="login-field">
-      <label>Usuario</label>
-      <input type="text" id="login-user" placeholder="Ingresá tu usuario" autocomplete="username"/>
-    </div>
-    <div class="login-field">
-      <label>Contraseña</label>
-      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/>
-    </div>
-    <div class="login-error" id="login-error"></div>
-    <button class="login-btn" onclick="(function(){var u=document.getElementById('login-user').value.trim().toLowerCase();var p=document.getElementById('login-pass').value;var e=document.getElementById('login-error');var ok={'pluton':'plutonadmin2024','admin':'mundo2024'};if(!u||!p){e.style.color='#fbbf24';e.textContent='Ingresa usuario y contrasena';return;}if(ok[u]&&ok[u]===p){document.getElementById('login-overlay').style.display='none';}else{e.style.color='#f87171';e.textContent='Usuario o contrasena incorrectos';document.getElementById('login-pass').value='';}})()">Ingresar →</button>
-  </div>
-</div>
 
 <div class="bg-fixed">
   <div class="stars"></div>
@@ -254,7 +218,7 @@ tr:hover td{background:rgba(124,58,237,.06)}
     <button class="nav-btn" id="nav-ranking" onclick="showPage('ranking')">Ranking</button>
     <button class="nav-btn" id="nav-gastos" onclick="showPage('gastos')">Gastos</button>
     <button class="nav-btn" id="nav-tesoro" onclick="showPage('tesoro')">Tesoro</button>
-    <button class="logout-btn" onclick="cerrarSesion()" title="Cerrar sesión">⏻ Salir</button>
+    <button class="logout-btn" onclick="sessionStorage.removeItem('mp_ok'); window.location.href='login.html';" title="Cerrar sesión">⏻</button>
   </div>
 </div>
 
@@ -481,35 +445,6 @@ tr:hover td{background:rgba(124,58,237,.06)}
 </div>
 
 <script>
-// ===== LOGIN =====
-var USUARIOS = { 'pluton': 'plutonadmin2024', 'admin': 'mundo2024' };
-var _logueado = false;
-
-function intentarLogin() {
-  var u = document.getElementById('login-user').value.trim().toLowerCase();
-  var p = document.getElementById('login-pass').value;
-  var e = document.getElementById('login-error');
-  if (!u || !p) { e.textContent = 'Ingresa usuario y contraseña'; e.style.color='#fbbf24'; return; }
-  if (USUARIOS[u] === p) {
-    _logueado = true;
-    document.getElementById('login-overlay').style.display = 'none';
-  } else {
-    e.textContent = 'Usuario o contraseña incorrectos';
-    e.style.color = '#f87171';
-    document.getElementById('login-pass').value = '';
-  }
-}
-
-function cerrarSesion() {
-  if (confirm('Cerrar sesion?')) {
-    _logueado = false;
-    document.getElementById('login-user').value = '';
-    document.getElementById('login-pass').value = '';
-    document.getElementById('login-error').textContent = '';
-    document.getElementById('login-overlay').style.display = 'flex';
-  }
-}
-
 // ===== ESTADO =====
 
 
@@ -626,11 +561,8 @@ function combinar() {
   document.getElementById('btn-limpiar').style.display = 'inline-block';
   dash(); renderMov(); renderRanking();
 
-// Mostrar login al inicio siempre
-document.getElementById('login-overlay').style.display = 'flex';
-document.getElementById('login-btn').onclick = intentarLogin;
-document.getElementById('login-user').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
-document.getElementById('login-pass').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); }; renderGraficas();
+// Verificar sesion
+if (sessionStorage.getItem('mp_ok') !== '1') { window.location.href = 'login.html'; } renderGraficas();
 }
 
 function limpiarCSV() {
@@ -641,11 +573,8 @@ function limpiarCSV() {
   document.getElementById('btn-limpiar').style.display = 'none';
   dash(); renderMov(); renderRanking();
 
-// Mostrar login al inicio siempre
-document.getElementById('login-overlay').style.display = 'flex';
-document.getElementById('login-btn').onclick = intentarLogin;
-document.getElementById('login-user').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
-document.getElementById('login-pass').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); }; renderGraficas();
+// Verificar sesion
+if (sessionStorage.getItem('mp_ok') !== '1') { window.location.href = 'login.html'; } renderGraficas();
 }
 
 function pN(v) {
@@ -995,11 +924,8 @@ var h = fmtD(n);
 });
 dash(); renderMov(); renderRanking();
 
-// Mostrar login al inicio siempre
-document.getElementById('login-overlay').style.display = 'flex';
-document.getElementById('login-btn').onclick = intentarLogin;
-document.getElementById('login-user').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
-document.getElementById('login-pass').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
+// Verificar sesion
+if (sessionStorage.getItem('mp_ok') !== '1') { window.location.href = 'login.html'; }
 </script>
 </body>
 </html>

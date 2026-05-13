@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mundo Plutón — Acceso</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #03010c;
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: radial-gradient(ellipse at 30% 20%, #7c3aed18, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, #9d5ff510, transparent 60%);
+}
+.box {
+  background: rgba(7,4,26,0.95);
+  border: 1px solid #2d2660;
+  border-radius: 20px;
+  padding: 2.5rem 3rem;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 0 80px #7c3aed20;
+}
+.logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 32px #7c3aed80;
+  margin: 0 auto 1.25rem;
+  display: block;
+}
+.logo-fallback {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #e9d5ff, #9d5ff5 45%, #2d1b69 80%);
+  box-shadow: 0 0 32px #7c3aed80;
+  margin: 0 auto 1.25rem;
+  display: none;
+}
+h1 { font-size: 26px; font-weight: 800; color: #fff; margin-bottom: .2rem; }
+h1 span { color: #c084fc; }
+.sub { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: #6b5fa0; margin-bottom: 2rem; }
+.field { margin-bottom: 1rem; text-align: left; }
+.field label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #9d99cc; display: block; margin-bottom: .4rem; }
+.field input {
+  width: 100%;
+  background: #0c0825;
+  border: 1px solid #2d2660;
+  border-radius: 10px;
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  padding: 11px 14px;
+  outline: none;
+}
+.field input:focus { border-color: #7c3aed; }
+.error {
+  font-size: 13px;
+  min-height: 20px;
+  margin-bottom: .75rem;
+  color: #f87171;
+  font-weight: 500;
+}
+.btn {
+  width: 100%;
+  background: linear-gradient(135deg, #7c3aed, #9d5ff5);
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  letter-spacing: .04em;
+}
+.btn:hover { filter: brightness(1.12); }
+.btn:active { transform: scale(.98); }
+</style>
+</head>
+<body>
+<div class="box">
+  <img class="logo" id="logo-img"
+    src="https://gonzalezcatan096.github.io/ganamosnet-extractor/logo-pluton.jpeg"
+    alt="Plutón"
+    onerror="this.style.display='none'; document.getElementById('logo-fb').style.display='block'"/>
+  <div class="logo-fallback" id="logo-fb"></div>
+  <h1>MUNDO <span>PLUTÓN</span></h1>
+  <p class="sub">Panel de administración</p>
+  <div class="field">
+    <label>Usuario</label>
+    <input type="text" id="usr" placeholder="Tu usuario" autocomplete="username"/>
+  </div>
+  <div class="field">
+    <label>Contraseña</label>
+    <input type="password" id="pwd" placeholder="••••••••" autocomplete="current-password"/>
+  </div>
+  <div class="error" id="err"></div>
+  <button class="btn" id="btn">Ingresar →</button>
+</div>
+
+<script>
+var OK = { 'pluton': 'plutonadmin2024', 'admin': 'mundo2024' };
+
+function login() {
+  var u = document.getElementById('usr').value.trim().toLowerCase();
+  var p = document.getElementById('pwd').value;
+  var e = document.getElementById('err');
+  if (!u || !p) {
+    e.textContent = '⚠️ Ingresá usuario y contraseña';
+    e.style.color = '#fbbf24';
+    return;
+  }
+  if (OK[u] && OK[u] === p) {
+    sessionStorage.setItem('mp_ok', '1');
+    window.location.href = 'dashboard.html';
+  } else {
+    e.textContent = '❌ Usuario o contraseña incorrectos';
+    e.style.color = '#f87171';
+    document.getElementById('pwd').value = '';
+    document.getElementById('pwd').focus();
+  }
+}
+
+document.getElementById('btn').onclick = login;
+document.getElementById('usr').onkeydown = function(e) { if (e.key === 'Enter') login(); };
+document.getElementById('pwd').onkeydown = function(e) { if (e.key === 'Enter') login(); };
+document.getElementById('usr').focus();
+</script>
+</body>
+</html>
