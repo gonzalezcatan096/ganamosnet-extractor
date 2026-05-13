@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///C:/Users/mlope/Downloads/dashboard_8.html -->
-<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Mundo Plutón — Administración</title>
-<link href="./dashboard_files/css2" rel="stylesheet">
-<script src="./dashboard_files/chart.umd.min.js.descarga"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -191,14 +191,14 @@ tr:hover td{background:rgba(124,58,237,.06)}
   <div class="stars"></div>
   <div class="nebula n1"></div>
   <div class="nebula n2"></div>
-  <img class="astro-deco a1" src="./dashboard_files/plutoncin.png" alt="">
-  <img class="astro-deco a2" src="./dashboard_files/plutoncin.png" alt="">
-  <img class="logo-deco" src="./dashboard_files/logo-pluton.jpeg" alt="">
+  <img class="astro-deco a1" src="https://gonzalezcatan096.github.io/ganamosnet-extractor/plutoncin.png" alt=""/>
+  <img class="astro-deco a2" src="https://gonzalezcatan096.github.io/ganamosnet-extractor/plutoncin.png" alt=""/>
+  <img class="logo-deco" src="https://gonzalezcatan096.github.io/ganamosnet-extractor/logo-pluton.jpeg" alt=""/>
 </div>
 
 <div class="header">
   <div class="logo-wrap">
-    <img class="logo-img" src="./dashboard_files/logo-pluton.jpeg" alt="Plutón" onerror="this.style.display=&#39;none&#39;;document.getElementById(&#39;logo-fallback&#39;).style.display=&#39;block&#39;">
+    <img class="logo-img" src="https://gonzalezcatan096.github.io/ganamosnet-extractor/logo-pluton.jpeg" alt="Plutón" onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='block'"/>
     <div id="logo-fallback" class="logo-planet" style="display:none"></div>
     <div>
       <div class="logo-title">MUNDO <span>PLUTÓN</span></div>
@@ -206,11 +206,11 @@ tr:hover td{background:rgba(124,58,237,.06)}
     </div>
   </div>
   <div class="nav">
-    <button class="nav-btn active" id="nav-dashboard" onclick="showPage(&#39;dashboard&#39;)">Dashboard</button>
-    <button class="nav-btn" id="nav-movimientos" onclick="showPage(&#39;movimientos&#39;)">Movimientos</button>
-    <button class="nav-btn" id="nav-graficas" onclick="showPage(&#39;graficas&#39;)">Gráficas</button>
-    <button class="nav-btn" id="nav-ranking" onclick="showPage(&#39;ranking&#39;)">Ranking</button>
-    <button class="nav-btn" id="nav-gastos" onclick="showPage(&#39;gastos&#39;)">Gastos</button>
+    <button class="nav-btn active" id="nav-dashboard" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-btn" id="nav-movimientos" onclick="showPage('movimientos')">Movimientos</button>
+    <button class="nav-btn" id="nav-graficas" onclick="showPage('graficas')">Gráficas</button>
+    <button class="nav-btn" id="nav-ranking" onclick="showPage('ranking')">Ranking</button>
+    <button class="nav-btn" id="nav-gastos" onclick="showPage('gastos')">Gastos</button>
   </div>
 </div>
 
@@ -218,18 +218,18 @@ tr:hover td{background:rgba(124,58,237,.06)}
 <div class="page active" id="page-dashboard">
   <div class="fbar">
     <label>Desde</label>
-    <input type="date" id="f-desde" onchange="dash()">
+    <input type="date" id="f-desde" onchange="dash()"/>
     <label>Hasta</label>
-    <input type="date" id="f-hasta" onchange="dash()">
+    <input type="date" id="f-hasta" onchange="dash()"/>
     <div class="sep"></div>
-    <button class="qb" onclick="setR(&#39;hoy&#39;,&#39;f&#39;)">Hoy</button>
-    <button class="qb" onclick="setR(&#39;semana&#39;,&#39;f&#39;)">7 Días</button>
-    <button class="qb" onclick="setR(&#39;mes&#39;,&#39;f&#39;)">Este Mes</button>
+    <button class="qb" onclick="setR('hoy','f')">Hoy</button>
+    <button class="qb" onclick="setR('semana','f')">7 Días</button>
+    <button class="qb" onclick="setR('mes','f')">Este Mes</button>
     <div class="sep"></div>
-    <button class="qb" onclick="setR(&#39;anterior&#39;,&#39;f&#39;)">Mes Anterior</button>
+    <button class="qb" onclick="setR('anterior','f')">Mes Anterior</button>
     <div class="sep"></div>
     <label class="csv-label" for="csv-input">⬆ Cargar CSV(s)</label>
-    <input type="file" id="csv-input" accept=".csv" multiple="">
+    <input type="file" id="csv-input" accept=".csv" multiple/>
     <button class="btn-limpiar" id="btn-limpiar" onclick="limpiarCSV()">✕ Limpiar</button>
     <span class="csv-tag none" id="csv-status">Sin datos</span>
   </div>
@@ -269,14 +269,14 @@ tr:hover td{background:rgba(124,58,237,.06)}
 <!-- MOVIMIENTOS -->
 <div class="page" id="page-movimientos">
   <div class="fbar">
-    <label>Desde</label><input type="date" id="m-desde" onchange="renderMov()">
-    <label>Hasta</label><input type="date" id="m-hasta" onchange="renderMov()">
+    <label>Desde</label><input type="date" id="m-desde" onchange="renderMov()"/>
+    <label>Hasta</label><input type="date" id="m-hasta" onchange="renderMov()"/>
     <div class="sep"></div>
-    <button class="qb" onclick="setR(&#39;hoy&#39;,&#39;m&#39;)">Hoy</button>
-    <button class="qb" onclick="setR(&#39;semana&#39;,&#39;m&#39;)">7 Días</button>
-    <button class="qb" onclick="setR(&#39;mes&#39;,&#39;m&#39;)">Este Mes</button>
+    <button class="qb" onclick="setR('hoy','m')">Hoy</button>
+    <button class="qb" onclick="setR('semana','m')">7 Días</button>
+    <button class="qb" onclick="setR('mes','m')">Este Mes</button>
     <div class="sep"></div>
-    <button class="qb" onclick="setR(&#39;anterior&#39;,&#39;m&#39;)">Mes Anterior</button>
+    <button class="qb" onclick="setR('anterior','m')">Mes Anterior</button>
     <div class="sep"></div>
     <select class="sel" id="m-tipo" onchange="renderMov()">
       <option value="">Todos los Tipos</option>
@@ -288,19 +288,19 @@ tr:hover td{background:rgba(124,58,237,.06)}
   <div class="tabla-wrap">
     <div class="tbar">
       <div class="slabel" style="margin:0">Movimientos</div>
-      <input class="tsearch" id="m-search" placeholder="Buscar jugador..." oninput="renderMov()">
+      <input class="tsearch" id="m-search" placeholder="Buscar jugador..." oninput="renderMov()"/>
     </div>
     <div class="tc">
       <table>
         <thead><tr><th>Fecha</th><th>Hora</th><th>Tipo</th><th>Desde</th><th>Hacia</th><th>Monto</th><th>Saldo Ant.</th><th>Saldo Post.</th></tr></thead>
-        <tbody id="m-body"><tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted)">Cargá un CSV desde el Dashboard</td></tr></tbody>
+        <tbody id="m-body"></tbody>
       </table>
     </div>
     <div class="tfooter">
       <span id="m-info">0 Registros</span>
       <div class="pag-btns">
-        <button class="pb" id="m-prev" onclick="cambiarPag(-1)" disabled="">← Ant</button>
-        <button class="pb" id="m-next" onclick="cambiarPag(1)" disabled="">Sig →</button>
+        <button class="pb" id="m-prev" onclick="cambiarPag(-1)" disabled>← Ant</button>
+        <button class="pb" id="m-next" onclick="cambiarPag(1)" disabled>Sig →</button>
       </div>
     </div>
   </div>
@@ -309,50 +309,50 @@ tr:hover td{background:rgba(124,58,237,.06)}
 <!-- GRAFICAS -->
 <div class="page" id="page-graficas">
   <div class="fbar">
-    <label>Desde</label><input type="date" id="g-desde" onchange="renderGraficas()">
-    <label>Hasta</label><input type="date" id="g-hasta" onchange="renderGraficas()">
+    <label>Desde</label><input type="date" id="g-desde" onchange="renderGraficas()"/>
+    <label>Hasta</label><input type="date" id="g-hasta" onchange="renderGraficas()"/>
     <div class="sep"></div>
-    <button class="qb" onclick="setR(&#39;hoy&#39;,&#39;g&#39;)">Hoy</button>
-    <button class="qb" onclick="setR(&#39;semana&#39;,&#39;g&#39;)">7 Días</button>
-    <button class="qb" onclick="setR(&#39;mes&#39;,&#39;g&#39;)">Este Mes</button>
+    <button class="qb" onclick="setR('hoy','g')">Hoy</button>
+    <button class="qb" onclick="setR('semana','g')">7 Días</button>
+    <button class="qb" onclick="setR('mes','g')">Este Mes</button>
     <div class="sep"></div>
-    <button class="qb" onclick="setR(&#39;anterior&#39;,&#39;g&#39;)">Mes Anterior</button>
+    <button class="qb" onclick="setR('anterior','g')">Mes Anterior</button>
   </div>
   <div class="graficas-tabs">
-    <button class="gtab active" id="gtab-volumen" onclick="showGraf(&#39;volumen&#39;)">📈 Cargas vs Premios</button>
-    <button class="gtab" id="gtab-profit" onclick="showGraf(&#39;profit&#39;)">💰 Netwing Diario</button>
-    <button class="gtab" id="gtab-bonos" onclick="showGraf(&#39;bonos&#39;)">⭐ Bonificaciones</button>
-    <button class="gtab" id="gtab-acum" onclick="showGraf(&#39;acum&#39;)">📊 Acumulado</button>
+    <button class="gtab active" id="gtab-volumen" onclick="showGraf('volumen')">📈 Cargas vs Premios</button>
+    <button class="gtab" id="gtab-profit" onclick="showGraf('profit')">💰 Netwing Diario</button>
+    <button class="gtab" id="gtab-bonos" onclick="showGraf('bonos')">⭐ Bonificaciones</button>
+    <button class="gtab" id="gtab-acum" onclick="showGraf('acum')">📊 Acumulado</button>
   </div>
-  <div class="chart-card" id="graf-volumen"><div class="chart-title">Cargas vs Premios por Día</div><div class="chart-wrap"><canvas id="chart-volumen" width="1798" height="320" style="display: block; box-sizing: border-box; height: 320px; width: 1798px;"></canvas></div></div>
-  <div class="chart-card" id="graf-profit" style="display:none"><div class="chart-title">Netwing Diario (Cargas − Premios − Bonos)</div><div class="chart-wrap"><canvas id="chart-profit" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div></div>
-  <div class="chart-card" id="graf-bonos" style="display:none"><div class="chart-title">Bonificaciones por Día</div><div class="chart-wrap"><canvas id="chart-bonos" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div></div>
-  <div class="chart-card" id="graf-acum" style="display:none"><div class="chart-title">Netwing Acumulado</div><div class="chart-wrap"><canvas id="chart-acum" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div></div>
+  <div class="chart-card" id="graf-volumen"><div class="chart-title">Cargas vs Premios por Día</div><div class="chart-wrap"><canvas id="chart-volumen"></canvas></div></div>
+  <div class="chart-card" id="graf-profit" style="display:none"><div class="chart-title">Netwing Diario (Cargas − Premios − Bonos)</div><div class="chart-wrap"><canvas id="chart-profit"></canvas></div></div>
+  <div class="chart-card" id="graf-bonos" style="display:none"><div class="chart-title">Bonificaciones por Día</div><div class="chart-wrap"><canvas id="chart-bonos"></canvas></div></div>
+  <div class="chart-card" id="graf-acum" style="display:none"><div class="chart-title">Netwing Acumulado</div><div class="chart-wrap"><canvas id="chart-acum"></canvas></div></div>
 </div>
 
 <!-- RANKING -->
 <div class="page" id="page-ranking">
   <div class="fbar">
-    <label>Desde</label><input type="date" id="r-desde" onchange="renderRanking()">
-    <label>Hasta</label><input type="date" id="r-hasta" onchange="renderRanking()">
+    <label>Desde</label><input type="date" id="r-desde" onchange="renderRanking()"/>
+    <label>Hasta</label><input type="date" id="r-hasta" onchange="renderRanking()"/>
     <div class="sep"></div>
-    <button class="qb" onclick="setR(&#39;hoy&#39;,&#39;r&#39;)">Hoy</button>
-    <button class="qb" onclick="setR(&#39;semana&#39;,&#39;r&#39;)">7 Días</button>
-    <button class="qb" onclick="setR(&#39;mes&#39;,&#39;r&#39;)">Este Mes</button>
+    <button class="qb" onclick="setR('hoy','r')">Hoy</button>
+    <button class="qb" onclick="setR('semana','r')">7 Días</button>
+    <button class="qb" onclick="setR('mes','r')">Este Mes</button>
     <div class="sep"></div>
-    <button class="qb" onclick="setR(&#39;anterior&#39;,&#39;r&#39;)">Mes Anterior</button>
+    <button class="qb" onclick="setR('anterior','r')">Mes Anterior</button>
   </div>
   <div class="slabel">Top Jugadores</div>
   <div class="rank-grid">
-    <div class="rank-card"><div class="rank-head"><div class="rank-title">🏆 Top Cargas por Monto</div><div class="rank-sub">Mayor depósito acumulado</div></div><div class="rank-list" id="rk-dep-monto"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin Datos para el Período</div></div></div>
-    <div class="rank-card"><div class="rank-head"><div class="rank-title">📊 Top Cargas por Cantidad</div><div class="rank-sub">Más operaciones de carga</div></div><div class="rank-list" id="rk-dep-cant"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin Datos para el Período</div></div></div>
-    <div class="rank-card"><div class="rank-head"><div class="rank-title">🎯 Top Premios por Monto</div><div class="rank-sub">Jugadores que más retiraron</div></div><div class="rank-list" id="rk-ret-monto"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin Datos para el Período</div></div></div>
-    <div class="rank-card"><div class="rank-head"><div class="rank-title">🔢 Top Premios por Cantidad</div><div class="rank-sub">Más retiros realizados</div></div><div class="rank-list" id="rk-ret-cant"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin Datos para el Período</div></div></div>
-    <div class="rank-card"><div class="rank-head"><div class="rank-title">⭐ Top Bonos por Monto</div><div class="rank-sub">Más bonificaciones recibidas</div></div><div class="rank-list" id="rk-bon-monto"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin Datos para el Período</div></div></div>
-    <div class="rank-card"><div class="rank-head"><div class="rank-title">🎁 Top Bonos por Cantidad</div><div class="rank-sub">Más bonos recibidos</div></div><div class="rank-list" id="rk-bon-cant"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin Datos para el Período</div></div></div>
-    <div class="rank-card"><div class="rank-head"><div class="rank-title">📈 Mejor Profit para Nosotros</div><div class="rank-sub">Carga − Premio · Los que más nos dejan</div></div><div class="rank-list" id="rk-profit-pos"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin Datos</div></div></div>
-    <div class="rank-card"><div class="rank-head"><div class="rank-title">📉 Jugadores que Nos Ganan</div><div class="rank-sub">Profit negativo para nosotros</div></div><div class="rank-list" id="rk-profit-neg"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin Datos</div></div></div>
-    <div class="rank-card"><div class="rank-head"><div class="rank-title">📊 Mejor Promedio de Carga</div><div class="rank-sub">Monto promedio por operación (mín. 2)</div></div><div class="rank-list" id="rk-promedio"><div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin Datos (mín. 2 cargas)</div></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">🏆 Top Cargas por Monto</div><div class="rank-sub">Mayor depósito acumulado</div></div><div class="rank-list" id="rk-dep-monto"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">📊 Top Cargas por Cantidad</div><div class="rank-sub">Más operaciones de carga</div></div><div class="rank-list" id="rk-dep-cant"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">🎯 Top Premios por Monto</div><div class="rank-sub">Jugadores que más retiraron</div></div><div class="rank-list" id="rk-ret-monto"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">🔢 Top Premios por Cantidad</div><div class="rank-sub">Más retiros realizados</div></div><div class="rank-list" id="rk-ret-cant"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">⭐ Top Bonos por Monto</div><div class="rank-sub">Más bonificaciones recibidas</div></div><div class="rank-list" id="rk-bon-monto"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">🎁 Top Bonos por Cantidad</div><div class="rank-sub">Más bonos recibidos</div></div><div class="rank-list" id="rk-bon-cant"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">📈 Mejor Profit para Nosotros</div><div class="rank-sub">Carga − Premio · Los que más nos dejan</div></div><div class="rank-list" id="rk-profit-pos"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">📉 Jugadores que Nos Ganan</div><div class="rank-sub">Profit negativo para nosotros</div></div><div class="rank-list" id="rk-profit-neg"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">📊 Mejor Promedio de Carga</div><div class="rank-sub">Monto promedio por operación (mín. 2)</div></div><div class="rank-list" id="rk-promedio"></div></div>
   </div>
 </div>
 
@@ -360,10 +360,10 @@ tr:hover td{background:rgba(124,58,237,.06)}
 <div class="page" id="page-gastos">
   <div class="slabel">Registro de Gastos Manuales</div>
   <div class="gastos-grid">
-    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#fbbf2420">📢</div><div class="gc-name">Publicidad</div></div><div class="gc-total" id="gt-pub">$0</div></div><div class="gc-items" id="gl-pub"><div class="gc-empty">Sin Registros Aún</div></div><div class="gc-form"><input type="date" id="ga-pub-fecha"><input type="text" id="ga-pub-det" placeholder="Detalle"><input type="number" id="ga-pub-monto" placeholder="Monto"><button class="btn-add" onclick="addGasto(&#39;pub&#39;)">+ Agregar</button></div></div>
-    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#22d3ee20">⚡</div><div class="gc-name">Servicios</div></div><div class="gc-total" id="gt-serv">$0</div></div><div class="gc-items" id="gl-serv"><div class="gc-empty">Sin Registros Aún</div></div><div class="gc-form"><input type="date" id="ga-serv-fecha"><input type="text" id="ga-serv-det" placeholder="Ej: Luz, Internet"><input type="number" id="ga-serv-monto" placeholder="Monto"><button class="btn-add" onclick="addGasto(&#39;serv&#39;)">+ Agregar</button></div></div>
-    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#c084fc20">🎰</div><div class="gc-name">Compra de Fichas</div></div><div class="gc-total" id="gt-fichas">$0</div></div><div class="gc-items" id="gl-fichas"><div class="gc-empty">Sin Registros Aún</div></div><div class="gc-form"><input type="date" id="ga-fichas-fecha"><input type="text" id="ga-fichas-det" placeholder="Detalle"><input type="number" id="ga-fichas-monto" placeholder="Monto"><button class="btn-add" onclick="addGasto(&#39;fichas&#39;)">+ Agregar</button></div></div>
-    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#4ade8020">👛</div><div class="gc-name">Billeteras</div></div><div class="gc-total" id="gt-bill">$0</div></div><div class="gc-items" id="gl-bill"><div class="gc-empty">Sin Registros Aún</div></div><div class="gc-form"><input type="date" id="ga-bill-fecha"><input type="text" id="ga-bill-det" placeholder="Ej: Mercado Pago"><input type="number" id="ga-bill-monto" placeholder="Monto"><button class="btn-add" onclick="addGasto(&#39;bill&#39;)">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#fbbf2420">📢</div><div class="gc-name">Publicidad</div></div><div class="gc-total" id="gt-pub">$0</div></div><div class="gc-items" id="gl-pub"></div><div class="gc-form"><input type="date" id="ga-pub-fecha"/><input type="text" id="ga-pub-det" placeholder="Detalle"/><input type="number" id="ga-pub-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('pub')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#22d3ee20">⚡</div><div class="gc-name">Servicios</div></div><div class="gc-total" id="gt-serv">$0</div></div><div class="gc-items" id="gl-serv"></div><div class="gc-form"><input type="date" id="ga-serv-fecha"/><input type="text" id="ga-serv-det" placeholder="Ej: Luz, Internet"/><input type="number" id="ga-serv-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('serv')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#c084fc20">🎰</div><div class="gc-name">Compra de Fichas</div></div><div class="gc-total" id="gt-fichas">$0</div></div><div class="gc-items" id="gl-fichas"></div><div class="gc-form"><input type="date" id="ga-fichas-fecha"/><input type="text" id="ga-fichas-det" placeholder="Detalle"/><input type="number" id="ga-fichas-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('fichas')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#4ade8020">👛</div><div class="gc-name">Billeteras</div></div><div class="gc-total" id="gt-bill">$0</div></div><div class="gc-items" id="gl-bill"></div><div class="gc-form"><input type="date" id="ga-bill-fecha"/><input type="text" id="ga-bill-det" placeholder="Ej: Mercado Pago"/><input type="number" id="ga-bill-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('bill')">+ Agregar</button></div></div>
   </div>
 </div>
 
@@ -789,6 +789,5 @@ var h = fmtD(n);
 });
 dash(); renderMov(); renderRanking();
 </script>
-
-
-</body></html>
+</body>
+</html>
