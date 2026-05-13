@@ -482,59 +482,34 @@ tr:hover td{background:rgba(124,58,237,.06)}
 
 <script>
 // ===== LOGIN =====
-var USUARIOS = {
-  'pluton': 'plutonadmin2024',
-  'admin':  'mundo2024'
-};
+var USUARIOS = { 'pluton': 'plutonadmin2024', 'admin': 'mundo2024' };
 
 function intentarLogin() {
   var user = (document.getElementById('login-user').value || '').trim().toLowerCase();
   var pass = (document.getElementById('login-pass').value || '');
   var errEl = document.getElementById('login-error');
-
-  if (!user || !pass) {
-    errEl.textContent = '⚠️ Completá usuario y contraseña';
-    return;
-  }
-
+  if (!user || !pass) { errEl.textContent = '⚠️ Ingresá usuario y contraseña'; return; }
   if (USUARIOS.hasOwnProperty(user) && USUARIOS[user] === pass) {
-    try { sessionStorage.setItem('gana_auth', '1'); } catch(e) {}
+    try { sessionStorage.setItem('gana_auth','1'); } catch(e) {}
     document.getElementById('login-overlay').style.display = 'none';
   } else {
     errEl.textContent = '❌ Usuario o contraseña incorrectos';
     document.getElementById('login-pass').value = '';
-    document.getElementById('login-pass').focus();
   }
 }
 
 function cerrarSesion() {
   if (confirm('¿Cerrar sesión?')) {
     try { sessionStorage.removeItem('gana_auth'); } catch(e) {}
-    document.getElementById('login-overlay').style.display = 'flex';
-    document.getElementById('login-user').value = '';
     document.getElementById('login-pass').value = '';
+    document.getElementById('login-user').value = '';
     document.getElementById('login-error').textContent = '';
+    document.getElementById('login-overlay').style.display = 'flex';
   }
 }
 
-// Verificar sesion al cargar
-(function iniciarLogin() {
-  function setup() {
-    var auth = false;
-    try { auth = sessionStorage.getItem('gana_auth') === '1'; } catch(e) {}
-    document.getElementById('login-overlay').style.display = auth ? 'none' : 'flex';
-    if (!auth) document.getElementById('login-user').focus();
-    document.getElementById('login-user').onkeydown = function(e) { if(e.key==='Enter') intentarLogin(); };
-    document.getElementById('login-pass').onkeydown = function(e) { if(e.key==='Enter') intentarLogin(); };
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setup);
-  } else {
-    setup();
-  }
-})();
-
 // ===== ESTADO =====
+
 var movs = [];
 var gastos = { pub:[], serv:[], fichas:[], bill:[], sus:[] };
 var pagMov = 0;
@@ -645,7 +620,20 @@ function combinar() {
   st.textContent = movs.length + ' registros · ' + archivosCSV.length + ' archivo' + (archivosCSV.length > 1 ? 's' : '');
   st.className = 'csv-tag ok';
   document.getElementById('btn-limpiar').style.display = 'inline-block';
-  dash(); renderMov(); renderRanking(); renderGraficas();
+  dash(); renderMov(); renderRanking();
+
+// Iniciar login
+(function() {
+  var auth = false;
+  try { auth = sessionStorage.getItem('gana_auth') === '1'; } catch(e) {}
+  if (!auth) {
+    document.getElementById('login-overlay').style.display = 'flex';
+  } else {
+    document.getElementById('login-overlay').style.display = 'none';
+  }
+  document.getElementById('login-user').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
+  document.getElementById('login-pass').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
+})(); renderGraficas();
 }
 
 function limpiarCSV() {
@@ -654,7 +642,20 @@ function limpiarCSV() {
   var st = document.getElementById('csv-status');
   st.textContent = 'Sin datos'; st.className = 'csv-tag none';
   document.getElementById('btn-limpiar').style.display = 'none';
-  dash(); renderMov(); renderRanking(); renderGraficas();
+  dash(); renderMov(); renderRanking();
+
+// Iniciar login
+(function() {
+  var auth = false;
+  try { auth = sessionStorage.getItem('gana_auth') === '1'; } catch(e) {}
+  if (!auth) {
+    document.getElementById('login-overlay').style.display = 'flex';
+  } else {
+    document.getElementById('login-overlay').style.display = 'none';
+  }
+  document.getElementById('login-user').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
+  document.getElementById('login-pass').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
+})(); renderGraficas();
 }
 
 function pN(v) {
@@ -1003,6 +1004,19 @@ var h = fmtD(n);
   document.getElementById(pre+'-hasta').value = h;
 });
 dash(); renderMov(); renderRanking();
+
+// Iniciar login
+(function() {
+  var auth = false;
+  try { auth = sessionStorage.getItem('gana_auth') === '1'; } catch(e) {}
+  if (!auth) {
+    document.getElementById('login-overlay').style.display = 'flex';
+  } else {
+    document.getElementById('login-overlay').style.display = 'none';
+  }
+  document.getElementById('login-user').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
+  document.getElementById('login-pass').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
+})();
 </script>
 </body>
 </html>
