@@ -483,28 +483,26 @@ tr:hover td{background:rgba(124,58,237,.06)}
 <script>
 // ===== LOGIN =====
 var USUARIOS = { 'pluton': 'plutonadmin2024', 'admin': 'mundo2024' };
+var _logueado = false;
 
 function intentarLogin() {
-  var user = document.getElementById('login-user').value.trim().toLowerCase();
-  var pass = document.getElementById('login-pass').value;
-  var err = document.getElementById('login-error');
-  if (!user || !pass) {
-    err.textContent = '⚠️ Ingresá usuario y contraseña';
-    return;
-  }
-  if (USUARIOS[user] && USUARIOS[user] === pass) {
-    sessionStorage.setItem('gana_auth', '1');
+  var u = document.getElementById('login-user').value.trim().toLowerCase();
+  var p = document.getElementById('login-pass').value;
+  var e = document.getElementById('login-error');
+  if (!u || !p) { e.textContent = 'Ingresa usuario y contraseña'; e.style.color='#fbbf24'; return; }
+  if (USUARIOS[u] === p) {
+    _logueado = true;
     document.getElementById('login-overlay').style.display = 'none';
-    err.textContent = '';
   } else {
-    err.textContent = '❌ Usuario o contraseña incorrectos';
+    e.textContent = 'Usuario o contraseña incorrectos';
+    e.style.color = '#f87171';
     document.getElementById('login-pass').value = '';
   }
 }
 
 function cerrarSesion() {
-  if (confirm('¿Cerrar sesión?')) {
-    sessionStorage.removeItem('gana_auth');
+  if (confirm('Cerrar sesion?')) {
+    _logueado = false;
     document.getElementById('login-user').value = '';
     document.getElementById('login-pass').value = '';
     document.getElementById('login-error').textContent = '';
@@ -513,6 +511,7 @@ function cerrarSesion() {
 }
 
 // ===== ESTADO =====
+
 
 
 var movs = [];
@@ -627,12 +626,11 @@ function combinar() {
   document.getElementById('btn-limpiar').style.display = 'inline-block';
   dash(); renderMov(); renderRanking();
 
-// Login init
-var _auth = sessionStorage.getItem('gana_auth') === '1';
-document.getElementById('login-overlay').style.display = _auth ? 'none' : 'flex';
-document.getElementById('login-btn').addEventListener('click', intentarLogin);
-document.getElementById('login-user').addEventListener('keydown', function(e){ if(e.key==='Enter') intentarLogin(); });
-document.getElementById('login-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') intentarLogin(); }); renderGraficas();
+// Mostrar login al inicio siempre
+document.getElementById('login-overlay').style.display = 'flex';
+document.getElementById('login-btn').onclick = intentarLogin;
+document.getElementById('login-user').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
+document.getElementById('login-pass').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); }; renderGraficas();
 }
 
 function limpiarCSV() {
@@ -643,12 +641,11 @@ function limpiarCSV() {
   document.getElementById('btn-limpiar').style.display = 'none';
   dash(); renderMov(); renderRanking();
 
-// Login init
-var _auth = sessionStorage.getItem('gana_auth') === '1';
-document.getElementById('login-overlay').style.display = _auth ? 'none' : 'flex';
-document.getElementById('login-btn').addEventListener('click', intentarLogin);
-document.getElementById('login-user').addEventListener('keydown', function(e){ if(e.key==='Enter') intentarLogin(); });
-document.getElementById('login-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') intentarLogin(); }); renderGraficas();
+// Mostrar login al inicio siempre
+document.getElementById('login-overlay').style.display = 'flex';
+document.getElementById('login-btn').onclick = intentarLogin;
+document.getElementById('login-user').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
+document.getElementById('login-pass').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); }; renderGraficas();
 }
 
 function pN(v) {
@@ -998,12 +995,11 @@ var h = fmtD(n);
 });
 dash(); renderMov(); renderRanking();
 
-// Login init
-var _auth = sessionStorage.getItem('gana_auth') === '1';
-document.getElementById('login-overlay').style.display = _auth ? 'none' : 'flex';
-document.getElementById('login-btn').addEventListener('click', intentarLogin);
-document.getElementById('login-user').addEventListener('keydown', function(e){ if(e.key==='Enter') intentarLogin(); });
-document.getElementById('login-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') intentarLogin(); });
+// Mostrar login al inicio siempre
+document.getElementById('login-overlay').style.display = 'flex';
+document.getElementById('login-btn').onclick = intentarLogin;
+document.getElementById('login-user').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
+document.getElementById('login-pass').onkeydown = function(e){ if(e.key==='Enter') intentarLogin(); };
 </script>
 </body>
 </html>
