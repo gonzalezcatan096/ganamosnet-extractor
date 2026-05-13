@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///C:/Users/mlope/Downloads/dashboard_6.html -->
+<!-- saved from url=(0049)file:///C:/Users/mlope/Downloads/dashboard_7.html -->
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -246,8 +246,8 @@ tr:hover td{background:rgba(124,58,237,.06)}
     <div class="divider"></div>
     <button class="qb" onclick="setR(&#39;anterior&#39;,&#39;f&#39;)">Mes Anterior</button>
     <div class="divider"></div>
-    <button class="upload-btn" onclick="document.getElementById(&#39;csv-input&#39;).click()">⬆ Cargar CSV(s)</button>
-    <input type="file" id="csv-input" accept=".csv" multiple="" onchange="cargarCSV(this)">
+    <label for="csv-input" class="upload-btn" style="cursor:pointer">⬆ Cargar CSV(s)</label>
+    <input type="file" id="csv-input" accept=".csv" multiple="" onchange="cargarCSV(this)" style="display:none">
     <button class="qb" onclick="limpiarCSV()" id="btn-limpiar" style="display:none;border-color:var(--rd);color:var(--rd)">✕ Limpiar</button>
     <span class="csv-tag none" id="csv-status">Sin datos</span>
   </div>
@@ -436,28 +436,38 @@ function setR(r,pre){
 
 // CSV
 function cargarCSV(input){
-  const files=Array.from(input.files);
+  const files = Array.from(input.files);
   if(!files.length) return;
+  let cargados = 0;
+  const total = files.length;
 
-  const leerArchivo = file => new Promise((resolve, reject) => {
+  files.forEach(file => {
     const reader = new FileReader();
-    reader.onload = e => resolve({ nombre: file.name, texto: e.target.result });
-    reader.onerror = () => reject(new Error('Error leyendo ' + file.name));
+    reader.onload = function(e) {
+      try {
+        const rows = parsearCSV(e.target.result);
+        const idx = archivosCSV.findIndex(a => a.nombre === file.name);
+        if(idx >= 0) archivosCSV[idx] = { nombre: file.name, rows };
+        else archivosCSV.push({ nombre: file.name, rows });
+      } catch(err) {
+        console.error('Error parseando ' + file.name + ':', err);
+      }
+      cargados++;
+      if(cargados === total) {
+        combinar();
+        input.value = '';
+      }
+    };
+    reader.onerror = function() {
+      console.error('Error leyendo archivo:', file.name);
+      cargados++;
+      if(cargados === total) {
+        combinar();
+        input.value = '';
+      }
+    };
     reader.readAsText(file, 'UTF-8');
   });
-
-  Promise.all(files.map(leerArchivo))
-    .then(resultados => {
-      resultados.forEach(({nombre, texto}) => {
-        const rows = parsearCSV(texto);
-        const idx = archivosCSV.findIndex(a => a.nombre === nombre);
-        if(idx >= 0) archivosCSV[idx] = { nombre, rows };
-        else archivosCSV.push({ nombre, rows });
-      });
-      combinar();
-      input.value = '';
-    })
-    .catch(err => alert('Error al cargar archivos: ' + err.message));
 }
 
 function parsearCSV(text){
