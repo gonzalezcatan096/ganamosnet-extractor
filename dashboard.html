@@ -95,16 +95,16 @@ select.sel{background:var(--s2);border:1px solid var(--border2);border-radius:8p
 
 .res-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem}
 @media(max-width:680px){.res-row{grid-template-columns:1fr}}
-.rc{border-radius:14px;padding:1.6rem 2rem;border:1px solid;position:relative;overflow:hidden;backdrop-filter:blur(10px)}
+.rc{border-radius:14px;padding:2rem 2.5rem;border:1px solid;position:relative;overflow:hidden;backdrop-filter:blur(10px)}
 .rc.nw{background:linear-gradient(135deg,#07051a,#100d2e);border-color:var(--v);box-shadow:0 0 40px #7c3aed18}
 .rc.ga{background:linear-gradient(135deg,#020c06,#041208);border-color:var(--gn);box-shadow:0 0 40px #4ade8015}
 .rc-glow{position:absolute;bottom:-30px;right:-30px;width:130px;height:130px;border-radius:50%;filter:blur(50px);opacity:.2}
 .rc.nw .rc-glow{background:var(--v2)} .rc.ga .rc-glow{background:var(--gn)}
 .rc-lbl{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.3rem}
 .rc.nw .rc-lbl{color:var(--v3)} .rc.ga .rc-lbl{color:var(--gn)}
-.rc-formula{font-size:12px;color:var(--muted);margin-bottom:1.1rem;font-family:var(--fm);line-height:1.9}
+.rc-formula{font-size:13px;color:var(--muted);margin-bottom:1.1rem;font-family:var(--fm);line-height:1.9}
 .rc-formula .fv{color:var(--text2);font-weight:600}
-.rc-val{font-size:42px;font-weight:800;line-height:1}
+.rc-val{font-size:64px;font-weight:800;line-height:1}
 .rc.nw .rc-val{color:var(--v3)} .rc.ga .rc-val{color:var(--gn)}
 .rc-val.neg{color:var(--rd)!important}
 
@@ -183,9 +183,50 @@ tr:hover td{background:rgba(124,58,237,.06)}
 ::-webkit-scrollbar-track{background:var(--s1)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 ::-webkit-scrollbar-thumb:hover{background:var(--v)}
+
+/* LOGIN */
+.login-overlay{position:fixed;inset:0;background:radial-gradient(ellipse at center,#0d0825 0%,#03010c 100%);z-index:9999;display:flex;align-items:center;justify-content:center;font-family:var(--fh)}
+.login-box{background:rgba(7,4,26,.95);border:1px solid var(--border2);border-radius:20px;padding:2.5rem 3rem;width:100%;max-width:400px;text-align:center;box-shadow:0 0 80px #7c3aed25,0 0 160px #7c3aed10;position:relative;overflow:hidden}
+.login-box::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,#7c3aed20,transparent 70%);pointer-events:none}
+.login-planet{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#e9d5ff,#9d5ff5 45%,#2d1b69 80%);box-shadow:0 0 32px #7c3aed80;margin:0 auto 1rem;animation:spin-glow 4s ease-in-out infinite alternate}
+.login-logo-img{width:64px;height:64px;border-radius:50%;object-fit:cover;box-shadow:0 0 32px #7c3aed80;margin:0 auto 1rem;display:block}
+.login-title{font-size:26px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:.25rem}
+.login-title span{color:var(--v3)}
+.login-sub{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem}
+.login-field{margin-bottom:1rem;text-align:left}
+.login-field label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.4rem}
+.login-field input{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:var(--fm);font-size:14px;padding:10px 14px;outline:none;transition:border-color .2s}
+.login-field input:focus{border-color:var(--v)}
+.login-error{font-size:12px;color:var(--rd);margin-bottom:1rem;min-height:18px;font-family:var(--fm)}
+.login-btn{width:100%;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;font-family:var(--fh);font-weight:800;font-size:15px;letter-spacing:.05em;padding:12px;border:none;border-radius:10px;cursor:pointer;box-shadow:0 0 24px var(--vg2);transition:all .2s;margin-bottom:.75rem}
+.login-btn:hover{filter:brightness(1.1);box-shadow:0 0 36px #7c3aed60}
+.login-btn:active{transform:scale(.98)}
+.logout-btn{font-family:var(--fh);font-size:12px;font-weight:600;padding:6px 16px;border-radius:999px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
+.logout-btn:hover{border-color:var(--rd);color:var(--rd)}
 </style>
 </head>
 <body>
+
+
+<div class="login-overlay" id="login-overlay">
+  <div class="login-box">
+    <img class="login-logo-img" src="https://gonzalezcatan096.github.io/ganamosnet-extractor/logo-pluton.jpeg" alt="Plutón"
+      onerror="this.onerror=null;this.style.display='none';document.getElementById('login-planet-fb').style.display='block'"/>
+    <div id="login-planet-fb" class="login-planet" style="display:none"></div>
+    <div class="login-title">MUNDO <span>PLUTÓN</span></div>
+    <div class="login-sub">Panel de administración</div>
+    <div class="login-field">
+      <label>Usuario</label>
+      <input type="text" id="login-user" placeholder="Ingresá tu usuario" autocomplete="username"/>
+    </div>
+    <div class="login-field">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <div class="login-error" id="login-error"></div>
+    <button class="login-btn" onclick="intentarLogin()">Ingresar →</button>
+  </div>
+</div>
 
 <div class="bg-fixed">
   <div class="stars"></div>
@@ -198,8 +239,9 @@ tr:hover td{background:rgba(124,58,237,.06)}
 
 <div class="header">
   <div class="logo-wrap">
-    <img class="logo-img" src="https://gonzalezcatan096.github.io/ganamosnet-extractor/logo-pluton.jpeg" alt="Plutón" onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='block'"/>
-    <div id="logo-fallback" class="logo-planet" style="display:none"></div>
+    <img class="logo-img" src="https://gonzalezcatan096.github.io/ganamosnet-extractor/logo-pluton.jpeg" alt="Plutón"
+      onerror="this.onerror=null;this.style.display='none';document.getElementById('logo-fb').style.display='block'"/>
+    <div id="logo-fb" class="logo-planet" style="display:none"></div>
     <div>
       <div class="logo-title">MUNDO <span>PLUTÓN</span></div>
       <div class="logo-sub">Panel de administración</div>
@@ -211,6 +253,8 @@ tr:hover td{background:rgba(124,58,237,.06)}
     <button class="nav-btn" id="nav-graficas" onclick="showPage('graficas')">Gráficas</button>
     <button class="nav-btn" id="nav-ranking" onclick="showPage('ranking')">Ranking</button>
     <button class="nav-btn" id="nav-gastos" onclick="showPage('gastos')">Gastos</button>
+    <button class="nav-btn" id="nav-tesoro" onclick="showPage('tesoro')">Tesoro</button>
+    <button class="logout-btn" onclick="cerrarSesion()" title="Cerrar sesión">⏻ Salir</button>
   </div>
 </div>
 
@@ -364,18 +408,137 @@ tr:hover td{background:rgba(124,58,237,.06)}
     <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#22d3ee20">⚡</div><div class="gc-name">Servicios</div></div><div class="gc-total" id="gt-serv">$0</div></div><div class="gc-items" id="gl-serv"></div><div class="gc-form"><input type="date" id="ga-serv-fecha"/><input type="text" id="ga-serv-det" placeholder="Ej: Luz, Internet"/><input type="number" id="ga-serv-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('serv')">+ Agregar</button></div></div>
     <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#c084fc20">🎰</div><div class="gc-name">Compra de Fichas</div></div><div class="gc-total" id="gt-fichas">$0</div></div><div class="gc-items" id="gl-fichas"></div><div class="gc-form"><input type="date" id="ga-fichas-fecha"/><input type="text" id="ga-fichas-det" placeholder="Detalle"/><input type="number" id="ga-fichas-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('fichas')">+ Agregar</button></div></div>
     <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#4ade8020">👛</div><div class="gc-name">Billeteras</div></div><div class="gc-total" id="gt-bill">$0</div></div><div class="gc-items" id="gl-bill"></div><div class="gc-form"><input type="date" id="ga-bill-fecha"/><input type="text" id="ga-bill-det" placeholder="Ej: Mercado Pago"/><input type="number" id="ga-bill-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('bill')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#22d3ee20">📱</div><div class="gc-name">Suscripciones</div></div><div class="gc-total" id="gt-sus">$0</div></div><div class="gc-items" id="gl-sus"></div><div class="gc-form"><input type="date" id="ga-sus-fecha"/><input type="text" id="ga-sus-det" placeholder="Ej: Netflix, Spotify"/><input type="number" id="ga-sus-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('sus')">+ Agregar</button></div></div>
+  </div>
+</div>
+
+<!-- TESORO -->
+<div class="page" id="page-tesoro">
+  <div class="slabel">Billeteras y Cajas</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.25rem">
+
+    <div class="gc" id="tesoro-caja">
+      <div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#fbbf2420">💰</div><div class="gc-name">Caja Principal</div></div><div class="gc-total" id="tt-caja" style="font-size:18px">$0</div></div>
+      <div class="gc-items" id="tl-caja"></div>
+      <div class="gc-form">
+        <input type="date" id="ta-caja-fecha"/>
+        <input type="text" id="ta-caja-det" placeholder="Detalle"/>
+        <input type="number" id="ta-caja-monto" placeholder="Monto"/>
+        <select id="ta-caja-tipo" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none">
+          <option value="ingreso">↑ Ingreso</option>
+          <option value="egreso">↓ Egreso</option>
+        </select>
+        <button class="btn-add" onclick="addTesoro('caja')">+ Agregar</button>
+      </div>
+    </div>
+
+    <div class="gc" id="tesoro-mauricio">
+      <div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#7c3aed20">👤</div><div class="gc-name">Mauricio</div></div><div class="gc-total" id="tt-mauricio" style="font-size:18px">$0</div></div>
+      <div class="gc-items" id="tl-mauricio"></div>
+      <div class="gc-form">
+        <input type="date" id="ta-mauricio-fecha"/>
+        <input type="text" id="ta-mauricio-det" placeholder="Detalle"/>
+        <input type="number" id="ta-mauricio-monto" placeholder="Monto"/>
+        <select id="ta-mauricio-tipo" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none">
+          <option value="ingreso">↑ Ingreso</option>
+          <option value="egreso">↓ Egreso</option>
+        </select>
+        <button class="btn-add" onclick="addTesoro('mauricio')">+ Agregar</button>
+      </div>
+    </div>
+
+    <div class="gc" id="tesoro-santiago">
+      <div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#22d3ee20">👤</div><div class="gc-name">Santiago</div></div><div class="gc-total" id="tt-santiago" style="font-size:18px">$0</div></div>
+      <div class="gc-items" id="tl-santiago"></div>
+      <div class="gc-form">
+        <input type="date" id="ta-santiago-fecha"/>
+        <input type="text" id="ta-santiago-det" placeholder="Detalle"/>
+        <input type="number" id="ta-santiago-monto" placeholder="Monto"/>
+        <select id="ta-santiago-tipo" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none">
+          <option value="ingreso">↑ Ingreso</option>
+          <option value="egreso">↓ Egreso</option>
+        </select>
+        <button class="btn-add" onclick="addTesoro('santiago')">+ Agregar</button>
+      </div>
+    </div>
+
+    <div class="gc" id="tesoro-nancy">
+      <div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#f472b620">👤</div><div class="gc-name">Nancy</div></div><div class="gc-total" id="tt-nancy" style="font-size:18px">$0</div></div>
+      <div class="gc-items" id="tl-nancy"></div>
+      <div class="gc-form">
+        <input type="date" id="ta-nancy-fecha"/>
+        <input type="text" id="ta-nancy-det" placeholder="Detalle"/>
+        <input type="number" id="ta-nancy-monto" placeholder="Monto"/>
+        <select id="ta-nancy-tipo" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none">
+          <option value="ingreso">↑ Ingreso</option>
+          <option value="egreso">↓ Egreso</option>
+        </select>
+        <button class="btn-add" onclick="addTesoro('nancy')">+ Agregar</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script>
+// ===== LOGIN =====
+// Credenciales - podés agregar mas usuarios en este objeto
+var USUARIOS = {
+  'pluton': 'plutonadmin2024',
+  'admin':  'mundo2024'
+};
+
+function intentarLogin() {
+  var user = document.getElementById('login-user').value.trim().toLowerCase();
+  var pass = document.getElementById('login-pass').value;
+  var err  = document.getElementById('login-error');
+
+  if(!user || !pass) { err.textContent = 'Completá usuario y contraseña'; return; }
+
+  if(USUARIOS[user] && USUARIOS[user] === pass) {
+    sessionStorage.setItem('gana_auth', btoa(user + ':' + Date.now()));
+    document.getElementById('login-overlay').style.display = 'none';
+    err.textContent = '';
+  } else {
+    err.textContent = 'Usuario o contraseña incorrectos';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-pass').focus();
+  }
+}
+
+function cerrarSesion() {
+  if(confirm('¿Cerrar sesión?')) {
+    sessionStorage.removeItem('gana_auth');
+    document.getElementById('login-overlay').style.display = 'flex';
+    document.getElementById('login-user').value = '';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-error').textContent = '';
+  }
+}
+
+// Verificar si ya hay sesion activa
+(function() {
+  var auth = sessionStorage.getItem('gana_auth');
+  if(auth) {
+    document.getElementById('login-overlay').style.display = 'none';
+  }
+  // Enter en los campos
+  ['login-user','login-pass'].forEach(function(id){
+    document.getElementById(id).addEventListener('keydown', function(e){
+      if(e.key === 'Enter') intentarLogin();
+    });
+  });
+})();
+
 // ===== ESTADO =====
 var movs = [];
-var gastos = { pub:[], serv:[], fichas:[], bill:[] };
+var gastos = { pub:[], serv:[], fichas:[], bill:[], sus:[] };
 var pagMov = 0;
 var POR_PAG = 50;
 var movFil = [];
 var archivosCSV = [];
 var charts = {};
+var tesoro = { caja:[], mauricio:[], santiago:[], nancy:[] };
 
 // ===== NAVEGACION =====
 function showPage(id) {
@@ -385,7 +548,7 @@ function showPage(id) {
   document.getElementById('nav-' + id).classList.add('active');
   if(id === 'movimientos') renderMov();
   if(id === 'ranking') renderRanking();
-  if(id === 'graficas') renderGraficas();
+  if(id === 'graficas') { setTimeout(function(){ renderGraficas(); }, 50); }
 }
 
 // ===== FECHAS =====
@@ -536,7 +699,8 @@ function dash() {
   var gS = filtG(desde,hasta,gastos.serv).reduce(function(s,g){ return s+g.monto; }, 0);
   var gF = filtG(desde,hasta,gastos.fichas).reduce(function(s,g){ return s+g.monto; }, 0);
   var gB = filtG(desde,hasta,gastos.bill).reduce(function(s,g){ return s+g.monto; }, 0);
-  var tG = gP+gS+gF+gB;
+  var gSus = filtG(desde,hasta,gastos.sus).reduce(function(s,g){ return s+g.monto; }, 0);
+  var tG = gP+gS+gF+gB+gSus;
   var nw = tD-tR-tB; var ga = nw-tG;
 
   document.getElementById('d-dep').textContent = ars(tD);
@@ -647,8 +811,10 @@ function renderGraficas() {
   };
 
   function mkChart(id, data) {
-    if(charts[id]) charts[id].destroy();
-    charts[id] = new Chart(document.getElementById(id), data);
+    var canvas = document.getElementById(id);
+    if(!canvas) return;
+    if(charts[id]) { charts[id].destroy(); delete charts[id]; }
+    charts[id] = new Chart(canvas, data);
   }
 
   mkChart('chart-volumen', { type:'bar', data:{ labels:labels, datasets:[
@@ -776,10 +942,55 @@ function renderCat(cat) {
     return '<div class="gc-row"><span class="gc-fecha">'+g.fecha+'</span><span class="gc-det">'+g.det+'</span><span class="gc-monto">'+ars(g.monto)+'</span><button class="gc-del" onclick="delGasto(\''+cat+'\','+i+')">×</button></div>';
   }).join('');
 }
-function renderG() { ['pub','serv','fichas','bill'].forEach(renderCat); }
+function renderG() { ['pub','serv','fichas','bill','sus'].forEach(renderCat); }
+
+// ===== TESORO =====
+function saveTesoro() { try{ localStorage.setItem('gana_tesoro', JSON.stringify(tesoro)); } catch(e){} }
+function loadTesoro() { try{ var t = localStorage.getItem('gana_tesoro'); if(t) tesoro = JSON.parse(t); } catch(e){} }
+
+function addTesoro(bil) {
+  var fecha = document.getElementById('ta-'+bil+'-fecha').value;
+  var det = document.getElementById('ta-'+bil+'-det').value.trim();
+  var monto = parseFloat(document.getElementById('ta-'+bil+'-monto').value);
+  var tipo = document.getElementById('ta-'+bil+'-tipo').value;
+  if(!fecha||!det||!monto||monto<=0) { alert('Completá todos los campos'); return; }
+  tesoro[bil].push({ fecha:fecha, det:det, monto:monto, tipo:tipo });
+  saveTesoro();
+  document.getElementById('ta-'+bil+'-det').value = '';
+  document.getElementById('ta-'+bil+'-monto').value = '';
+  renderTesoro();
+}
+
+function delTesoro(bil, i) { tesoro[bil].splice(i,1); saveTesoro(); renderTesoro(); }
+
+function renderBilletera(bil) {
+  var lista = tesoro[bil];
+  var saldo = lista.reduce(function(s,m){ return s + (m.tipo==='ingreso' ? m.monto : -m.monto); }, 0);
+  var el = document.getElementById('tt-'+bil);
+  el.textContent = ars(saldo);
+  el.style.color = saldo >= 0 ? 'var(--am)' : 'var(--rd)';
+  var elList = document.getElementById('tl-'+bil);
+  if(!lista.length) { elList.innerHTML = '<div class="gc-empty">Sin movimientos aún</div>'; return; }
+  elList.innerHTML = lista.slice().reverse().map(function(m, ri){
+    var i = lista.length - 1 - ri;
+    var col = m.tipo==='ingreso' ? 'var(--gn)' : 'var(--rd)';
+    var signo = m.tipo==='ingreso' ? '+' : '-';
+    return '<div class="gc-row" style="grid-template-columns:88px 1fr auto auto auto;">' +
+      '<span class="gc-fecha">'+m.fecha+'</span>' +
+      '<span class="gc-det">'+m.det+'</span>' +
+      '<span style="font-size:11px;padding:2px 8px;border-radius:999px;background:'+(m.tipo==='ingreso'?'var(--gn-d)':'var(--rd-d)')+';color:'+col+'">'+m.tipo+'</span>' +
+      '<span class="gc-monto" style="color:'+col+'">'+signo+ars(m.monto)+'</span>' +
+      '<button class="gc-del" onclick="delTesoro(''+bil+'','+i+')">×</button>' +
+      '</div>';
+  }).join('');
+}
+
+function renderTesoro() {
+  ['caja','mauricio','santiago','nancy'].forEach(renderBilletera);
+}
 
 // ===== INIT =====
-loadG(); renderG();
+loadG(); renderG(); loadTesoro(); renderTesoro();
 var n = new Date();
 var p = fmtD(new Date(n.getFullYear(), n.getMonth(), 1));
 var h = fmtD(n);
