@@ -3,135 +3,583 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Mundo Plutón — Acceso</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<title>Mundo Plutón</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: #03010c;
-  font-family: 'Space Grotesk', sans-serif;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-image: radial-gradient(ellipse at 30% 20%, #7c3aed18, transparent 60%),
-    radial-gradient(ellipse at 80% 80%, #9d5ff510, transparent 60%);
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#03010c;--s1:#07041a;--s2:#0c0825;--s3:#110d30;
+  --border:#1c1640;--border2:#2d2660;
+  --v:#7c3aed;--v2:#9d5ff5;--v3:#c084fc;
+  --vg:#7c3aed20;--vg2:#7c3aed40;
+  --cy:#22d3ee;--cy-d:#22d3ee15;
+  --pk:#f472b6;--pk-d:#f472b618;
+  --gn:#4ade80;--gn-d:#4ade8015;
+  --am:#fbbf24;--am-d:#fbbf2418;
+  --rd:#f87171;--rd-d:#f8717115;
+  --text:#fff;--text2:#e2e0ff;--muted:#9d99cc;--muted2:#4d4880;
+  --fh:'Space Grotesk',sans-serif;--fm:'Space Mono',monospace;
 }
-.box {
-  background: rgba(7,4,26,0.95);
-  border: 1px solid #2d2660;
-  border-radius: 20px;
-  padding: 2.5rem 3rem;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 0 80px #7c3aed20;
-}
-.logo {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 0 32px #7c3aed80;
-  margin: 0 auto 1.25rem;
-  display: block;
-}
-.logo-fallback {
-  width: 72px; height: 72px; border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #e9d5ff, #9d5ff5 45%, #2d1b69 80%);
-  box-shadow: 0 0 32px #7c3aed80;
-  margin: 0 auto 1.25rem;
-  display: none;
-}
-h1 { font-size: 26px; font-weight: 800; color: #fff; margin-bottom: .2rem; }
-h1 span { color: #c084fc; }
-.sub { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: #6b5fa0; margin-bottom: 2rem; }
-.field { margin-bottom: 1rem; text-align: left; }
-.field label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #9d99cc; display: block; margin-bottom: .4rem; }
-.field input {
-  width: 100%;
-  background: #0c0825;
-  border: 1px solid #2d2660;
-  border-radius: 10px;
-  color: #fff;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 15px;
-  padding: 11px 14px;
-  outline: none;
-}
-.field input:focus { border-color: #7c3aed; }
-.error {
-  font-size: 13px;
-  min-height: 20px;
-  margin-bottom: .75rem;
-  color: #f87171;
-  font-weight: 500;
-}
-.btn {
-  width: 100%;
-  background: linear-gradient(135deg, #7c3aed, #9d5ff5);
-  color: #fff;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 800;
-  font-size: 16px;
-  padding: 13px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  letter-spacing: .04em;
-}
-.btn:hover { filter: brightness(1.12); }
-.btn:active { transform: scale(.98); }
+body{background:var(--bg);color:var(--text);font-family:var(--fh);min-height:100vh}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:radial-gradient(ellipse at center,#0d0825,#03010c);z-index:9999;display:flex;align-items:center;justify-content:center}
+.login-box{background:rgba(7,4,26,.96);border:1px solid var(--border2);border-radius:20px;padding:2.5rem 3rem;width:100%;max-width:400px;text-align:center;box-shadow:0 0 80px #7c3aed25}
+.login-logo{width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 0 32px #7c3aed80;margin:0 auto 1.25rem;display:block}
+.login-title{font-size:26px;font-weight:800;color:#fff;margin-bottom:.2rem}
+.login-title span{color:var(--v3)}
+.login-sub{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem}
+.login-field{margin-bottom:1rem;text-align:left}
+.login-field label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.4rem}
+.login-field input{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:10px;color:#fff;font-family:var(--fh);font-size:15px;padding:11px 14px;outline:none}
+.login-field input:focus{border-color:var(--v)}
+.login-err{font-size:13px;min-height:20px;margin-bottom:.75rem;color:var(--rd);font-weight:500}
+.login-btn{width:100%;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;font-family:var(--fh);font-weight:800;font-size:16px;padding:13px;border:none;border-radius:10px;cursor:pointer}
+.login-btn:hover{filter:brightness(1.1)}
+
+.bg-fixed{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.stars{position:absolute;inset:0;background-image:radial-gradient(1px 1px at 15% 25%,#fff6,transparent),radial-gradient(1px 1px at 75% 8%,#fff5,transparent),radial-gradient(2px 2px at 55% 15%,#c084fc30,transparent)}
+.nebula{position:absolute;border-radius:50%;filter:blur(80px);animation:pulse 8s ease-in-out infinite alternate}
+.nebula.n1{width:600px;height:600px;top:-150px;left:-100px;background:radial-gradient(circle,#7c3aed15,transparent 70%)}
+.nebula.n2{width:400px;height:400px;top:40%;right:-100px;background:radial-gradient(circle,#9d5ff510,transparent 70%);animation-delay:3s}
+@keyframes pulse{0%{opacity:.5;transform:scale(1)}100%{opacity:1;transform:scale(1.1)}}
+
+.header{position:sticky;top:0;z-index:100;background:rgba(3,1,12,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem;height:66px;display:flex;align-items:center;justify-content:space-between}
+.logo-wrap{display:flex;align-items:center;gap:14px}
+.logo-img{width:46px;height:46px;border-radius:50%;object-fit:cover;box-shadow:0 0 24px #7c3aed70}
+.logo-title{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.02em}
+.logo-title span{color:var(--v3)}
+.logo-sub{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:1px}
+.nav{display:flex;gap:4px;align-items:center}
+.nav-btn{font-family:var(--fh);font-size:13px;font-weight:500;padding:8px 18px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+.nav-btn:hover{color:var(--v3);background:var(--vg);border-color:var(--border2)}
+.nav-btn.active{color:#fff;background:var(--vg2);border-color:var(--v)}
+.logout-btn{width:32px;height:32px;border-radius:50%;background:#f8717125;border:1.5px solid #f87171;color:#f87171;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:16px;transition:all .2s;flex-shrink:0;margin-left:8px}
+.logout-btn:hover{background:#f87171;color:#fff}
+
+.page{display:none;padding:2rem;position:relative;z-index:1}
+.page.active{display:block}
+.slabel{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem;display:flex;align-items:center;gap:10px}
+.slabel::before{content:'';width:20px;height:2px;background:linear-gradient(90deg,var(--v),transparent)}
+.slabel::after{content:'';flex:1;height:1px;background:var(--border)}
+.fbar{background:rgba(7,4,26,.85);border:1px solid var(--border);border-radius:14px;padding:1rem 1.5rem;margin-bottom:1.75rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;backdrop-filter:blur(10px)}
+.fbar label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+input[type="date"]{background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fm);font-size:13px;padding:7px 12px;outline:none}
+input[type="date"]:focus{border-color:var(--v)}
+input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.5) sepia(1) hue-rotate(220deg)}
+select.sel{background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:13px;padding:7px 12px;outline:none}
+.qb{font-family:var(--fh);font-size:12px;font-weight:600;padding:6px 16px;border-radius:999px;border:1px solid var(--border2);background:var(--s2);color:var(--text2);cursor:pointer;transition:all .15s}
+.qb:hover{border-color:var(--v);color:var(--v3);background:var(--vg)}
+.sep{width:1px;height:28px;background:var(--border2);flex-shrink:0}
+.csv-label{font-family:var(--fh);font-weight:700;font-size:13px;padding:8px 22px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:999px;cursor:pointer;box-shadow:0 0 20px var(--vg2);transition:all .2s;white-space:nowrap}
+.csv-label:hover{filter:brightness(1.1)}
+#csv-input{display:none}
+.csv-tag{font-size:12px;font-weight:500;padding:5px 14px;border-radius:999px;border:1px solid;white-space:nowrap}
+.csv-tag.ok{background:var(--gn-d);color:var(--gn);border-color:#4ade8040}
+.csv-tag.none{background:var(--s2);color:var(--muted);border-color:var(--border)}
+.btn-limpiar{font-family:var(--fh);font-size:12px;font-weight:600;padding:6px 14px;border-radius:999px;border:1px solid var(--rd);background:var(--rd-d);color:var(--rd);cursor:pointer;display:none}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.1rem}
+.kpi{background:rgba(7,4,26,.75);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.6rem;position:relative;overflow:hidden;transition:transform .2s;backdrop-filter:blur(8px)}
+.kpi:hover{transform:translateY(-2px)}
+.kpi-glow{position:absolute;top:-25px;right:-25px;width:90px;height:90px;border-radius:50%;filter:blur(40px);opacity:.4}
+.kpi.cy .kpi-glow{background:var(--cy)} .kpi.cy .kv{color:var(--cy)} .kpi.cy{border-color:#22d3ee22}
+.kpi.pk .kpi-glow{background:var(--pk)} .kpi.pk .kv{color:var(--pk)} .kpi.pk{border-color:#f472b622}
+.kpi.vl .kpi-glow{background:var(--v2)} .kpi.vl .kv{color:var(--v3)} .kpi.vl{border-color:#7c3aed35}
+.kpi.am .kpi-glow{background:var(--am)} .kpi.am .kv{color:var(--am)} .kpi.am{border-color:#fbbf2422}
+.kl{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.7rem}
+.kv{font-size:28px;font-weight:800;line-height:1;margin-bottom:.35rem}
+.ks{font-size:12px;color:var(--muted);font-family:var(--fm)}
+.res-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem}
+@media(max-width:680px){.res-row{grid-template-columns:1fr}}
+.rc{border-radius:14px;padding:2.5rem 3rem;border:1px solid;position:relative;overflow:hidden;backdrop-filter:blur(10px);min-height:220px}
+.rc.nw{background:linear-gradient(135deg,#07051a,#100d2e);border-color:var(--v);box-shadow:0 0 40px #7c3aed18}
+.rc.ga{background:linear-gradient(135deg,#020c06,#041208);border-color:var(--gn);box-shadow:0 0 40px #4ade8015}
+.rc-glow{position:absolute;bottom:-30px;right:-30px;width:130px;height:130px;border-radius:50%;filter:blur(50px);opacity:.2}
+.rc.nw .rc-glow{background:var(--v2)} .rc.ga .rc-glow{background:var(--gn)}
+.rc-lbl{font-size:22px;font-weight:700;text-transform:uppercase;margin-bottom:.6rem}
+.rc.nw .rc-lbl{color:var(--v3)} .rc.ga .rc-lbl{color:var(--gn)}
+.rc-formula{font-size:16px;color:var(--muted);margin-bottom:1.25rem;font-family:var(--fm);line-height:2}
+.rc-formula .fv{color:var(--text2);font-weight:600}
+.rc-val{font-size:64px;font-weight:800;line-height:1;letter-spacing:-.03em}
+.rc.nw .rc-val{color:var(--v3)} .rc.ga .rc-val{color:var(--gn)}
+.rc-val.neg{color:var(--rd)!important}
+.tabla-wrap{background:rgba(7,4,26,.75);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.5rem;backdrop-filter:blur(8px)}
+.tbar{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.tsearch{background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fm);font-size:13px;padding:7px 12px;outline:none;width:220px}
+.tsearch:focus{border-color:var(--v)}
+.tc{overflow-x:auto;max-height:440px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--s2);padding:10px 14px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);position:sticky;top:0;z-index:1;white-space:nowrap;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap;color:var(--text2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(124,58,237,.06)}
+.badge{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600}
+.b-dep{color:var(--cy);background:var(--cy-d);border:1px solid #22d3ee30}
+.b-ret{color:var(--pk);background:var(--pk-d);border:1px solid #f472b630}
+.b-bon{color:var(--v3);background:var(--vg);border:1px solid #7c3aed40}
+.b-otro{color:var(--muted);background:var(--s3)}
+.m-pos{color:var(--cy);font-weight:600} .m-neg{color:var(--pk);font-weight:600}
+.tfooter{padding:.75rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted)}
+.pag-btns{display:flex;gap:6px}
+.pb{background:var(--s2);border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-size:12px;padding:5px 12px;cursor:pointer;font-family:var(--fm);transition:all .15s}
+.pb:hover{border-color:var(--v);color:var(--v3)}
+.pb:disabled{opacity:.3;cursor:not-allowed}
+.graficas-tabs{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap}
+.gtab{font-family:var(--fh);font-size:12px;font-weight:600;padding:8px 20px;border-radius:999px;border:1px solid var(--border2);background:var(--s2);color:var(--muted);cursor:pointer;transition:all .15s}
+.gtab:hover{border-color:var(--v);color:var(--v3)}
+.gtab.active{background:var(--vg2);border-color:var(--v);color:#fff}
+.chart-card{background:rgba(7,4,26,.8);border:1px solid var(--border);border-radius:14px;padding:1.75rem;backdrop-filter:blur(8px);margin-bottom:1.25rem}
+.chart-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:1.25rem}
+.chart-wrap{position:relative;height:320px}
+.rank-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.25rem;margin-bottom:1.5rem}
+.rank-card{background:rgba(7,4,26,.75);border:1px solid var(--border);border-radius:14px;overflow:hidden;backdrop-filter:blur(8px)}
+.rank-head{padding:1rem 1.5rem;border-bottom:1px solid var(--border)}
+.rank-title{font-size:13px;font-weight:700;color:var(--text)}
+.rank-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.rank-list{max-height:320px;overflow-y:auto}
+.rank-row{padding:.75rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.rank-row:last-child{border-bottom:none}
+.rank-pos{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.pos-1{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#000}
+.pos-2{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff}
+.pos-3{background:linear-gradient(135deg,#cd7c2f,#a0522d);color:#fff}
+.pos-n{background:var(--s3);color:var(--muted)}
+.rank-name{flex:1;font-size:13px;font-weight:600;color:var(--text2)}
+.rank-main{font-size:13px;font-weight:700;font-family:var(--fm)}
+.rank-sec{font-size:11px;color:var(--muted);font-family:var(--fm)}
+.rank-col-cy{color:var(--cy)} .rank-col-pk{color:var(--pk)} .rank-col-vl{color:var(--v3)}
+.gastos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.25rem}
+.gc{background:rgba(7,4,26,.75);border:1px solid var(--border);border-radius:14px;overflow:hidden;backdrop-filter:blur(8px)}
+.gc-head{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.gc-tw{display:flex;align-items:center;gap:10px}
+.gc-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.gc-name{font-size:13px;font-weight:700;color:var(--text)}
+.gc-total{font-size:15px;font-weight:700;color:var(--am);font-family:var(--fm)}
+.gc-items{max-height:220px;overflow-y:auto}
+.gc-row{padding:.7rem 1.5rem;border-bottom:1px solid var(--border);display:grid;grid-template-columns:88px 1fr auto auto;gap:8px;align-items:center}
+.gc-row:last-child{border-bottom:none}
+.gc-fecha{font-size:11px;color:var(--muted);font-family:var(--fm)}
+.gc-det{font-size:12px;color:var(--text2)}
+.gc-monto{font-size:12px;color:var(--am);font-weight:600;font-family:var(--fm);text-align:right}
+.gc-del{background:none;border:none;color:var(--muted2);cursor:pointer;font-size:16px;padding:2px 4px}
+.gc-del:hover{color:var(--rd)}
+.gc-empty{padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic}
+.gc-form{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap}
+.gc-form input{background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fm);font-size:12px;padding:7px 10px;outline:none;flex:1;min-width:80px}
+.gc-form input:focus{border-color:var(--v)}
+.gc-form input::placeholder{color:var(--muted2)}
+.btn-add{background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;font-family:var(--fh);font-weight:700;font-size:11px;padding:7px 16px;border:none;border-radius:8px;cursor:pointer;white-space:nowrap}
+.btn-add:hover{filter:brightness(1.15)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--s1)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 </style>
 </head>
 <body>
-<div class="box">
-  <img class="logo" id="logo-img"
-    src="https://gonzalezcatan096.github.io/ganamosnet-extractor/logo-pluton.jpeg"
-    alt="Plutón"
-    onerror="this.style.display='none'; document.getElementById('logo-fb').style.display='block'"/>
-  <div class="logo-fallback" id="logo-fb"></div>
-  <h1>MUNDO <span>PLUTÓN</span></h1>
-  <p class="sub">Panel de administración</p>
-  <div class="field">
-    <label>Usuario</label>
-    <input type="text" id="usr" placeholder="Tu usuario" autocomplete="username"/>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <img class="login-logo" src="https://gonzalezcatan096.github.io/ganamosnet-extractor/logo-pluton.jpeg" alt="Plutón" onerror="this.style.display='none'"/>
+    <div class="login-title">MUNDO <span>PLUTÓN</span></div>
+    <p class="login-sub">Panel de administración</p>
+    <div class="login-field"><label>Usuario</label><input type="text" id="lu" placeholder="Usuario" autocomplete="username"/></div>
+    <div class="login-field"><label>Contraseña</label><input type="password" id="lp" placeholder="••••••••" autocomplete="current-password"/></div>
+    <div class="login-err" id="le"></div>
+    <button class="login-btn" id="login-btn">Ingresar →</button>
   </div>
-  <div class="field">
-    <label>Contraseña</label>
-    <input type="password" id="pwd" placeholder="••••••••" autocomplete="current-password"/>
+</div>
+
+<div class="bg-fixed"><div class="stars"></div><div class="nebula n1"></div><div class="nebula n2"></div></div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-wrap">
+    <img class="logo-img" src="https://gonzalezcatan096.github.io/ganamosnet-extractor/logo-pluton.jpeg" alt="Plutón" onerror="this.style.display='none'"/>
+    <div><div class="logo-title">MUNDO <span>PLUTÓN</span></div><div class="logo-sub">Panel de administración</div></div>
   </div>
-  <div class="error" id="err"></div>
-  <button class="btn" id="btn">Ingresar →</button>
+  <div class="nav">
+    <button class="nav-btn active" id="nav-dashboard" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-btn" id="nav-movimientos" onclick="showPage('movimientos')">Movimientos</button>
+    <button class="nav-btn" id="nav-graficas" onclick="showPage('graficas')">Gráficas</button>
+    <button class="nav-btn" id="nav-ranking" onclick="showPage('ranking')">Ranking</button>
+    <button class="nav-btn" id="nav-gastos" onclick="showPage('gastos')">Gastos</button>
+    <button class="nav-btn" id="nav-tesoro" onclick="showPage('tesoro')">Tesoro</button>
+    <button class="logout-btn" onclick="cerrarSesion()" title="Cerrar sesión">⏻</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="fbar">
+    <label>Desde</label><input type="date" id="f-desde" onchange="dash()"/>
+    <label>Hasta</label><input type="date" id="f-hasta" onchange="dash()"/>
+    <div class="sep"></div>
+    <button class="qb" onclick="setR('hoy','f')">Hoy</button>
+    <button class="qb" onclick="setR('semana','f')">7 Días</button>
+    <button class="qb" onclick="setR('mes','f')">Este Mes</button>
+    <div class="sep"></div>
+    <button class="qb" onclick="setR('anterior','f')">Mes Anterior</button>
+    <div class="sep"></div>
+    <label class="csv-label" for="csv-input">⬆ Cargar CSV(s)</label>
+    <input type="file" id="csv-input" accept=".csv" multiple/>
+    <button class="btn-limpiar" id="btn-limpiar" onclick="limpiarCSV()">✕ Limpiar</button>
+    <span class="csv-tag none" id="csv-status">Sin datos</span>
+  </div>
+  <div class="slabel">Resumen del Período</div>
+  <div class="kpi-row">
+    <div class="kpi cy"><div class="kpi-glow"></div><div class="kl">Cargas · Depósitos</div><div class="kv" id="d-dep">$0</div><div class="ks" id="d-dep-n">0 Operaciones</div></div>
+    <div class="kpi pk"><div class="kpi-glow"></div><div class="kl">Premios · Retiros</div><div class="kv" id="d-ret">$0</div><div class="ks" id="d-ret-n">0 Operaciones</div></div>
+    <div class="kpi vl"><div class="kpi-glow"></div><div class="kl">Bonificaciones</div><div class="kv" id="d-bon">$0</div><div class="ks" id="d-bon-n">0 Operaciones</div></div>
+    <div class="kpi am"><div class="kpi-glow"></div><div class="kl">Gastos Totales</div><div class="kv" id="d-gas">$0</div><div class="ks">Pub + Serv + Fichas + Billeteras</div></div>
+  </div>
+  <div class="res-row">
+    <div class="rc nw"><div class="rc-glow"></div><div class="rc-lbl">Netwing</div><div class="rc-formula"><span id="nw-c" class="fv">$0</span> Cargas − <span id="nw-p" class="fv">$0</span> Premios − <span id="nw-b" class="fv">$0</span> Bonos</div><div class="rc-val" id="d-nw">$0</div></div>
+    <div class="rc ga"><div class="rc-glow"></div><div class="rc-lbl">Ganancia Limpia</div><div class="rc-formula">Netwing <span id="ga-nw" class="fv">$0</span> − Gastos <span id="ga-g" class="fv">$0</span></div><div class="rc-val" id="d-ga">$0</div></div>
+  </div>
+  <div class="slabel">Desglose de Gastos</div>
+  <div class="kpi-row">
+    <div class="kpi am"><div class="kpi-glow"></div><div class="kl">Publicidad</div><div class="kv" id="dg-pub">$0</div><div class="ks" id="dg-pub-n">0 Registros</div></div>
+    <div class="kpi am"><div class="kpi-glow"></div><div class="kl">Servicios</div><div class="kv" id="dg-serv">$0</div><div class="ks" id="dg-serv-n">0 Registros</div></div>
+    <div class="kpi am"><div class="kpi-glow"></div><div class="kl">Compra de Fichas</div><div class="kv" id="dg-fichas">$0</div><div class="ks" id="dg-fichas-n">0 Registros</div></div>
+    <div class="kpi am"><div class="kpi-glow"></div><div class="kl">Billeteras</div><div class="kv" id="dg-bill">$0</div><div class="ks" id="dg-bill-n">0 Registros</div></div>
+  </div>
+</div>
+
+<!-- MOVIMIENTOS -->
+<div class="page" id="page-movimientos">
+  <div class="fbar">
+    <label>Desde</label><input type="date" id="m-desde" onchange="renderMov()"/>
+    <label>Hasta</label><input type="date" id="m-hasta" onchange="renderMov()"/>
+    <div class="sep"></div>
+    <button class="qb" onclick="setR('hoy','m')">Hoy</button>
+    <button class="qb" onclick="setR('semana','m')">7 Días</button>
+    <button class="qb" onclick="setR('mes','m')">Este Mes</button>
+    <div class="sep"></div>
+    <button class="qb" onclick="setR('anterior','m')">Mes Anterior</button>
+    <div class="sep"></div>
+    <select class="sel" id="m-tipo" onchange="renderMov()"><option value="">Todos</option><option value="Deposito">Depósitos</option><option value="Retiro">Retiros</option><option value="Bonificacion">Bonificaciones</option></select>
+  </div>
+  <div class="tabla-wrap">
+    <div class="tbar"><div class="slabel" style="margin:0">Movimientos</div><input class="tsearch" id="m-search" placeholder="Buscar jugador..." oninput="renderMov()"/></div>
+    <div class="tc"><table><thead><tr><th>Fecha</th><th>Hora</th><th>Tipo</th><th>Desde</th><th>Hacia</th><th>Monto</th><th>Saldo Ant.</th><th>Saldo Post.</th></tr></thead><tbody id="m-body"></tbody></table></div>
+    <div class="tfooter"><span id="m-info">0 Registros</span><div class="pag-btns"><button class="pb" id="m-prev" onclick="cambiarPag(-1)" disabled>← Ant</button><button class="pb" id="m-next" onclick="cambiarPag(1)" disabled>Sig →</button></div></div>
+  </div>
+</div>
+
+<!-- GRAFICAS -->
+<div class="page" id="page-graficas">
+  <div class="fbar">
+    <label>Desde</label><input type="date" id="g-desde" onchange="renderGraficas()"/>
+    <label>Hasta</label><input type="date" id="g-hasta" onchange="renderGraficas()"/>
+    <div class="sep"></div>
+    <button class="qb" onclick="setR('hoy','g')">Hoy</button>
+    <button class="qb" onclick="setR('semana','g')">7 Días</button>
+    <button class="qb" onclick="setR('mes','g')">Este Mes</button>
+    <div class="sep"></div>
+    <button class="qb" onclick="setR('anterior','g')">Mes Anterior</button>
+  </div>
+  <div class="graficas-tabs">
+    <button class="gtab active" id="gtab-volumen" onclick="showGraf('volumen')">📈 Cargas vs Premios</button>
+    <button class="gtab" id="gtab-profit" onclick="showGraf('profit')">💰 Netwing Diario</button>
+    <button class="gtab" id="gtab-bonos" onclick="showGraf('bonos')">⭐ Bonificaciones</button>
+    <button class="gtab" id="gtab-acum" onclick="showGraf('acum')">📊 Acumulado</button>
+  </div>
+  <div class="chart-card" id="graf-volumen"><div class="chart-title">Cargas vs Premios por Día</div><div class="chart-wrap"><canvas id="chart-volumen"></canvas></div></div>
+  <div class="chart-card" id="graf-profit" style="display:none"><div class="chart-title">Netwing Diario</div><div class="chart-wrap"><canvas id="chart-profit"></canvas></div></div>
+  <div class="chart-card" id="graf-bonos" style="display:none"><div class="chart-title">Bonificaciones por Día</div><div class="chart-wrap"><canvas id="chart-bonos"></canvas></div></div>
+  <div class="chart-card" id="graf-acum" style="display:none"><div class="chart-title">Netwing Acumulado</div><div class="chart-wrap"><canvas id="chart-acum"></canvas></div></div>
+</div>
+
+<!-- RANKING -->
+<div class="page" id="page-ranking">
+  <div class="fbar">
+    <label>Desde</label><input type="date" id="r-desde" onchange="renderRanking()"/>
+    <label>Hasta</label><input type="date" id="r-hasta" onchange="renderRanking()"/>
+    <div class="sep"></div>
+    <button class="qb" onclick="setR('hoy','r')">Hoy</button>
+    <button class="qb" onclick="setR('semana','r')">7 Días</button>
+    <button class="qb" onclick="setR('mes','r')">Este Mes</button>
+    <div class="sep"></div>
+    <button class="qb" onclick="setR('anterior','r')">Mes Anterior</button>
+  </div>
+  <div class="slabel">Top Jugadores</div>
+  <div class="rank-grid">
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">🏆 Top Cargas por Monto</div><div class="rank-sub">Mayor depósito acumulado</div></div><div class="rank-list" id="rk-dep-monto"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">📊 Top Cargas por Cantidad</div><div class="rank-sub">Más operaciones de carga</div></div><div class="rank-list" id="rk-dep-cant"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">🎯 Top Premios por Monto</div><div class="rank-sub">Jugadores que más retiraron</div></div><div class="rank-list" id="rk-ret-monto"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">🔢 Top Premios por Cantidad</div><div class="rank-sub">Más retiros realizados</div></div><div class="rank-list" id="rk-ret-cant"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">⭐ Top Bonos por Monto</div><div class="rank-sub">Más bonificaciones recibidas</div></div><div class="rank-list" id="rk-bon-monto"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">🎁 Top Bonos por Cantidad</div><div class="rank-sub">Más bonos recibidos</div></div><div class="rank-list" id="rk-bon-cant"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">📈 Mejor Profit para Nosotros</div><div class="rank-sub">Carga − Premio</div></div><div class="rank-list" id="rk-profit-pos"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">📉 Jugadores que Nos Ganan</div><div class="rank-sub">Profit negativo</div></div><div class="rank-list" id="rk-profit-neg"></div></div>
+    <div class="rank-card"><div class="rank-head"><div class="rank-title">📊 Mejor Promedio de Carga</div><div class="rank-sub">Monto promedio (mín. 2 cargas)</div></div><div class="rank-list" id="rk-promedio"></div></div>
+  </div>
+</div>
+
+<!-- GASTOS -->
+<div class="page" id="page-gastos">
+  <div class="slabel">Registro de Gastos Manuales</div>
+  <div class="gastos-grid">
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#fbbf2420">📢</div><div class="gc-name">Publicidad</div></div><div class="gc-total" id="gt-pub">$0</div></div><div class="gc-items" id="gl-pub"></div><div class="gc-form"><input type="date" id="ga-pub-fecha"/><input type="text" id="ga-pub-det" placeholder="Detalle"/><input type="number" id="ga-pub-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('pub')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#22d3ee20">⚡</div><div class="gc-name">Servicios</div></div><div class="gc-total" id="gt-serv">$0</div></div><div class="gc-items" id="gl-serv"></div><div class="gc-form"><input type="date" id="ga-serv-fecha"/><input type="text" id="ga-serv-det" placeholder="Ej: Luz"/><input type="number" id="ga-serv-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('serv')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#c084fc20">🎰</div><div class="gc-name">Compra de Fichas</div></div><div class="gc-total" id="gt-fichas">$0</div></div><div class="gc-items" id="gl-fichas"></div><div class="gc-form"><input type="date" id="ga-fichas-fecha"/><input type="text" id="ga-fichas-det" placeholder="Detalle"/><input type="number" id="ga-fichas-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('fichas')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#4ade8020">👛</div><div class="gc-name">Billeteras</div></div><div class="gc-total" id="gt-bill">$0</div></div><div class="gc-items" id="gl-bill"></div><div class="gc-form"><input type="date" id="ga-bill-fecha"/><input type="text" id="ga-bill-det" placeholder="Ej: Mercado Pago"/><input type="number" id="ga-bill-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('bill')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#22d3ee20">📱</div><div class="gc-name">Suscripciones</div></div><div class="gc-total" id="gt-sus">$0</div></div><div class="gc-items" id="gl-sus"></div><div class="gc-form"><input type="date" id="ga-sus-fecha"/><input type="text" id="ga-sus-det" placeholder="Ej: Netflix"/><input type="number" id="ga-sus-monto" placeholder="Monto"/><button class="btn-add" onclick="addGasto('sus')">+ Agregar</button></div></div>
+  </div>
+</div>
+
+<!-- TESORO -->
+<div class="page" id="page-tesoro">
+  <div class="slabel">Billeteras y Cajas</div>
+  <div class="gastos-grid">
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#fbbf2420">💰</div><div class="gc-name">Caja Principal</div></div><div class="gc-total" id="tt-caja">$0</div></div><div class="gc-items" id="tl-caja"></div><div class="gc-form"><input type="date" id="ta-caja-fecha"/><input type="text" id="ta-caja-det" placeholder="Detalle"/><input type="number" id="ta-caja-monto" placeholder="Monto"/><select id="ta-caja-tipo" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="ingreso">↑ Ingreso</option><option value="egreso">↓ Egreso</option></select><button class="btn-add" onclick="addTesoro('caja')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#7c3aed20">👤</div><div class="gc-name">Mauricio</div></div><div class="gc-total" id="tt-mauricio">$0</div></div><div class="gc-items" id="tl-mauricio"></div><div class="gc-form"><input type="date" id="ta-mauricio-fecha"/><input type="text" id="ta-mauricio-det" placeholder="Detalle"/><input type="number" id="ta-mauricio-monto" placeholder="Monto"/><select id="ta-mauricio-tipo" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="ingreso">↑ Ingreso</option><option value="egreso">↓ Egreso</option></select><button class="btn-add" onclick="addTesoro('mauricio')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#22d3ee20">👤</div><div class="gc-name">Santiago</div></div><div class="gc-total" id="tt-santiago">$0</div></div><div class="gc-items" id="tl-santiago"></div><div class="gc-form"><input type="date" id="ta-santiago-fecha"/><input type="text" id="ta-santiago-det" placeholder="Detalle"/><input type="number" id="ta-santiago-monto" placeholder="Monto"/><select id="ta-santiago-tipo" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="ingreso">↑ Ingreso</option><option value="egreso">↓ Egreso</option></select><button class="btn-add" onclick="addTesoro('santiago')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#f472b620">👤</div><div class="gc-name">Nancy</div></div><div class="gc-total" id="tt-nancy">$0</div></div><div class="gc-items" id="tl-nancy"></div><div class="gc-form"><input type="date" id="ta-nancy-fecha"/><input type="text" id="ta-nancy-det" placeholder="Detalle"/><input type="number" id="ta-nancy-monto" placeholder="Monto"/><select id="ta-nancy-tipo" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="ingreso">↑ Ingreso</option><option value="egreso">↓ Egreso</option></select><button class="btn-add" onclick="addTesoro('nancy')">+ Agregar</button></div></div>
+  </div>
 </div>
 
 <script>
-var OK = { 'pluton': 'plutonadmin2024', 'admin': 'mundo2024' };
+// ---- LOGIN ----
+var USERS = {'pluton':'plutonadmin2024','admin':'mundo2024'};
+var logueado = false;
 
-function login() {
-  var u = document.getElementById('usr').value.trim().toLowerCase();
-  var p = document.getElementById('pwd').value;
-  var e = document.getElementById('err');
-  if (!u || !p) {
-    e.textContent = '⚠️ Ingresá usuario y contraseña';
-    e.style.color = '#fbbf24';
-    return;
-  }
-  if (OK[u] && OK[u] === p) {
-    sessionStorage.setItem('mp_ok', '1');
-    window.location.href = 'dashboard.html';
+function tryLogin(){
+  var u = document.getElementById('lu').value.trim().toLowerCase();
+  var p = document.getElementById('lp').value;
+  var e = document.getElementById('le');
+  if(!u||!p){e.textContent='Ingresá usuario y contraseña';return;}
+  if(USERS[u]&&USERS[u]===p){
+    logueado=true;
+    document.getElementById('login-screen').style.display='none';
   } else {
-    e.textContent = '❌ Usuario o contraseña incorrectos';
-    e.style.color = '#f87171';
-    document.getElementById('pwd').value = '';
-    document.getElementById('pwd').focus();
+    e.textContent='❌ Usuario o contraseña incorrectos';
+    document.getElementById('lp').value='';
   }
 }
+function cerrarSesion(){if(confirm('¿Cerrar sesión?')){logueado=false;document.getElementById('login-screen').style.display='flex';document.getElementById('lu').value='';document.getElementById('lp').value='';document.getElementById('le').textContent='';}}
+document.getElementById('login-btn').onclick = tryLogin;
+document.getElementById('lu').onkeydown = function(e){if(e.key==='Enter')tryLogin();};
+document.getElementById('lp').onkeydown = function(e){if(e.key==='Enter')tryLogin();};
 
-document.getElementById('btn').onclick = login;
-document.getElementById('usr').onkeydown = function(e) { if (e.key === 'Enter') login(); };
-document.getElementById('pwd').onkeydown = function(e) { if (e.key === 'Enter') login(); };
-document.getElementById('usr').focus();
+// ---- ESTADO ----
+var movs=[],gastos={pub:[],serv:[],fichas:[],bill:[],sus:[]},pagMov=0,POR_PAG=50,movFil=[],archivosCSV=[],charts={},tesoro={caja:[],mauricio:[],santiago:[],nancy:[]};
+
+// ---- NAV ----
+function showPage(id){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+  if(id==='movimientos')renderMov();
+  if(id==='ranking')renderRanking();
+  if(id==='graficas')setTimeout(renderGraficas,50);
+}
+
+// ---- FECHAS ----
+function fmtD(d){return d.toISOString().split('T')[0];}
+function setR(r,pre){
+  var n=new Date(),f=new Date(),t=new Date();
+  if(r==='hoy'){f=new Date();t=new Date();}
+  else if(r==='semana'){f=new Date();f.setDate(n.getDate()-7);t=new Date();}
+  else if(r==='mes'){f=new Date(n.getFullYear(),n.getMonth(),1);t=new Date();}
+  else if(r==='anterior'){f=new Date(n.getFullYear(),n.getMonth()-1,1);t=new Date(n.getFullYear(),n.getMonth(),0);}
+  document.getElementById(pre+'-desde').value=fmtD(f);
+  document.getElementById(pre+'-hasta').value=fmtD(t);
+  if(pre==='f')dash();else if(pre==='m')renderMov();else if(pre==='r')renderRanking();else if(pre==='g')renderGraficas();
+}
+
+// ---- CSV ----
+document.getElementById('csv-input').addEventListener('change',function(){
+  var files=Array.from(this.files),cargados=0,total=files.length,inp=this;
+  if(!total)return;
+  files.forEach(function(file){
+    var r=new FileReader();
+    r.onload=function(e){
+      var rows=parsearCSV(e.target.result);
+      var ix=archivosCSV.findIndex(function(a){return a.nombre===file.name;});
+      if(ix>=0)archivosCSV[ix]={nombre:file.name,rows:rows};
+      else archivosCSV.push({nombre:file.name,rows:rows});
+      if(++cargados===total){combinar();inp.value='';}
+    };
+    r.onerror=function(){if(++cargados===total){combinar();inp.value='';}};
+    r.readAsText(file,'UTF-8');
+  });
+});
+
+function parsearCSV(text){
+  var lines=text.replace(/\r/g,'').split('\n').filter(function(l){return l.trim();});
+  var sep=lines[0].indexOf(';')>=0?';':',';
+  var start=lines[0].indexOf('sep=')===0?1:0;
+  var headers=parseL(lines[start],sep);
+  var rows=[];
+  for(var i=start+1;i<lines.length;i++){
+    var vals=parseL(lines[i],sep);
+    if(vals.length<3)continue;
+    var row={};
+    headers.forEach(function(h,idx){row[h.trim()]=vals[idx]?vals[idx].trim():'';});
+    rows.push(row);
+  }
+  return rows;
+}
+function parseL(line,sep){
+  var res=[],cur='',inQ=false;
+  for(var i=0;i<line.length;i++){
+    var ch=line[i];
+    if(ch==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else{inQ=!inQ;}}
+    else if(ch===sep&&!inQ){res.push(cur);cur='';}
+    else{cur+=ch;}
+  }
+  res.push(cur);return res;
+}
+function combinar(){
+  var mapa={};
+  archivosCSV.forEach(function(a){a.rows.forEach(function(row){var id=row['ID']||row['id']||JSON.stringify(row);mapa[id]=row;});});
+  movs=Object.values(mapa).sort(function(a,b){return((b['Fecha']||'')+(b['Hora']||'')).localeCompare((a['Fecha']||'')+(a['Hora']||''));});
+  var st=document.getElementById('csv-status');
+  st.textContent=movs.length+' registros · '+archivosCSV.length+' archivo'+(archivosCSV.length>1?'s':'');
+  st.className='csv-tag ok';
+  document.getElementById('btn-limpiar').style.display='inline-block';
+  dash();renderMov();renderRanking();
+}
+function limpiarCSV(){
+  if(!confirm('¿Limpiar?'))return;
+  archivosCSV=[];movs=[];
+  document.getElementById('csv-status').textContent='Sin datos';
+  document.getElementById('csv-status').className='csv-tag none';
+  document.getElementById('btn-limpiar').style.display='none';
+  dash();renderMov();renderRanking();
+}
+function pN(v){
+  if(!v&&v!==0)return 0;
+  var s=String(v).replace(/'/g,'').replace(/\$/g,'').replace(/\s/g,'');
+  if(!s)return 0;
+  if(s.indexOf(',')>=0&&s.indexOf('.')>=0)return parseFloat(s.replace(/\./g,'').replace(',','.'))||0;
+  if(s.indexOf(',')>=0)return parseFloat(s.replace(',','.'))||0;
+  return parseFloat(s)||0;
+}
+function ars(n){return(!n&&n!==0)?'$0':(n<0?'-':'')+'$'+Math.round(Math.abs(n)).toLocaleString('es-AR');}
+function filtM(d,h){return movs.filter(function(m){var f=m['Fecha']||'';return(!d||f>=d)&&(!h||f<=h);});}
+function filtG(d,h,l){return l.filter(function(g){return(!d||g.fecha>=d)&&(!h||g.fecha<=h);});}
+
+// ---- DASHBOARD ----
+function dash(){
+  var d=document.getElementById('f-desde').value,h=document.getElementById('f-hasta').value,fil=filtM(d,h);
+  var deps=fil.filter(function(m){return m['Tipo']==='Deposito';});
+  var rets=fil.filter(function(m){return m['Tipo']==='Retiro';});
+  var bons=fil.filter(function(m){return m['Tipo']==='Bonificacion';});
+  var tD=deps.reduce(function(s,m){return s+pN(m['Monto']||0);},0);
+  var tR=rets.reduce(function(s,m){return s+pN(m['Monto']||0);},0);
+  var tB=bons.reduce(function(s,m){return s+pN(m['Monto']||0);},0);
+  var tG=['pub','serv','fichas','bill','sus'].reduce(function(s,c){return s+filtG(d,h,gastos[c]).reduce(function(ss,g){return ss+g.monto;},0);},0);
+  var nw=tD-tR-tB,ga=nw-tG;
+  document.getElementById('d-dep').textContent=ars(tD);document.getElementById('d-dep-n').textContent=deps.length+' Operaciones';
+  document.getElementById('d-ret').textContent=ars(tR);document.getElementById('d-ret-n').textContent=rets.length+' Operaciones';
+  document.getElementById('d-bon').textContent=ars(tB);document.getElementById('d-bon-n').textContent=bons.length+' Operaciones';
+  document.getElementById('d-gas').textContent=ars(tG);
+  document.getElementById('nw-c').textContent=ars(tD);document.getElementById('nw-p').textContent=ars(tR);document.getElementById('nw-b').textContent=ars(tB);
+  var nwEl=document.getElementById('d-nw');nwEl.textContent=ars(nw);nwEl.className='rc-val'+(nw<0?' neg':'');
+  document.getElementById('ga-nw').textContent=ars(nw);document.getElementById('ga-g').textContent=ars(tG);
+  var gaEl=document.getElementById('d-ga');gaEl.textContent=ars(ga);gaEl.className='rc-val'+(ga<0?' neg':'');
+  ['pub','serv','fichas','bill'].forEach(function(c){var v=filtG(d,h,gastos[c]).reduce(function(s,g){return s+g.monto;},0);document.getElementById('dg-'+c).textContent=ars(v);document.getElementById('dg-'+c+'-n').textContent=filtG(d,h,gastos[c]).length+' Registros';});
+}
+
+// ---- MOVIMIENTOS ----
+function renderMov(){
+  var d=document.getElementById('m-desde').value,h=document.getElementById('m-hasta').value;
+  var tipo=document.getElementById('m-tipo').value,busq=(document.getElementById('m-search').value||'').toLowerCase();
+  movFil=filtM(d,h).filter(function(m){if(tipo&&m['Tipo']!==tipo)return false;if(busq&&((m['Desde']||'')+(m['Hacia']||'')).toLowerCase().indexOf(busq)<0)return false;return true;});
+  var total=movFil.length,tP=Math.ceil(total/POR_PAG)||1;
+  if(pagMov>=tP)pagMov=0;
+  var ini=pagMov*POR_PAG,pag=movFil.slice(ini,ini+POR_PAG),tb=document.getElementById('m-body');
+  if(!movs.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted)">Cargá un CSV desde el Dashboard</td></tr>';document.getElementById('m-info').textContent='0 Registros';return;}
+  if(!pag.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted)">Sin Resultados</td></tr>';return;}
+  tb.innerHTML=pag.map(function(m){var t=m['Tipo']||'';var b=t==='Deposito'?'<span class="badge b-dep">Depósito</span>':t==='Retiro'?'<span class="badge b-ret">Retiro</span>':t==='Bonificacion'?'<span class="badge b-bon">Bono</span>':'<span class="badge b-otro">'+t+'</span>';return '<tr><td>'+(m['Fecha']||'')+'</td><td style="color:var(--muted);font-family:var(--fm)">'+(m['Hora']||'')+'</td><td>'+b+'</td><td>'+(m['Desde']||'')+'</td><td>'+(m['Hacia']||'')+'</td><td class="'+(t==='Retiro'?'m-neg':'m-pos')+'" style="font-family:var(--fm)">'+ars(pN(m['Monto']||0))+'</td><td style="color:var(--muted);font-family:var(--fm)">'+ars(pN(m['Saldo anterior']||0))+'</td><td style="color:var(--muted);font-family:var(--fm)">'+ars(pN(m['Saldo posterior']||0))+'</td></tr>';}).join('');
+  document.getElementById('m-info').textContent=(ini+1)+'–'+Math.min(ini+POR_PAG,total)+' de '+total+' Registros';
+  document.getElementById('m-prev').disabled=pagMov===0;document.getElementById('m-next').disabled=pagMov>=tP-1;
+}
+function cambiarPag(dir){pagMov+=dir;renderMov();}
+
+// ---- GRAFICAS ----
+function showGraf(id){document.querySelectorAll('.chart-card').forEach(function(c){c.style.display='none';});document.querySelectorAll('.gtab').forEach(function(b){b.classList.remove('active');});document.getElementById('graf-'+id).style.display='block';document.getElementById('gtab-'+id).classList.add('active');}
+function renderGraficas(){
+  var d=document.getElementById('g-desde').value,h=document.getElementById('g-hasta').value;
+  if(!d||!h)return;
+  var fil=filtM(d,h),dm={};
+  var cur=new Date(d+'T00:00:00'),end=new Date(h+'T00:00:00');
+  while(cur<=end){dm[fmtD(cur)]={dep:0,ret:0,bon:0};cur.setDate(cur.getDate()+1);}
+  fil.forEach(function(m){var f=m['Fecha']||'';if(!dm[f])return;var mn=pN(m['Monto']||0);if(m['Tipo']==='Deposito')dm[f].dep+=mn;else if(m['Tipo']==='Retiro')dm[f].ret+=mn;else if(m['Tipo']==='Bonificacion')dm[f].bon+=mn;});
+  var lb=Object.keys(dm).sort();
+  var deps=lb.map(function(x){return Math.round(dm[x].dep);});
+  var rets=lb.map(function(x){return Math.round(dm[x].ret);});
+  var bons=lb.map(function(x){return Math.round(dm[x].bon);});
+  var profs=lb.map(function(x){return Math.round(dm[x].dep-dm[x].ret-dm[x].bon);});
+  var ac=0,acums=profs.map(function(p){ac+=p;return ac;});
+  var cfg={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#9d99cc',font:{family:'Space Grotesk',size:12}}},tooltip:{callbacks:{label:function(c){return '$'+Math.round(Math.abs(c.parsed.y)).toLocaleString('es-AR');}}}},scales:{x:{ticks:{color:'#6b5fa0',font:{size:10},maxTicksLimit:20},grid:{color:'#1c1640'}},y:{ticks:{color:'#6b5fa0',callback:function(v){return '$'+Math.round(Math.abs(v)).toLocaleString('es-AR');},font:{size:10}},grid:{color:'#1c164050'}}}};
+  function mk(id,data){if(charts[id])charts[id].destroy();var c=document.getElementById(id);if(c)charts[id]=new Chart(c,data);}
+  mk('chart-volumen',{type:'bar',data:{labels:lb,datasets:[{label:'Cargas',data:deps,backgroundColor:'#22d3ee30',borderColor:'#22d3ee',borderWidth:2,borderRadius:4},{label:'Premios',data:rets,backgroundColor:'#f472b630',borderColor:'#f472b6',borderWidth:2,borderRadius:4}]},options:cfg});
+  mk('chart-profit',{type:'bar',data:{labels:lb,datasets:[{label:'Netwing',data:profs,backgroundColor:profs.map(function(v){return v>=0?'#4ade8030':'#f8717130';}),borderColor:profs.map(function(v){return v>=0?'#4ade80':'#f87171';}),borderWidth:2,borderRadius:4}]},options:cfg});
+  mk('chart-bonos',{type:'bar',data:{labels:lb,datasets:[{label:'Bonificaciones',data:bons,backgroundColor:'#c084fc30',borderColor:'#c084fc',borderWidth:2,borderRadius:4}]},options:cfg});
+  mk('chart-acum',{type:'line',data:{labels:lb,datasets:[{label:'Netwing Acumulado',data:acums,borderColor:'#9d5ff5',backgroundColor:'#7c3aed15',borderWidth:2.5,pointBackgroundColor:'#c084fc',pointRadius:3,fill:true,tension:.35}]},options:cfg});
+}
+
+// ---- RANKING ----
+function renderRanking(){
+  var d=document.getElementById('r-desde').value,h=document.getElementById('r-hasta').value,fil=filtM(d,h);
+  buildRank('rk-dep-monto',fil,'Deposito','monto','rank-col-cy');buildRank('rk-dep-cant',fil,'Deposito','cant','rank-col-cy');
+  buildRank('rk-ret-monto',fil,'Retiro','monto','rank-col-pk');buildRank('rk-ret-cant',fil,'Retiro','cant','rank-col-pk');
+  buildRank('rk-bon-monto',fil,'Bonificacion','monto','rank-col-vl');buildRank('rk-bon-cant',fil,'Bonificacion','cant','rank-col-vl');
+  buildProfit('rk-profit-pos',fil,'desc');buildProfit('rk-profit-neg',fil,'asc');buildPromedio('rk-promedio',fil);
+}
+function buildRank(elId,data,tipo,mode,cc){
+  var mapa={};
+  data.filter(function(m){return m['Tipo']===tipo;}).forEach(function(m){var p=m['Hacia']||m['Desde']||'?';if(!mapa[p])mapa[p]={monto:0,cant:0};mapa[p].monto+=pN(m['Monto']||0);mapa[p].cant++;});
+  var lista=Object.keys(mapa).map(function(n){return{name:n,monto:mapa[n].monto,cant:mapa[n].cant};}).sort(function(a,b){return b[mode]-a[mode];}).slice(0,10);
+  var el=document.getElementById(elId);
+  if(!lista.length){el.innerHTML='<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin Datos</div>';return;}
+  el.innerHTML=lista.map(function(item,i){var p=i+1;var pc=p===1?'pos-1':p===2?'pos-2':p===3?'pos-3':'pos-n';var mv=mode==='monto'?ars(item.monto):item.cant+' ops';var sv=mode==='monto'?item.cant+' ops':ars(item.monto);return '<div class="rank-row"><div class="rank-pos '+pc+'">'+p+'</div><div class="rank-name">'+item.name+'</div><div><div class="rank-main '+cc+'">'+mv+'</div><div class="rank-sec">'+sv+'</div></div></div>';}).join('');
+}
+function buildProfit(elId,data,order){
+  var mapa={};
+  data.filter(function(m){return m['Tipo']==='Deposito';}).forEach(function(m){var p=m['Hacia']||m['Desde']||'?';if(!mapa[p])mapa[p]={c:0,r:0};mapa[p].c+=pN(m['Monto']||0);});
+  data.filter(function(m){return m['Tipo']==='Retiro';}).forEach(function(m){var p=m['Hacia']||m['Desde']||'?';if(!mapa[p])mapa[p]={c:0,r:0};mapa[p].r+=pN(m['Monto']||0);});
+  var lista=Object.keys(mapa).map(function(n){return{name:n,c:mapa[n].c,r:mapa[n].r,prof:mapa[n].c-mapa[n].r};}).filter(function(i){return i.c>0;}).sort(function(a,b){return order==='desc'?b.prof-a.prof:a.prof-b.prof;}).slice(0,10);
+  var el=document.getElementById(elId);
+  if(!lista.length){el.innerHTML='<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin Datos</div>';return;}
+  el.innerHTML=lista.map(function(item,i){var p=i+1;var pc=p===1?'pos-1':p===2?'pos-2':p===3?'pos-3':'pos-n';var col=item.prof>=0?'var(--gn)':'var(--rd)';return '<div class="rank-row"><div class="rank-pos '+pc+'">'+p+'</div><div><div class="rank-name">'+item.name+'</div><div style="font-size:11px;color:var(--muted)">C: '+ars(item.c)+' · P: '+ars(item.r)+'</div></div><div style="text-align:right"><div class="rank-main" style="color:'+col+'">'+ars(item.prof)+'</div><div class="rank-sec">Profit</div></div></div>';}).join('');
+}
+function buildPromedio(elId,data){
+  var mapa={};
+  data.filter(function(m){return m['Tipo']==='Deposito';}).forEach(function(m){var p=m['Hacia']||m['Desde']||'?';if(!mapa[p])mapa[p]={t:0,c:0};mapa[p].t+=pN(m['Monto']||0);mapa[p].c++;});
+  var lista=Object.keys(mapa).map(function(n){return{name:n,prom:mapa[n].c>0?mapa[n].t/mapa[n].c:0,c:mapa[n].c,t:mapa[n].t};}).filter(function(i){return i.c>=2;}).sort(function(a,b){return b.prom-a.prom;}).slice(0,10);
+  var el=document.getElementById(elId);
+  if(!lista.length){el.innerHTML='<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:12px;font-style:italic">Sin Datos</div>';return;}
+  el.innerHTML=lista.map(function(item,i){var p=i+1;var pc=p===1?'pos-1':p===2?'pos-2':p===3?'pos-3':'pos-n';return '<div class="rank-row"><div class="rank-pos '+pc+'">'+p+'</div><div><div class="rank-name">'+item.name+'</div><div style="font-size:11px;color:var(--muted)">'+item.c+' cargas · '+ars(item.t)+'</div></div><div style="text-align:right"><div class="rank-main rank-col-cy">'+ars(item.prom)+'</div><div class="rank-sec">Promedio</div></div></div>';}).join('');
+}
+
+// ---- GASTOS ----
+function saveG(){try{localStorage.setItem('gana_g',JSON.stringify(gastos));}catch(e){}}
+function loadG(){try{var g=localStorage.getItem('gana_g');if(g)gastos=JSON.parse(g);}catch(e){}}
+function addGasto(cat){var f=document.getElementById('ga-'+cat+'-fecha').value,d=document.getElementById('ga-'+cat+'-det').value.trim(),m=parseFloat(document.getElementById('ga-'+cat+'-monto').value);if(!f||!d||!m||m<=0){alert('Completá todos los campos');return;}gastos[cat].push({fecha:f,det:d,monto:m});saveG();document.getElementById('ga-'+cat+'-det').value='';document.getElementById('ga-'+cat+'-monto').value='';renderG();dash();}
+function delGasto(cat,i){gastos[cat].splice(i,1);saveG();renderG();dash();}
+function renderCat(cat){var lista=gastos[cat],total=lista.reduce(function(s,g){return s+g.monto;},0);document.getElementById('gt-'+cat).textContent=ars(total);var el=document.getElementById('gl-'+cat);if(!lista.length){el.innerHTML='<div class="gc-empty">Sin Registros Aún</div>';return;}el.innerHTML=lista.map(function(g,i){return '<div class="gc-row"><span class="gc-fecha">'+g.fecha+'</span><span class="gc-det">'+g.det+'</span><span class="gc-monto">'+ars(g.monto)+'</span><button class="gc-del" onclick="delGasto(\''+cat+'\','+i+')">×</button></div>';}).join('');}
+function renderG(){['pub','serv','fichas','bill','sus'].forEach(renderCat);}
+
+// ---- TESORO ----
+function saveT(){try{localStorage.setItem('gana_t',JSON.stringify(tesoro));}catch(e){}}
+function loadT(){try{var t=localStorage.getItem('gana_t');if(t)tesoro=JSON.parse(t);}catch(e){}}
+function addTesoro(bil){var f=document.getElementById('ta-'+bil+'-fecha').value,d=document.getElementById('ta-'+bil+'-det').value.trim(),m=parseFloat(document.getElementById('ta-'+bil+'-monto').value),tp=document.getElementById('ta-'+bil+'-tipo').value;if(!f||!d||!m||m<=0){alert('Completá todos los campos');return;}tesoro[bil].push({fecha:f,det:d,monto:m,tipo:tp});saveT();document.getElementById('ta-'+bil+'-det').value='';document.getElementById('ta-'+bil+'-monto').value='';renderTesoro();}
+function delTesoro(bil,i){tesoro[bil].splice(i,1);saveT();renderTesoro();}
+function renderBil(bil){var lista=tesoro[bil],saldo=lista.reduce(function(s,m){return s+(m.tipo==='ingreso'?m.monto:-m.monto);},0);var el=document.getElementById('tt-'+bil);el.textContent=ars(saldo);el.style.color=saldo>=0?'var(--am)':'var(--rd)';var eL=document.getElementById('tl-'+bil);if(!lista.length){eL.innerHTML='<div class="gc-empty">Sin movimientos aún</div>';return;}eL.innerHTML=lista.slice().reverse().map(function(m,ri){var i=lista.length-1-ri;var col=m.tipo==='ingreso'?'var(--gn)':'var(--rd)';var sg=m.tipo==='ingreso'?'+':'-';return '<div class="gc-row" style="grid-template-columns:88px 1fr auto auto auto;"><span class="gc-fecha">'+m.fecha+'</span><span class="gc-det">'+m.det+'</span><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:'+(m.tipo==='ingreso'?'var(--gn-d)':'var(--rd-d)')+';color:'+col+'">'+m.tipo+'</span><span class="gc-monto" style="color:'+col+'">'+sg+ars(m.monto)+'</span><button class="gc-del" onclick="delTesoro(\''+bil+'\','+i+')">×</button></div>';}).join('');}
+function renderTesoro(){['caja','mauricio','santiago','nancy'].forEach(renderBil);}
+
+// ---- INIT ----
+loadG();renderG();loadT();renderTesoro();
+var _n=new Date(),_p=fmtD(new Date(_n.getFullYear(),_n.getMonth(),1)),_h=fmtD(_n);
+['f','m','r','g'].forEach(function(pre){document.getElementById(pre+'-desde').value=_p;document.getElementById(pre+'-hasta').value=_h;});
+dash();renderMov();renderRanking();
 </script>
 </body>
 </html>
