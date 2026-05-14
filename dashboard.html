@@ -477,7 +477,7 @@ function dash(){
   var tD=deps.reduce(function(s,m){return s+pN(m['Monto']||0);},0);
   var tR=rets.reduce(function(s,m){return s+pN(m['Monto']||0);},0);
   var tB=bons.reduce(function(s,m){return s+pN(m['Monto']||0);},0);
-  var tG=['pub','serv','fichas','bill','sus'].reduce(function(s,c){return s+filtG(d,h,gastos[c]).reduce(function(ss,g){return ss+g.monto;},0);},0);
+  var tG=['pub','serv','fichas','bill','sus'].reduce(function(s,c){return s+(gastos[c]?filtG(d,h,gastos[c]).reduce(function(ss,g){return ss+g.monto;},0):0);},0);
   var nw=tD-tR-tB,ga=nw-tG;
   document.getElementById('d-dep').textContent=ars(tD);document.getElementById('d-dep-n').textContent=deps.length+' Operaciones';
   document.getElementById('d-ret').textContent=ars(tR);document.getElementById('d-ret-n').textContent=rets.length+' Operaciones';
@@ -568,7 +568,7 @@ function saveG(){try{localStorage.setItem('gana_g',JSON.stringify(gastos));}catc
 function loadG(){try{var g=localStorage.getItem('gana_g');if(g)gastos=JSON.parse(g);}catch(e){}}
 function addGasto(cat){var f=document.getElementById('ga-'+cat+'-fecha').value,d=document.getElementById('ga-'+cat+'-det').value.trim(),m=parseFloat(document.getElementById('ga-'+cat+'-monto').value);if(!f||!d||!m||m<=0){alert('Completá todos los campos');return;}gastos[cat].push({fecha:f,det:d,monto:m});saveG();document.getElementById('ga-'+cat+'-det').value='';document.getElementById('ga-'+cat+'-monto').value='';renderG();dash();}
 function delGasto(cat,i){gastos[cat].splice(i,1);saveG();renderG();dash();}
-function renderCat(cat){var lista=gastos[cat],total=lista.reduce(function(s,g){return s+g.monto;},0);document.getElementById('gt-'+cat).textContent=ars(total);var el=document.getElementById('gl-'+cat);if(!lista.length){el.innerHTML='<div class="gc-empty">Sin Registros Aún</div>';return;}el.innerHTML=lista.map(function(g,i){return '<div class="gc-row"><span class="gc-fecha">'+g.fecha+'</span><span class="gc-det">'+g.det+'</span><span class="gc-monto">'+ars(g.monto)+'</span><button class="gc-del" onclick="delGasto(\''+cat+'\','+i+')">×</button></div>';}).join('');}
+function renderCat(cat){if(!gastos[cat])return;var lista=gastos[cat],total=lista.reduce(function(s,g){return s+g.monto;},0);document.getElementById('gt-'+cat).textContent=ars(total);var el=document.getElementById('gl-'+cat);if(!lista.length){el.innerHTML='<div class="gc-empty">Sin Registros Aún</div>';return;}el.innerHTML=lista.map(function(g,i){return '<div class="gc-row"><span class="gc-fecha">'+g.fecha+'</span><span class="gc-det">'+g.det+'</span><span class="gc-monto">'+ars(g.monto)+'</span><button class="gc-del" onclick="delGasto(\''+cat+'\','+i+')">×</button></div>';}).join('');}
 function renderG(){['pub','serv','fichas','bill','sus'].forEach(renderCat);}
 
 // ---- TESORO ----
