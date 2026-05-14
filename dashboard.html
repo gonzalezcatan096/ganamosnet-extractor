@@ -185,7 +185,10 @@ tr:hover td{background:rgba(124,58,237,.06)}
     <div class="login-title">MUNDO <span>PLUTÓN</span></div>
     <p class="login-sub">Panel de administración</p>
     <div class="login-field"><label>Usuario</label><input type="text" id="lu" placeholder="Usuario" autocomplete="username"/></div>
-    <div class="login-field"><label>Contraseña</label><input type="password" id="lp" placeholder="••••••••" autocomplete="current-password"/></div>
+    <div class="login-field"><label>Contraseña</label><div style="position:relative">
+      <input type="password" id="lp" placeholder="••••••••" autocomplete="current-password" style="padding-right:44px"/>
+      <button type="button" onclick="togglePass()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;padding:0;line-height:1" id="eye-btn">👁</button>
+    </div></div>
     <div class="login-err" id="le"></div>
     <button class="login-btn" id="login-btn">Ingresar →</button>
   </div>
@@ -343,7 +346,11 @@ tr:hover td{background:rgba(124,58,237,.06)}
 
 <script>
 // ---- LOGIN ----
-var USERS = {'pluton':'plutonadmin2024','admin':'mundo2024'};
+var USERS = {
+  'pluton1': { pass: 'plutonadmin1', rol: 'admin' },
+  'pluton2': { pass: 'pluton1',      rol: 'viewer' }
+};
+var rolActual = '';
 var logueado = false;
 
 function tryLogin(){
@@ -351,18 +358,78 @@ function tryLogin(){
   var p = document.getElementById('lp').value;
   var e = document.getElementById('le');
   if(!u||!p){e.textContent='Ingresá usuario y contraseña';return;}
-  if(USERS[u]&&USERS[u]===p){
+  if(USERS[u]&&USERS[u].pass===p){
     logueado=true;
+    rolActual=USERS[u].rol;
     document.getElementById('login-screen').style.display='none';
+    aplicarRol();
   } else {
     e.textContent='❌ Usuario o contraseña incorrectos';
     document.getElementById('lp').value='';
   }
 }
+
+function aplicarRol(){
+  var esAdmin = rolActual==='admin';
+  // Ocultar controles de edicion para viewer
+  var selectores = [
+    '.csv-label','#btn-limpiar','.btn-add','.gc-del','.gc-form',
+    '.btn-add','#nav-tesoro'
+  ];
+  // Ocultar boton cargar CSV y limpiar para viewer
+  if(!esAdmin){
+    document.querySelector('.csv-label').style.display='none';
+    var btnLimpiar=document.getElementById('btn-limpiar');
+    if(btnLimpiar)btnLimpiar.style.display='none';
+    // Ocultar todos los formularios de gastos
+    document.querySelectorAll('.gc-form').forEach(function(el){el.style.display='none';});
+    document.querySelectorAll('.gc-del').forEach(function(el){el.style.display='none';});
+    document.querySelectorAll('.gc-del').forEach(function(el){el.style.display='none';});
+  }
+}
 function cerrarSesion(){if(confirm('¿Cerrar sesión?')){logueado=false;document.getElementById('login-screen').style.display='flex';document.getElementById('lu').value='';document.getElementById('lp').value='';document.getElementById('le').textContent='';}}
 document.getElementById('login-btn').onclick = tryLogin;
+function togglePass(){
+  var inp = document.getElementById('lp');
+  var btn = document.getElementById('eye-btn');
+  if(inp.type==='password'){inp.type='text';btn.textContent='🙈';}
+  else{inp.type='password';btn.textContent='👁';}
+}
 document.getElementById('lu').onkeydown = function(e){if(e.key==='Enter')tryLogin();};
 document.getElementById('lp').onkeydown = function(e){if(e.key==='Enter')tryLogin();};
+
+// ---- GOOGLE SHEETS API ----
+// Pegar aqui la URL del script publicado de Google Sheets
+// Instrucciones: ver archivo script-google-sheets.js
+var SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbynIFVo68BbOCpAyZzSNFsL4-PSgKWejMCxg63WSxubwfnyh5xwmtSE6Ez4o8FzNbjhPg/exec'; // COMPLETAR CON LA URL DEL SCRIPT PUBLICADO
+
+function cargarDesdeSheets(){
+  if(!SHEETS_API_URL) return;
+  var st = document.getElementById('csv-status');
+  st.textContent = 'Cargando datos...';
+  st.className = 'csv-tag none';
+  fetch(SHEETS_API_URL)
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(data.registros && data.registros.length > 0){
+        movs = data.registros.sort(function(a,b){
+          return ((b['Fecha']||'')+(b['Hora']||'')).localeCompare((a['Fecha']||'')+(a['Hora']||''));
+        });
+        archivosCSV = [{nombre:'sheets',rows:data.registros}];
+        st.textContent = movs.length + ' registros cargados';
+        st.className = 'csv-tag ok';
+        document.getElementById('btn-limpiar').style.display = 'none';
+        dash(); renderMov(); renderRanking();
+      } else {
+        st.textContent = 'Sin datos en servidor';
+        st.className = 'csv-tag none';
+      }
+    })
+    .catch(function(e){
+      st.textContent = 'Error al cargar datos';
+      console.log('Error Sheets:', e);
+    });
+}
 
 // ---- ESTADO ----
 var movs=[],gastos={pub:[],serv:[],fichas:[],bill:[],sus:[]},pagMov=0,POR_PAG=50,movFil=[],archivosCSV=[],charts={},tesoro={caja:[],mauricio:[],santiago:[],nancy:[]};
@@ -584,6 +651,7 @@ loadG();renderG();loadT();renderTesoro();
 var _n=new Date(),_p=fmtD(new Date(_n.getFullYear(),_n.getMonth(),1)),_h=fmtD(_n);
 ['f','m','r','g'].forEach(function(pre){document.getElementById(pre+'-desde').value=_p;document.getElementById(pre+'-hasta').value=_h;});
 dash();renderMov();renderRanking();
+cargarDesdeSheets();
 </script>
 </body>
 </html>
