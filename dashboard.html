@@ -412,6 +412,28 @@ function cargarDesdeSheets(){
     .then(function(r){ return r.json(); })
     .then(function(data){
       if(data.registros && data.registros.length > 0){
+        // Normalizar fechas que vienen como objetos Date de Google Sheets
+        data.registros.forEach(function(r){
+          // Normalizar Fecha
+          if(r['Fecha'] && r['Fecha'].length > 10){
+            try{
+              var d = new Date(r['Fecha']);
+              var mm = String(d.getMonth()+1).padStart(2,'0');
+              var dd = String(d.getDate()).padStart(2,'0');
+              r['Fecha'] = d.getFullYear()+'-'+mm+'-'+dd;
+            }catch(e){}
+          }
+          // Normalizar Hora
+          if(r['Hora'] && r['Hora'].length > 8){
+            try{
+              var h = new Date(r['Hora']);
+              var hh = String(h.getHours()).padStart(2,'0');
+              var mi = String(h.getMinutes()).padStart(2,'0');
+              var ss = String(h.getSeconds()).padStart(2,'0');
+              r['Hora'] = hh+':'+mi+':'+ss;
+            }catch(e){}
+          }
+        });
         movs = data.registros.sort(function(a,b){
           return ((b['Fecha']||'')+(b['Hora']||'')).localeCompare((a['Fecha']||'')+(a['Hora']||''));
         });
