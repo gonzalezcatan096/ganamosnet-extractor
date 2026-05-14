@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Mundo Plutón v2</title>
+<title>Mundo Plutón</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -379,7 +379,11 @@ function showPage(id){
 }
 
 // ---- FECHAS ----
-function fmtD(d){return d.toISOString().split('T')[0];}
+function fmtD(d){
+  var mm=String(d.getMonth()+1).padStart(2,'0');
+  var dd=String(d.getDate()).padStart(2,'0');
+  return d.getFullYear()+'-'+mm+'-'+dd;
+}
 function setR(r,pre){
   var n=new Date(),f=new Date(),t=new Date();
   if(r==='hoy'){f=new Date();t=new Date();}
