@@ -213,6 +213,15 @@ tr:hover td{background:rgba(124,58,237,.06)}
   </div>
 </div>
 
+<!-- FILTRO AGENTE -->
+<div class="agente-bar" id="agente-bar">
+  <span class="agente-label">🎯 Agente:</span>
+  <select class="agente-sel" id="agente-sel" onchange="cambiarAgente()">
+    <option value="">Todos los agentes</option>
+  </select>
+  <span style="font-size:11px;color:var(--muted)" id="agente-info"></span>
+</div>
+
 <!-- DASHBOARD -->
 <div class="page active" id="page-dashboard">
   <div class="fbar">
@@ -247,6 +256,13 @@ tr:hover td{background:rgba(124,58,237,.06)}
     <div class="kpi am"><div class="kpi-glow"></div><div class="kl">Servicios</div><div class="kv" id="dg-serv">$0</div><div class="ks" id="dg-serv-n">0 Registros</div></div>
     <div class="kpi am"><div class="kpi-glow"></div><div class="kl">Compra de Fichas</div><div class="kv" id="dg-fichas">$0</div><div class="ks" id="dg-fichas-n">0 Registros</div></div>
     <div class="kpi am"><div class="kpi-glow"></div><div class="kl">Billeteras</div><div class="kv" id="dg-bill">$0</div><div class="ks" id="dg-bill-n">0 Registros</div></div>
+  </div>
+
+  <div class="slabel" style="margin-top:2rem">Promedio Diario del Período</div>
+  <div class="diario-row">
+    <div class="kpi cy"><div class="kpi-glow"></div><div class="kl">Promedio Cargas / Día</div><div class="kv" id="d-avg-dep">$0</div><div class="ks" id="d-avg-dep-n">0 días</div></div>
+    <div class="kpi pk"><div class="kpi-glow"></div><div class="kl">Promedio Premios / Día</div><div class="kv" id="d-avg-ret">$0</div><div class="ks" id="d-avg-ret-n">0 días</div></div>
+    <div class="kpi vl"><div class="kpi-glow"></div><div class="kl">Promedio Netwing / Día</div><div class="kv" id="d-avg-nw">$0</div><div class="ks" id="d-avg-nw-n">basado en días con actividad</div></div>
   </div>
 </div>
 
@@ -441,6 +457,7 @@ function cargarDesdeSheets(){
         st.textContent = movs.length + ' registros cargados';
         st.className = 'csv-tag ok';
         document.getElementById('btn-limpiar').style.display = 'none';
+        poblarAgentes();
         dash(); renderMov(); renderRanking();
       } else {
         st.textContent = 'Sin datos en servidor';
@@ -535,6 +552,7 @@ function combinar(){
   st.textContent=movs.length+' registros · '+archivosCSV.length+' archivo'+(archivosCSV.length>1?'s':'');
   st.className='csv-tag ok';
   document.getElementById('btn-limpiar').style.display='inline-block';
+  poblarAgentes();
   dash();renderMov();renderRanking();
 }
 function limpiarCSV(){
@@ -543,6 +561,7 @@ function limpiarCSV(){
   document.getElementById('csv-status').textContent='Sin datos';
   document.getElementById('csv-status').className='csv-tag none';
   document.getElementById('btn-limpiar').style.display='none';
+  poblarAgentes();
   dash();renderMov();renderRanking();
 }
 function pN(v){
@@ -559,7 +578,7 @@ function filtG(d,h,l){return l.filter(function(g){return(!d||g.fecha>=d)&&(!h||g
 
 // ---- DASHBOARD ----
 function dash(){
-  var d=document.getElementById('f-desde').value,h=document.getElementById('f-hasta').value,fil=filtM(d,h);
+  var d=document.getElementById('f-desde').value,h=document.getElementById('f-hasta').value,fil=filtMConAgente(d,h);
   var deps=fil.filter(function(m){return m['Tipo']==='Deposito';});
   var rets=fil.filter(function(m){return m['Tipo']==='Retiro';});
   var bons=fil.filter(function(m){return m['Tipo']==='Bonificacion';});
@@ -577,13 +596,14 @@ function dash(){
   document.getElementById('ga-nw').textContent=ars(nw);document.getElementById('ga-g').textContent=ars(tG);
   var gaEl=document.getElementById('d-ga');gaEl.textContent=ars(ga);gaEl.className='rc-val'+(ga<0?' neg':'');
   ['pub','serv','fichas','bill'].forEach(function(c){var v=filtG(d,h,gastos[c]).reduce(function(s,g){return s+g.monto;},0);document.getElementById('dg-'+c).textContent=ars(v);document.getElementById('dg-'+c+'-n').textContent=filtG(d,h,gastos[c]).length+' Registros';});
+  calcularPromedios(fil,d,h);
 }
 
 // ---- MOVIMIENTOS ----
 function renderMov(){
   var d=document.getElementById('m-desde').value,h=document.getElementById('m-hasta').value;
   var tipo=document.getElementById('m-tipo').value,busq=(document.getElementById('m-search').value||'').toLowerCase();
-  movFil=filtM(d,h).filter(function(m){if(tipo&&m['Tipo']!==tipo)return false;if(busq&&((m['Desde']||'')+(m['Hacia']||'')).toLowerCase().indexOf(busq)<0)return false;return true;});
+  movFil=filtMConAgente(d,h).filter(function(m){if(tipo&&m['Tipo']!==tipo)return false;if(busq&&((m['Desde']||'')+(m['Hacia']||'')).toLowerCase().indexOf(busq)<0)return false;return true;});
   var total=movFil.length,tP=Math.ceil(total/POR_PAG)||1;
   if(pagMov>=tP)pagMov=0;
   var ini=pagMov*POR_PAG,pag=movFil.slice(ini,ini+POR_PAG),tb=document.getElementById('m-body');
@@ -600,7 +620,7 @@ function showGraf(id){document.querySelectorAll('.chart-card').forEach(function(
 function renderGraficas(){
   var d=document.getElementById('g-desde').value,h=document.getElementById('g-hasta').value;
   if(!d||!h)return;
-  var fil=filtM(d,h),dm={};
+  var fil=filtMConAgente(d,h),dm={};
   var cur=new Date(d+'T00:00:00'),end=new Date(h+'T00:00:00');
   while(cur<=end){dm[fmtD(cur)]={dep:0,ret:0,bon:0};cur.setDate(cur.getDate()+1);}
   fil.forEach(function(m){var f=m['Fecha']||'';if(!dm[f])return;var mn=pN(m['Monto']||0);if(m['Tipo']==='Deposito')dm[f].dep+=mn;else if(m['Tipo']==='Retiro')dm[f].ret+=mn;else if(m['Tipo']==='Bonificacion')dm[f].bon+=mn;});
@@ -620,7 +640,7 @@ function renderGraficas(){
 
 // ---- RANKING ----
 function renderRanking(){
-  var d=document.getElementById('r-desde').value,h=document.getElementById('r-hasta').value,fil=filtM(d,h);
+  var d=document.getElementById('r-desde').value,h=document.getElementById('r-hasta').value,fil=filtMConAgente(d,h);
   buildRank('rk-dep-monto',fil,'Deposito','monto','rank-col-cy');buildRank('rk-dep-cant',fil,'Deposito','cant','rank-col-cy');
   buildRank('rk-ret-monto',fil,'Retiro','monto','rank-col-pk');buildRank('rk-ret-cant',fil,'Retiro','cant','rank-col-pk');
   buildRank('rk-bon-monto',fil,'Bonificacion','monto','rank-col-vl');buildRank('rk-bon-cant',fil,'Bonificacion','cant','rank-col-vl');
@@ -672,6 +692,65 @@ function renderTesoro(){['caja','mauricio','santiago','nancy'].forEach(renderBil
 loadG();renderG();loadT();renderTesoro();
 var _n=new Date(),_p=fmtD(new Date(_n.getFullYear(),_n.getMonth(),1)),_h=fmtD(_n);
 ['f','m','r','g'].forEach(function(pre){document.getElementById(pre+'-desde').value=_p;document.getElementById(pre+'-hasta').value=_h;});
+
+// ---- AGENTE ----
+var agenteActual = '';
+
+function poblarAgentes(){
+  var sel = document.getElementById('agente-sel');
+  var agentes = {};
+  movs.forEach(function(m){ var a = m['Desde']||''; if(a) agentes[a]=true; });
+  // Limpiar opciones actuales (mantener "Todos")
+  while(sel.options.length > 1) sel.remove(1);
+  Object.keys(agentes).sort().forEach(function(a){
+    var opt = document.createElement('option');
+    opt.value = a; opt.textContent = a;
+    sel.appendChild(opt);
+  });
+}
+
+function cambiarAgente(){
+  agenteActual = document.getElementById('agente-sel').value;
+  var info = document.getElementById('agente-info');
+  info.textContent = agenteActual ? 'Filtrando por: ' + agenteActual : '';
+  dash(); renderMov(); renderRanking(); renderGraficas();
+}
+
+function filtMConAgente(d, h){
+  var base = filtM(d, h);
+  if(!agenteActual) return base;
+  return base.filter(function(m){
+    return (m['Desde']||'') === agenteActual || (m['Hacia']||'') === agenteActual;
+  });
+}
+
+// ---- PROMEDIOS DIARIOS ----
+function calcularPromedios(fil, desde, hasta){
+  // Contar dias unicos con actividad
+  var diasMap = {};
+  fil.forEach(function(m){ var f=m['Fecha']||''; if(f) diasMap[f]=true; });
+  var numDias = Object.keys(diasMap).length;
+  if(numDias === 0) numDias = 1;
+
+  var deps = fil.filter(function(m){return m['Tipo']==='Deposito';});
+  var rets = fil.filter(function(m){return m['Tipo']==='Retiro';});
+  var bons = fil.filter(function(m){return m['Tipo']==='Bonificacion';});
+  var tD = deps.reduce(function(s,m){return s+pN(m['Monto']||0);},0);
+  var tR = rets.reduce(function(s,m){return s+pN(m['Monto']||0);},0);
+  var tB = bons.reduce(function(s,m){return s+pN(m['Monto']||0);},0);
+  var nw = tD - tR - tB;
+
+  document.getElementById('d-avg-dep').textContent = ars(Math.round(tD/numDias));
+  document.getElementById('d-avg-dep-n').textContent = numDias + ' días con actividad';
+  document.getElementById('d-avg-ret').textContent = ars(Math.round(tR/numDias));
+  document.getElementById('d-avg-ret-n').textContent = numDias + ' días con actividad';
+  var avgNw = Math.round(nw/numDias);
+  var nwEl = document.getElementById('d-avg-nw');
+  nwEl.textContent = ars(avgNw);
+  nwEl.className = 'kv' + (avgNw < 0 ? '' : '');
+  document.getElementById('d-avg-nw-n').textContent = numDias + ' días con actividad';
+}
+
 dash();renderMov();renderRanking();
 cargarDesdeSheets();
 </script>
