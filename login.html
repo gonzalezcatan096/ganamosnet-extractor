@@ -118,7 +118,7 @@ function login() {
     return;
   }
   if (OK[u] && OK[u] === p) {
-    sessionStorage.setItem('mp_ok', '1');
+    localStorage.setItem('mp_ok', '1');
     window.location.href = 'dashboard.html';
   } else {
     e.textContent = '❌ Usuario o contraseña incorrectos';
