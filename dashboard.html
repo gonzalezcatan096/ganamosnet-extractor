@@ -253,7 +253,7 @@ tr:hover td{background:rgba(124,58,237,.06)}
     <div class="rc nw"><div class="rc-glow"></div><div class="rc-lbl">Netwing</div><div class="rc-formula"><span id="nw-c" class="fv">$0</span> Cargas − <span id="nw-p" class="fv">$0</span> Premios − <span id="nw-b" class="fv">$0</span> Bonos</div><div class="rc-val" id="d-nw">$0</div></div>
     <div class="rc ga"><div class="rc-glow"></div><div class="rc-lbl">Ganancia Limpia</div>
       <div class="rc-formula">Netwing <span id="ga-nw" class="fv">$0</span> − Gastos <span id="ga-g" class="fv">$0</span></div>
-      <div id="ga-pct-wrap" style="display:none;margin-bottom:.75rem;display:flex;align-items:center;gap:8px">
+      <div id="ga-pct-wrap" style="display:none;margin-bottom:.75rem;align-items:center;gap:8px">
         <span style="font-size:12px;color:var(--muted);font-family:var(--fm)">% del Netwing:</span>
         <input type="number" id="ga-pct" min="0" max="100" value="45" oninput="dash()"
           style="width:70px;background:var(--s2);border:1px solid var(--gn);border-radius:8px;color:var(--gn);font-family:var(--fm);font-size:14px;font-weight:700;padding:4px 8px;outline:none;text-align:center"/>
@@ -399,20 +399,14 @@ function tryLogin(){
 
 function aplicarRol(){
   var esAdmin = rolActual==='admin';
-  // Ocultar controles de edicion para viewer
-  var selectores = [
-    '.csv-label','#btn-limpiar','.btn-add','.gc-del','.gc-form',
-    '.btn-add','#nav-tesoro'
-  ];
-  // Ocultar boton cargar CSV y limpiar para viewer
   if(!esAdmin){
-    document.querySelector('.csv-label').style.display='none';
-    var btnLimpiar=document.getElementById('btn-limpiar');
-    if(btnLimpiar)btnLimpiar.style.display='none';
-    // Ocultar todos los formularios de gastos
+    var csvLabel = document.querySelector('.csv-label');
+    if(csvLabel) csvLabel.style.display='none';
+    var btnLimpiar = document.getElementById('btn-limpiar');
+    if(btnLimpiar) btnLimpiar.style.display='none';
     document.querySelectorAll('.gc-form').forEach(function(el){el.style.display='none';});
     document.querySelectorAll('.gc-del').forEach(function(el){el.style.display='none';});
-    document.querySelectorAll('.gc-del').forEach(function(el){el.style.display='none';});
+    document.querySelectorAll('.btn-add').forEach(function(el){el.style.display='none';});
   }
 }
 function cerrarSesion(){if(confirm('¿Cerrar sesión?')){logueado=false;document.getElementById('login-screen').style.display='flex';document.getElementById('lu').value='';document.getElementById('lp').value='';document.getElementById('le').textContent='';}}
