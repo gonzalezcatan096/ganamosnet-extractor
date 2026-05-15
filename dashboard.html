@@ -215,11 +215,14 @@ tr:hover td{background:rgba(124,58,237,.06)}
 
 <!-- FILTRO AGENTE -->
 <div class="agente-bar" id="agente-bar">
-  <span class="agente-label">🎯 Agente:</span>
-  <select class="agente-sel" id="agente-sel" onchange="cambiarAgente()">
+  <span class="agente-label">🎯 Filtrar por agente:</span>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center" id="agente-btns">
+    <button class="agente-btn active" onclick="selAgente('',this)">Todos</button>
+  </div>
+  <select class="agente-sel" id="agente-sel" onchange="cambiarAgente()" style="display:none">
     <option value="">Todos los agentes</option>
   </select>
-  <span style="font-size:11px;color:var(--muted)" id="agente-info"></span>
+  <span style="font-size:11px;color:var(--muted);margin-left:8px" id="agente-info"></span>
 </div>
 
 <!-- DASHBOARD -->
@@ -248,7 +251,16 @@ tr:hover td{background:rgba(124,58,237,.06)}
   </div>
   <div class="res-row">
     <div class="rc nw"><div class="rc-glow"></div><div class="rc-lbl">Netwing</div><div class="rc-formula"><span id="nw-c" class="fv">$0</span> Cargas − <span id="nw-p" class="fv">$0</span> Premios − <span id="nw-b" class="fv">$0</span> Bonos</div><div class="rc-val" id="d-nw">$0</div></div>
-    <div class="rc ga"><div class="rc-glow"></div><div class="rc-lbl">Ganancia Limpia</div><div class="rc-formula">Netwing <span id="ga-nw" class="fv">$0</span> − Gastos <span id="ga-g" class="fv">$0</span></div><div class="rc-val" id="d-ga">$0</div></div>
+    <div class="rc ga"><div class="rc-glow"></div><div class="rc-lbl">Ganancia Limpia</div>
+      <div class="rc-formula">Netwing <span id="ga-nw" class="fv">$0</span> − Gastos <span id="ga-g" class="fv">$0</span></div>
+      <div id="ga-pct-wrap" style="display:none;margin-bottom:.75rem;display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;color:var(--muted);font-family:var(--fm)">% del Netwing:</span>
+        <input type="number" id="ga-pct" min="0" max="100" value="45" oninput="dash()"
+          style="width:70px;background:var(--s2);border:1px solid var(--gn);border-radius:8px;color:var(--gn);font-family:var(--fm);font-size:14px;font-weight:700;padding:4px 8px;outline:none;text-align:center"/>
+        <span style="font-size:12px;color:var(--muted);font-family:var(--fm)">%</span>
+      </div>
+      <div class="rc-val" id="d-ga">$0</div>
+    </div>
   </div>
   <div class="slabel">Desglose de Gastos</div>
   <div class="kpi-row">
@@ -585,7 +597,8 @@ function dash(){
   var tD=deps.reduce(function(s,m){return s+pN(m['Monto']||0);},0);
   var tR=rets.reduce(function(s,m){return s+pN(m['Monto']||0);},0);
   var tB=bons.reduce(function(s,m){return s+pN(m['Monto']||0);},0);
-  var tG=['pub','serv','fichas','bill','sus'].reduce(function(s,c){return s+(gastos[c]?filtG(d,h,gastos[c]).reduce(function(ss,g){return ss+g.monto;},0):0);},0);
+  var esPrincipal = !agenteActual || agenteActual==='plutonnet07';
+  var tG=esPrincipal?['pub','serv','fichas','bill','sus'].reduce(function(s,c){return s+(gastos[c]?filtG(d,h,gastos[c]).reduce(function(ss,g){return ss+g.monto;},0):0);},0):0;
   var nw=tD-tR-tB,ga=nw-tG;
   document.getElementById('d-dep').textContent=ars(tD);document.getElementById('d-dep-n').textContent=deps.length+' Operaciones';
   document.getElementById('d-ret').textContent=ars(tR);document.getElementById('d-ret-n').textContent=rets.length+' Operaciones';
@@ -594,7 +607,13 @@ function dash(){
   document.getElementById('nw-c').textContent=ars(tD);document.getElementById('nw-p').textContent=ars(tR);document.getElementById('nw-b').textContent=ars(tB);
   var nwEl=document.getElementById('d-nw');nwEl.textContent=ars(nw);nwEl.className='rc-val'+(nw<0?' neg':'');
   document.getElementById('ga-nw').textContent=ars(nw);document.getElementById('ga-g').textContent=ars(tG);
-  var gaEl=document.getElementById('d-ga');gaEl.textContent=ars(ga);gaEl.className='rc-val'+(ga<0?' neg':'');
+  var gaFinal = ga;
+  if(!esPrincipal){
+    var pctInput = document.getElementById('ga-pct');
+    var pct = pctInput ? parseFloat(pctInput.value)||0 : 0;
+    gaFinal = Math.round(nw * pct / 100);
+  }
+  var gaEl=document.getElementById('d-ga');gaEl.textContent=ars(gaFinal);gaEl.className='rc-val'+(gaFinal<0?' neg':'');
   ['pub','serv','fichas','bill'].forEach(function(c){var v=filtG(d,h,gastos[c]).reduce(function(s,g){return s+g.monto;},0);document.getElementById('dg-'+c).textContent=ars(v);document.getElementById('dg-'+c+'-n').textContent=filtG(d,h,gastos[c]).length+' Registros';});
   calcularPromedios(fil,d,h);
 }
@@ -697,23 +716,36 @@ var _n=new Date(),_p=fmtD(new Date(_n.getFullYear(),_n.getMonth(),1)),_h=fmtD(_n
 var agenteActual = '';
 
 function poblarAgentes(){
-  var sel = document.getElementById('agente-sel');
   var agentes = {};
   movs.forEach(function(m){ var a = m['Desde']||''; if(a) agentes[a]=true; });
-  // Limpiar opciones actuales (mantener "Todos")
-  while(sel.options.length > 1) sel.remove(1);
+  var container = document.getElementById('agente-btns');
+  // Mantener solo el boton "Todos"
+  container.innerHTML = '<button class="agente-btn active" onclick="selAgente('',this)">Todos</button>';
   Object.keys(agentes).sort().forEach(function(a){
-    var opt = document.createElement('option');
-    opt.value = a; opt.textContent = a;
-    sel.appendChild(opt);
+    var btn = document.createElement('button');
+    btn.className = 'agente-btn';
+    btn.textContent = a;
+    btn.onclick = function(){ selAgente(a, this); };
+    container.appendChild(btn);
   });
+}
+
+function selAgente(agente, btn){
+  agenteActual = agente;
+  document.querySelectorAll('.agente-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('agente-info').textContent = '';
+  // Mostrar input % solo para agentes secundarios
+  var esPrincipal = !agente || agente === 'plutonnet07';
+  var pctWrap = document.getElementById('ga-pct-wrap');
+  if(pctWrap) pctWrap.style.display = esPrincipal ? 'none' : 'flex';
+  dash(); renderMov(); renderRanking();
+  setTimeout(renderGraficas, 50);
 }
 
 function cambiarAgente(){
   agenteActual = document.getElementById('agente-sel').value;
-  var info = document.getElementById('agente-info');
-  info.textContent = agenteActual ? 'Filtrando por: ' + agenteActual : '';
-  dash(); renderMov(); renderRanking(); renderGraficas();
+  dash(); renderMov(); renderRanking();
 }
 
 function filtMConAgente(d, h){
