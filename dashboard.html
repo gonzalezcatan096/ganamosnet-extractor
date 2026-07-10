@@ -1110,7 +1110,7 @@ function delMovInterno(i){
 function renderBil(bil){ var lista=tesoro[bil],saldo=lista.reduce(function(s,m){return s+(m.tipo==='ingreso'?m.monto:-m.monto);},0); var el=document.getElementById('tt-'+bil); el.textContent=ars(saldo); el.style.color=saldo>=0?'var(--am)':'var(--rd)'; var eL=document.getElementById('tl-'+bil); if(!lista.length){eL.innerHTML='<div class="gc-empty">Sin movimientos aun</div>';return;} eL.innerHTML=lista.slice().reverse().map(function(m,ri){var i=lista.length-1-ri;var col=m.tipo==='ingreso'?'var(--gn)':'var(--rd)';var sg=m.tipo==='ingreso'?'+':'-';return '<div class="gc-row" style="grid-template-columns:88px 1fr auto auto auto;"><span class="gc-fecha">'+m.fecha+'</span><span class="gc-det">'+m.det+'</span><span style="font-size:11px;padding:2px 8px;border-radius:999px;background:'+(m.tipo==='ingreso'?'var(--gn-d)':'var(--rd-d)')+';color:'+col+'">'+m.tipo+'</span><span class="gc-monto" style="color:'+col+'">'+sg+ars(m.monto)+'</span><button class="gc-del" onclick="delTesoro(\''+bil+'\','+i+')">x</button></div>';}).join('');}
 function renderTesoro(){ ['caja','mauricio','santiago','nancy'].forEach(renderBil); }
 
-// INIT
+// INIT 1
 loadG(); renderG(); loadT(); renderTesoro();
 var _n=new Date();
 globalDesde = fmtD(new Date(_n.getFullYear(),_n.getMonth(),1));
