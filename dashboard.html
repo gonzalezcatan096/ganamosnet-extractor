@@ -250,24 +250,28 @@ tr:hover td{background:rgba(124,58,237,.06)}
   </div>
 </div>
 
-<!-- FILTRO AGENTE -->
-<div class="agente-bar">
+<!-- BARRA GLOBAL DE FILTROS -->
+<div class="agente-bar" id="barra-global">
+  <label style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Desde</label>
+  <input type="date" id="g-desde-global" onchange="aplicarFiltroGlobal()"/>
+  <label style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Hasta</label>
+  <input type="date" id="g-hasta-global" onchange="aplicarFiltroGlobal()"/>
+  <div class="sep"></div>
+  <button class="qb" onclick="setRGlobal('hoy')">Hoy</button>
+  <button class="qb" onclick="setRGlobal('semana')">7 Días</button>
+  <button class="qb" onclick="setRGlobal('mes')">Este Mes</button>
+  <button class="qb" onclick="setRGlobal('anterior')">Mes Anterior</button>
+  <div class="sep"></div>
   <span class="agente-label">🎯 Agente:</span>
-  <div id="agente-btns" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+  <div id="agente-btns" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
+  <select id="agente-dropdown" class="sel" onchange="selAgenteDropdown()" style="display:none">
+    <option value="">Otros agentes...</option>
+  </select>
 </div>
 
 <!-- DASHBOARD -->
 <div class="page active" id="page-dashboard">
   <div class="fbar">
-    <label>Desde</label><input type="date" id="f-desde" onchange="dash()"/>
-    <label>Hasta</label><input type="date" id="f-hasta" onchange="dash()"/>
-    <div class="sep"></div>
-    <button class="qb" onclick="setR('hoy','f')">Hoy</button>
-    <button class="qb" onclick="setR('semana','f')">7 Días</button>
-    <button class="qb" onclick="setR('mes','f')">Este Mes</button>
-    <div class="sep"></div>
-    <button class="qb" onclick="setR('anterior','f')">Mes Anterior</button>
-    <div class="sep"></div>
     <label class="csv-label" id="csv-label" for="csv-input">⬆ Cargar CSV(s)</label>
     <input type="file" id="csv-input" accept=".csv" multiple/>
     <button class="btn-limpiar" id="btn-limpiar" onclick="limpiarCSV()">✕ Limpiar</button>
@@ -312,15 +316,6 @@ tr:hover td{background:rgba(124,58,237,.06)}
 <!-- MOVIMIENTOS -->
 <div class="page" id="page-movimientos">
   <div class="fbar">
-    <label>Desde</label><input type="date" id="m-desde" onchange="renderMov()"/>
-    <label>Hasta</label><input type="date" id="m-hasta" onchange="renderMov()"/>
-    <div class="sep"></div>
-    <button class="qb" onclick="setR('hoy','m')">Hoy</button>
-    <button class="qb" onclick="setR('semana','m')">7 Días</button>
-    <button class="qb" onclick="setR('mes','m')">Este Mes</button>
-    <div class="sep"></div>
-    <button class="qb" onclick="setR('anterior','m')">Mes Anterior</button>
-    <div class="sep"></div>
     <select class="sel" id="m-tipo" onchange="renderMov()"><option value="">Todos</option><option value="Deposito">Depósitos</option><option value="Retiro">Retiros</option><option value="Bonificacion">Bonificaciones</option></select>
   </div>
   <div class="tabla-wrap">
@@ -332,16 +327,7 @@ tr:hover td{background:rgba(124,58,237,.06)}
 
 <!-- GRAFICAS -->
 <div class="page" id="page-graficas">
-  <div class="fbar">
-    <label>Desde</label><input type="date" id="g-desde" onchange="renderGraficas()"/>
-    <label>Hasta</label><input type="date" id="g-hasta" onchange="renderGraficas()"/>
-    <div class="sep"></div>
-    <button class="qb" onclick="setR('hoy','g')">Hoy</button>
-    <button class="qb" onclick="setR('semana','g')">7 Días</button>
-    <button class="qb" onclick="setR('mes','g')">Este Mes</button>
-    <div class="sep"></div>
-    <button class="qb" onclick="setR('anterior','g')">Mes Anterior</button>
-  </div>
+
   <div class="graficas-tabs">
     <button class="gtab active" id="gtab-volumen" onclick="showGraf('volumen')">📈 Cargas vs Premios</button>
     <button class="gtab" id="gtab-profit" onclick="showGraf('profit')">💰 Netwing Diario</button>
@@ -367,16 +353,7 @@ tr:hover td{background:rgba(124,58,237,.06)}
 
 <!-- RANKING -->
 <div class="page" id="page-ranking">
-  <div class="fbar">
-    <label>Desde</label><input type="date" id="r-desde" onchange="renderRanking()"/>
-    <label>Hasta</label><input type="date" id="r-hasta" onchange="renderRanking()"/>
-    <div class="sep"></div>
-    <button class="qb" onclick="setR('hoy','r')">Hoy</button>
-    <button class="qb" onclick="setR('semana','r')">7 Días</button>
-    <button class="qb" onclick="setR('mes','r')">Este Mes</button>
-    <div class="sep"></div>
-    <button class="qb" onclick="setR('anterior','r')">Mes Anterior</button>
-  </div>
+
   <div class="slabel">Top Jugadores</div>
   <div class="rank-grid">
     <div class="rank-card"><div class="rank-head"><div class="rank-title">🏆 Top Cargas por Monto</div><div class="rank-sub">Mayor depósito acumulado</div></div><div class="rank-list" id="rk-dep-monto"></div></div>
@@ -395,11 +372,11 @@ tr:hover td{background:rgba(124,58,237,.06)}
 <div class="page" id="page-gastos">
   <div class="slabel">Registro de Gastos Manuales</div>
   <div class="gastos-grid">
-    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#fbbf2420">📢</div><div class="gc-name">Publicidad</div></div><div class="gc-total" id="gt-pub">$0</div></div><div class="gc-items" id="gl-pub"></div><div class="gc-form"><input type="date" id="ga-pub-fecha"/><input type="text" id="ga-pub-det" placeholder="Detalle"/><input type="number" id="ga-pub-monto" placeholder="Monto"/><select id="ga-pub-bil" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="">Billetera...</option><option value="Caja Principal">Caja Principal</option><option value="Mauricio">Mauricio</option><option value="Santiago">Santiago</option><option value="Nancy">Nancy</option></select><button class="btn-add" onclick="addGasto('pub')">+ Agregar</button></div></div>
-    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#22d3ee20">⚡</div><div class="gc-name">Servicios</div></div><div class="gc-total" id="gt-serv">$0</div></div><div class="gc-items" id="gl-serv"></div><div class="gc-form"><input type="date" id="ga-serv-fecha"/><input type="text" id="ga-serv-det" placeholder="Ej: Luz"/><input type="number" id="ga-serv-monto" placeholder="Monto"/><select id="ga-serv-bil" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="">Billetera...</option><option value="Caja Principal">Caja Principal</option><option value="Mauricio">Mauricio</option><option value="Santiago">Santiago</option><option value="Nancy">Nancy</option></select><button class="btn-add" onclick="addGasto('serv')">+ Agregar</button></div></div>
-    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#c084fc20">🎰</div><div class="gc-name">Compra de Fichas</div></div><div class="gc-total" id="gt-fichas">$0</div></div><div class="gc-items" id="gl-fichas"></div><div class="gc-form"><input type="date" id="ga-fichas-fecha"/><input type="text" id="ga-fichas-det" placeholder="Detalle"/><input type="number" id="ga-fichas-monto" placeholder="Monto"/><select id="ga-fichas-bil" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="">Billetera...</option><option value="Caja Principal">Caja Principal</option><option value="Mauricio">Mauricio</option><option value="Santiago">Santiago</option><option value="Nancy">Nancy</option></select><button class="btn-add" onclick="addGasto('fichas')">+ Agregar</button></div></div>
-    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#4ade8020">👛</div><div class="gc-name">Billeteras</div></div><div class="gc-total" id="gt-bill">$0</div></div><div class="gc-items" id="gl-bill"></div><div class="gc-form"><input type="date" id="ga-bill-fecha"/><input type="text" id="ga-bill-det" placeholder="Ej: Mercado Pago"/><input type="number" id="ga-bill-monto" placeholder="Monto"/><select id="ga-bill-bil" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="">Billetera...</option><option value="Caja Principal">Caja Principal</option><option value="Mauricio">Mauricio</option><option value="Santiago">Santiago</option><option value="Nancy">Nancy</option></select><button class="btn-add" onclick="addGasto('bill')">+ Agregar</button></div></div>
-    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#22d3ee20">📱</div><div class="gc-name">Suscripciones</div></div><div class="gc-total" id="gt-sus">$0</div></div><div class="gc-items" id="gl-sus"></div><div class="gc-form"><input type="date" id="ga-sus-fecha"/><input type="text" id="ga-sus-det" placeholder="Ej: Netflix"/><input type="number" id="ga-sus-monto" placeholder="Monto"/><select id="ga-sus-bil" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="">Billetera...</option><option value="Caja Principal">Caja Principal</option><option value="Mauricio">Mauricio</option><option value="Santiago">Santiago</option><option value="Nancy">Nancy</option></select><button class="btn-add" onclick="addGasto('sus')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#fbbf2420">📢</div><div class="gc-name">Publicidad</div></div><div class="gc-total" id="gt-pub">$0</div></div><div class="gc-items" id="gl-pub"></div><div class="gc-form"><input type="date" id="ga-pub-fecha"/><input type="text" id="ga-pub-det" placeholder="Detalle"/><input type="number" id="ga-pub-monto" placeholder="Monto"/><select id="ga-pub-bil" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="">Billetera...</option><option value="Caja Principal">Caja Principal</option><option value="Mauricio">Mauricio</option><option value="Santiago">Santiago</option><option value="Nancy">Nancy</option><option value="Oficina">Oficina</option></select><button class="btn-add" onclick="addGasto('pub')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#22d3ee20">⚡</div><div class="gc-name">Servicios</div></div><div class="gc-total" id="gt-serv">$0</div></div><div class="gc-items" id="gl-serv"></div><div class="gc-form"><input type="date" id="ga-serv-fecha"/><input type="text" id="ga-serv-det" placeholder="Ej: Luz"/><input type="number" id="ga-serv-monto" placeholder="Monto"/><select id="ga-serv-bil" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="">Billetera...</option><option value="Caja Principal">Caja Principal</option><option value="Mauricio">Mauricio</option><option value="Santiago">Santiago</option><option value="Nancy">Nancy</option><option value="Oficina">Oficina</option></select><button class="btn-add" onclick="addGasto('serv')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#c084fc20">🎰</div><div class="gc-name">Compra de Fichas</div></div><div class="gc-total" id="gt-fichas">$0</div></div><div class="gc-items" id="gl-fichas"></div><div class="gc-form"><input type="date" id="ga-fichas-fecha"/><input type="text" id="ga-fichas-det" placeholder="Detalle"/><input type="number" id="ga-fichas-monto" placeholder="Monto"/><select id="ga-fichas-bil" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="">Billetera...</option><option value="Caja Principal">Caja Principal</option><option value="Mauricio">Mauricio</option><option value="Santiago">Santiago</option><option value="Nancy">Nancy</option><option value="Oficina">Oficina</option></select><button class="btn-add" onclick="addGasto('fichas')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#4ade8020">👛</div><div class="gc-name">Billeteras</div></div><div class="gc-total" id="gt-bill">$0</div></div><div class="gc-items" id="gl-bill"></div><div class="gc-form"><input type="date" id="ga-bill-fecha"/><input type="text" id="ga-bill-det" placeholder="Ej: Mercado Pago"/><input type="number" id="ga-bill-monto" placeholder="Monto"/><select id="ga-bill-bil" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="">Billetera...</option><option value="Caja Principal">Caja Principal</option><option value="Mauricio">Mauricio</option><option value="Santiago">Santiago</option><option value="Nancy">Nancy</option><option value="Oficina">Oficina</option></select><button class="btn-add" onclick="addGasto('bill')">+ Agregar</button></div></div>
+    <div class="gc"><div class="gc-head"><div class="gc-tw"><div class="gc-icon" style="background:#22d3ee20">📱</div><div class="gc-name">Suscripciones</div></div><div class="gc-total" id="gt-sus">$0</div></div><div class="gc-items" id="gl-sus"></div><div class="gc-form"><input type="date" id="ga-sus-fecha"/><input type="text" id="ga-sus-det" placeholder="Ej: Netflix"/><input type="number" id="ga-sus-monto" placeholder="Monto"/><select id="ga-sus-bil" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-family:var(--fh);font-size:12px;padding:7px 10px;outline:none"><option value="">Billetera...</option><option value="Caja Principal">Caja Principal</option><option value="Mauricio">Mauricio</option><option value="Santiago">Santiago</option><option value="Nancy">Nancy</option><option value="Oficina">Oficina</option></select><button class="btn-add" onclick="addGasto('sus')">+ Agregar</button></div></div>
   </div>
 </div>
 
@@ -469,7 +446,7 @@ tr:hover td{background:rgba(124,58,237,.06)}
 <script>
 var SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbyGBWOUsXkHEA7G98avUOrzFDQF5BNmzAwDvVDl9CzDqIu7W1CTHhgo3i_Ot6iEatpSuA/exec';
 var BILLETERAS = ['Caja Principal','Mauricio','Santiago','Nancy','Marcelo'];
-var BILLETERAS_GASTOS = ['Caja Principal','Mauricio','Santiago','Nancy']; // Marcelo solo ingresos
+var BILLETERAS_GASTOS = ['Caja Principal','Mauricio','Santiago','Nancy','Oficina']; // Marcelo solo ingresos
 
 // Guardar en Sheets via POST
 function sheetsPost(datos, callback) {
@@ -542,6 +519,36 @@ var USERS = { 'pluton1': { pass: 'plutonadmin1', rol: 'admin' }, 'pluton2': { pa
 var logueado = false;
 var rolActual = '';
 var agenteActual = '';
+var globalDesde = '';
+var globalHasta = '';
+
+function getDesde(){ return globalDesde; }
+function getHasta(){ return globalHasta; }
+
+function aplicarFiltroGlobal(){
+  globalDesde = document.getElementById('g-desde-global').value;
+  globalHasta = document.getElementById('g-hasta-global').value;
+  actualizarTodo();
+}
+
+function setRGlobal(r){
+  var n=new Date(), f=new Date(), t=new Date();
+  if(r==='hoy'){ f=new Date(); t=new Date(); }
+  else if(r==='semana'){ f=new Date(); f.setDate(n.getDate()-7); t=new Date(); }
+  else if(r==='mes'){ f=new Date(n.getFullYear(),n.getMonth(),1); t=new Date(); }
+  else if(r==='anterior'){ f=new Date(n.getFullYear(),n.getMonth()-1,1); t=new Date(n.getFullYear(),n.getMonth(),0); }
+  globalDesde = fmtD(f);
+  globalHasta = fmtD(t);
+  document.getElementById('g-desde-global').value = globalDesde;
+  document.getElementById('g-hasta-global').value = globalHasta;
+  actualizarTodo();
+}
+
+function actualizarTodo(){
+  dash(); renderMov(); renderRanking(); 
+  var paginaActiva = document.querySelector('.page.active');
+  if(paginaActiva && paginaActiva.id==='page-graficas') renderGraficas();
+}
 var movs = [], gastos = { pub:[], serv:[], fichas:[], bill:[], sus:[] };
 var pagMov = 0, POR_PAG = 50, movFil = [], archivosCSV = [], charts = {};
 var tesoro = { caja:[], mauricio:[], santiago:[], nancy:[], marcelo:[] };
@@ -654,10 +661,14 @@ function selAgente(agente, btn) {
   agenteActual = agente;
   document.querySelectorAll('.agente-btn').forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
+  // Resetear dropdown
+  var dd = document.getElementById('agente-dropdown');
+  if(dd) dd.selectedIndex = 0;
   var esPrincipal = !agente || agente === 'plutonnet07';
   var pw = document.getElementById('pct-wrap');
   if(pw) pw.style.display = esPrincipal ? 'none' : 'flex';
-  dash(); renderMov(); renderRanking(); setTimeout(renderGraficas, 50);
+  actualizarTodo();
+  setTimeout(renderGraficas, 50);
 }
 
 function filtMConAgente(d, h) {
@@ -772,7 +783,7 @@ function cargarDesdeSheets() {
 
 // DASHBOARD
 function dash() {
-  var d=document.getElementById('f-desde').value, h=document.getElementById('f-hasta').value;
+  var d=globalDesde, h=globalHasta;
   var fil = filtMConAgente(d, h);
   var esPrincipal = !agenteActual || agenteActual==='plutonnet07';
   var deps=fil.filter(function(m){return m['Tipo']==='Deposito';});
@@ -818,7 +829,7 @@ function dash() {
 
 // MOVIMIENTOS
 function renderMov() {
-  var d=document.getElementById('m-desde').value, h=document.getElementById('m-hasta').value;
+  var d=globalDesde, h=globalHasta;
   var tipo=document.getElementById('m-tipo').value;
   var busq=(document.getElementById('m-search').value||'').toLowerCase();
   movFil=filtMConAgente(d,h).filter(function(m){
@@ -852,7 +863,7 @@ function showGraf(id){
 }
 
 function renderGraficas(){
-  var d=document.getElementById('g-desde').value, h=document.getElementById('g-hasta').value;
+  var d=globalDesde, h=globalHasta;
   if(!d||!h) return;
   var fil=filtMConAgente(d,h), dm={};
   var cur=new Date(d+'T00:00:00'), end=new Date(h+'T00:00:00');
@@ -873,7 +884,7 @@ function renderGraficas(){
 }
 
 function renderRetencio(){
-  var d=document.getElementById('g-desde').value, h=document.getElementById('g-hasta').value;
+  var d=globalDesde, h=globalHasta;
   if(!d||!h) return;
   
   // Calcular ultima carga de cada jugador en TODO el historico
@@ -960,7 +971,7 @@ function mostrarDetalleRetencio(fecha, jugadores){
 
 // RANKING
 function renderRanking(){
-  var d=document.getElementById('r-desde').value, h=document.getElementById('r-hasta').value;
+  var d=globalDesde, h=globalHasta;
   var fil=filtMConAgente(d,h);
   buildRank('rk-dep-monto',fil,'Deposito','monto','rank-col-cy'); buildRank('rk-dep-cant',fil,'Deposito','cant','rank-col-cy');
   buildRank('rk-ret-monto',fil,'Retiro','monto','rank-col-pk'); buildRank('rk-ret-cant',fil,'Retiro','cant','rank-col-pk');
@@ -1101,8 +1112,11 @@ function renderTesoro(){ ['caja','mauricio','santiago','nancy'].forEach(renderBi
 
 // INIT
 loadG(); renderG(); loadT(); renderTesoro();
-var _n=new Date(), _p=fmtD(new Date(_n.getFullYear(),_n.getMonth(),1)), _h=fmtD(_n);
-['f','m','r','g'].forEach(function(pre){ document.getElementById(pre+'-desde').value=_p; document.getElementById(pre+'-hasta').value=_h; });
+var _n=new Date();
+globalDesde = fmtD(new Date(_n.getFullYear(),_n.getMonth(),1));
+globalHasta = fmtD(_n);
+document.getElementById('g-desde-global').value = globalDesde;
+document.getElementById('g-hasta-global').value = globalHasta;
 dash(); renderMov(); renderRanking();
 calcularSaldos();
 cargarDesdeSheets();
