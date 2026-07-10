@@ -775,7 +775,7 @@ function combinar() {
   archivosCSV.forEach(function(a){ a.rows.forEach(function(row){ var id=row['ID']||row['id']||JSON.stringify(row); mapa[id]=row; }); });
   movs = Object.values(mapa).sort(function(a,b){ return ((b['Fecha']||'')+(b['Hora']||'')).localeCompare((a['Fecha']||'')+(a['Hora']||'')); });
   var st = document.getElementById('csv-status');
-  st.textContent = movs.length+' registros · '+archivosCSV.length+' archivo'+(archivosCSV.length>1?'s':'');
+  st.textContent = movs.length+' registros | '+archivosCSV.length+' archivo'+(archivosCSV.length>1?'s':'');
   st.className = 'csv-tag ok';
   document.getElementById('btn-limpiar').style.display = 'inline-block';
   poblarAgentes(); dash(); renderMov(); renderRanking();
@@ -895,7 +895,7 @@ function renderMov() {
     var b=t==='Deposito'?'<span class="badge b-dep">Depósito</span>':t==='Retiro'?'<span class="badge b-ret">Retiro</span>':t==='Bonificacion'?'<span class="badge b-bon">Bono</span>':'<span class="badge b-otro">'+t+'</span>';
     return '<tr><td>'+(m['Fecha']||'')+'</td><td style="color:var(--muted);font-family:var(--fm)">'+(m['Hora']||'')+'</td><td>'+b+'</td><td>'+(m['Desde']||'')+'</td><td>'+(m['Hacia']||'')+'</td><td class="'+(t==='Retiro'?'m-neg':'m-pos')+'" style="font-family:var(--fm)">'+ars(pN(m['Monto']||0))+'</td><td style="color:var(--muted);font-family:var(--fm)">'+ars(pN(m['Saldo anterior']||0))+'</td><td style="color:var(--muted);font-family:var(--fm)">'+ars(pN(m['Saldo posterior']||0))+'</td></tr>';
   }).join('');
-  document.getElementById('m-info').textContent=(ini+1)+'–'+Math.min(ini+POR_PAG,total)+' de '+total+' Registros';
+  document.getElementById('m-info').textContent=(ini+1)+'- '+Math.min(ini+POR_PAG,total)+' de '+total+' Registros';
   document.getElementById('m-prev').disabled=pagMov===0;
   document.getElementById('m-next').disabled=pagMov>=tP-1;
 }
@@ -1010,7 +1010,7 @@ function mostrarDetalleRetencio(fecha, jugadores){
   var tit = document.getElementById('retencio-titulo');
   var lista = document.getElementById('retencio-lista');
   if(!det||!jugadores.length){ if(det) det.style.display='none'; return; }
-  tit.textContent = jugadores.length+' jugadores — última carga: '+fecha;
+  tit.textContent = jugadores.length+' jugadores - ultima carga: '+fecha;
   lista.innerHTML = jugadores.sort().map(function(j){
     return '<div style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text2);font-family:var(--fm)">'+j+'</div>';
   }).join('');
@@ -1199,8 +1199,8 @@ function renderHistorialUnificado(){
   (movInternos||[]).forEach(function(m){
     var oNom=bilNombres[m.origen]||m.origen;
     var dNom=bilNombres[m.destino]||m.destino;
-    todos.push({fecha:m.fecha,billetera:oNom,tipo:'transferencia',det:'→ '+dNom,monto:m.monto,src:'mi'});
-    todos.push({fecha:m.fecha,billetera:dNom,tipo:'transferencia',det:'← '+oNom,monto:m.monto,src:'mi_in'});
+    todos.push({fecha:m.fecha,billetera:oNom,tipo:'transferencia',det:'-> '+dNom,monto:m.monto,src:'mi'});
+    todos.push({fecha:m.fecha,billetera:dNom,tipo:'transferencia',det:'<- '+oNom,monto:m.monto,src:'mi_in'});
   });
 
   // Filtros
@@ -1214,7 +1214,7 @@ function renderHistorialUnificado(){
 
   tbody.innerHTML = todos.map(function(m){
     var col = m.tipo==='ingreso'?'var(--gn)':m.tipo==='egreso'?'var(--rd)':'var(--v3)';
-    var sg = m.tipo==='ingreso'?'+':m.tipo==='egreso'?'-':'↔';
+    var sg = m.tipo==='ingreso'?'+':m.tipo==='egreso'?'-':'<->';
     return '<tr>'+
       '<td>'+m.fecha+'</td>'+
       '<td style="color:var(--v3)">'+m.billetera+'</td>'+
@@ -1236,7 +1236,7 @@ function descargarHistorial(){
     (gastos[cat]||[]).forEach(function(g){rows.push([g.fecha,g.billetera||'','egreso',g.det,g.monto]);});
   });
   (movInternos||[]).forEach(function(m){
-    rows.push([m.fecha,bilNombres[m.origen]||m.origen,'transferencia','→ '+(bilNombres[m.destino]||m.destino),m.monto]);
+    rows.push([m.fecha,bilNombres[m.origen]||m.origen,'transferencia','->'+(bilNombres[m.destino]||m.destino),m.monto]);
   });
   descargarCSV(rows, 'historial_billeteras.csv');
 }
@@ -1251,8 +1251,7 @@ function descargarGastos(){
 }
 
 function descargarCSV(rows, nombre){
-  var csv = rows.map(function(r){return r.join(';');}).join('
-');
+  var csv = rows.map(function(r){return r.join(';');}).join('\n');
   var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
