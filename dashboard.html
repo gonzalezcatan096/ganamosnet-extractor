@@ -1,4 +1,3 @@
-cat > /mnt/user-data/outputs/dashboard.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -560,7 +559,7 @@ function selAgenteDropdown() {
 function filtMConAgente(d,h) {
   var base=filtM(d,h);
   if(!agenteActual) return base;
-  return base.filter(function(m){return (m['Desde']||')===agenteActual||(m['Hacia']||'')===agenteActual;});
+  return base.filter(function(m){return (m['Desde']||'')===agenteActual||(m['Hacia']||'')===agenteActual;});
 }
 
 // CSV
@@ -979,5 +978,3 @@ cargarDesdeSheets();
 </script>
 </body>
 </html>
-HTMLEOF
-echo "OK - $(wc -c < /mnt/user-data/outputs/dashboard.html) bytes"
