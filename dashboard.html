@@ -190,6 +190,32 @@ tr:hover td{background:rgba(124,58,237,.06)}
   .rank-grid{grid-template-columns:1fr}
   .gastos-grid{grid-template-columns:1fr}
   .chart-wrap{height:220px}
+  .agente-bar{position:static;top:auto;padding:.6rem 1rem;gap:8px}
+  .agente-bar .sep{display:none}
+  .logo-sub{display:none}
+  .logo-title{font-size:15px}
+  .fbar{padding:.85rem 1rem;gap:8px}
+  .gtab{font-size:11px;padding:6px 12px}
+  .graficas-tabs{gap:6px}
+  .tbar{padding:.85rem 1rem}
+  .tsearch{width:100%}
+  table{font-size:12px}
+  th,td{padding:8px 10px}
+  .rank-row{padding:.7rem 1rem;gap:8px}
+  .rank-name{font-size:12px}
+  .rc-lbl{font-size:17px}
+  .rc-formula{font-size:13px;line-height:1.8}
+  .gc-form{flex-wrap:wrap}
+  .gc-form input,.gc-form select{flex:1 1 45%;min-width:0}
+  .slabel{font-size:12px}
+}
+@media(max-width:480px){
+  .kpi-row{grid-template-columns:1fr}
+  .rc-val{font-size:34px}
+  .chart-wrap{height:200px}
+  .nav-btn{font-size:10px;padding:5px 8px}
+  .page{padding:.75rem}
+  .kpi{padding:1rem 1.1rem}
 }
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:var(--s1)}
@@ -263,6 +289,7 @@ tr:hover td{background:rgba(124,58,237,.06)}
     <input type="file" id="csv-input" accept=".csv" multiple/>
     <button class="btn-limpiar" id="btn-limpiar" onclick="limpiarCSV()">Limpiar</button>
     <span class="csv-tag none" id="csv-status">Sin datos</span>
+    <button class="pb" onclick="descargarExcel()" title="Descarga un Excel con todo: movimientos del periodo, gastos, tesoro y contactos">Descargar Excel</button>
   </div>
   <div class="slabel">Resumen del Periodo</div>
   <div class="kpi-row">
@@ -297,6 +324,12 @@ tr:hover td{background:rgba(124,58,237,.06)}
     <div class="kpi pk"><div class="kpi-glow"></div><div class="kl">Promedio Premios / Dia</div><div class="kv" id="d-avg-ret">$0</div><div class="ks" id="d-avg-n2">0 dias</div></div>
     <div class="kpi vl"><div class="kpi-glow"></div><div class="kl">Promedio Netwing / Dia</div><div class="kv" id="d-avg-nw">$0</div><div class="ks" id="d-avg-n3">dias con actividad</div></div>
   </div>
+  <div class="slabel" style="margin-top:2rem">Cantidad de Operaciones por Dia</div>
+  <div class="diario-row">
+    <div class="kpi cy"><div class="kpi-glow"></div><div class="kl">Cargas / Dia</div><div class="kv" id="d-avg-odep">0</div><div class="ks" id="d-avg-odep-n">0 operaciones</div></div>
+    <div class="kpi pk"><div class="kpi-glow"></div><div class="kl">Premios / Dia</div><div class="kv" id="d-avg-oret">0</div><div class="ks" id="d-avg-oret-n">0 operaciones</div></div>
+    <div class="kpi vl"><div class="kpi-glow"></div><div class="kl">Total Operaciones / Dia</div><div class="kv" id="d-avg-otot">0</div><div class="ks" id="d-avg-otot-n">0 operaciones</div></div>
+  </div>
 </div>
 
 <!-- MOVIMIENTOS -->
@@ -315,12 +348,14 @@ tr:hover td{background:rgba(124,58,237,.06)}
 <div class="page" id="page-graficas">
   <div class="graficas-tabs">
     <button class="gtab active" id="gtab-volumen" onclick="showGraf('volumen')">Cargas vs Premios</button>
+    <button class="gtab" id="gtab-ops" onclick="showGraf('ops')">Cantidad de Operaciones</button>
     <button class="gtab" id="gtab-profit" onclick="showGraf('profit')">Netwing Diario</button>
     <button class="gtab" id="gtab-bonos" onclick="showGraf('bonos')">Bonificaciones</button>
     <button class="gtab" id="gtab-acum" onclick="showGraf('acum')">Acumulado</button>
     <button class="gtab" id="gtab-retencio" onclick="showGraf('retencio')">Ultima Carga</button>
   </div>
   <div class="chart-card" id="graf-volumen"><div class="chart-title">Cargas vs Premios por Dia</div><div class="chart-wrap"><canvas id="chart-volumen"></canvas></div></div>
+  <div class="chart-card" id="graf-ops" style="display:none"><div class="chart-title">Cantidad de Operaciones por Dia</div><div style="font-size:12px;color:var(--muted);margin-bottom:1rem">Cuantas cargas y cuantos premios se hicieron cada dia, sin importar el monto.</div><div class="chart-wrap"><canvas id="chart-ops"></canvas></div></div>
   <div class="chart-card" id="graf-profit" style="display:none"><div class="chart-title">Netwing Diario</div><div class="chart-wrap"><canvas id="chart-profit"></canvas></div></div>
   <div class="chart-card" id="graf-bonos" style="display:none"><div class="chart-title">Bonificaciones por Dia</div><div class="chart-wrap"><canvas id="chart-bonos"></canvas></div></div>
   <div class="chart-card" id="graf-acum" style="display:none"><div class="chart-title">Netwing Acumulado</div><div class="chart-wrap"><canvas id="chart-acum"></canvas></div></div>
@@ -430,6 +465,8 @@ var pagMov = 0, POR_PAG = 50, movFil = [], archivosCSV = [], charts = {};
 var tesoro = { caja:[], mauricio:[], santiago:[], nancy:[], marcelo:[] };
 var movInternos = [];
 var SESSION_MIN = 20;
+var contactos = {};
+var retUltFecha = '', retUltJug = [];
 
 // LOGIN
 function tryLogin() {
@@ -630,7 +667,6 @@ function cargarDesdeSheets() {
         st.textContent=movs.length+' registros cargados'; st.className='csv-tag ok';
         document.getElementById('btn-limpiar').style.display='none';
         poblarAgentes(); actualizarTodo();
-        cargarGastosDesdeSheets(); cargarTesoroDesdeSheets();
       } else { st.textContent='Sin datos en servidor'; }
     })
     .catch(function(err){ st.textContent='Error: '+err.message; console.log('Error:',err); });
@@ -639,11 +675,12 @@ function cargarGastosDesdeSheets() {
   fetch(SHEETS_API_URL+'?accion=gastos&t='+Date.now())
     .then(function(r){return r.json();})
     .then(function(data){
-      if(data.gastos&&data.gastos.length>0){
+      // el Sheet manda: si responde bien se reemplaza lo local, aunque venga vacio
+      if(data.gastos&&Object.prototype.toString.call(data.gastos)==='[object Array]'){
         gastos={pub:[],serv:[],fichas:[],bill:[],sus:[]};
         var catMap={'Publicidad':'pub','Servicios':'serv','Compra de Fichas':'fichas','Billeteras':'bill','Suscripciones':'sus'};
         data.gastos.forEach(function(g){var cat=catMap[g.Categoria];if(cat)gastos[cat].push({id:g.ID,fecha:g.Fecha,det:g.Detalle,monto:parseFloat(g.Monto)||0,billetera:g.Billetera});});
-        renderG(); dash();
+        saveG(); renderG(); dash(); calcularSaldos(); renderHistorialUnificado();
       }
     }).catch(function(){});
 }
@@ -651,7 +688,8 @@ function cargarTesoroDesdeSheets() {
   fetch(SHEETS_API_URL+'?accion=tesoro&t='+Date.now())
     .then(function(r){return r.json();})
     .then(function(data){
-      if(data.movimientos&&data.movimientos.length>0){
+      // el Sheet manda: si responde bien se reemplaza lo local, aunque venga vacio
+      if(data.movimientos&&Object.prototype.toString.call(data.movimientos)==='[object Array]'){
         tesoro={caja:[],mauricio:[],santiago:[],nancy:[],marcelo:[]};
         movInternos=[];
         var bilMap={'Caja Principal':'caja','Mauricio':'mauricio','Santiago':'santiago','Nancy':'nancy','Marcelo':'marcelo'};
@@ -664,8 +702,47 @@ function cargarTesoroDesdeSheets() {
             if(bil) tesoro[bil].push({id:m.ID,fecha:m.Fecha,det:m.Detalle,monto:parseFloat(m.Monto)||0,tipo:m.Tipo});
           }
         });
-        renderTesoro();
+        saveT(); renderTesoro();
       }
+    }).catch(function(){});
+}
+
+// CONTACTOS
+function normU(v){ return String(v==null?'':v).trim().toLowerCase(); }
+function pickCampo(obj,frag){
+  var ks=Object.keys(obj);
+  for(var i=0;i<ks.length;i++){ if(normU(ks[i]).indexOf(frag)>=0) return String(obj[ks[i]]==null?'':obj[ks[i]]).trim(); }
+  return '';
+}
+function buscarContacto(jug){ return contactos[normU(jug)]||null; }
+// linea de telefono para las tablas de ranking
+function telRank(nombre){
+  var c=buscarContacto(nombre);
+  if(!c||!c.tel) return '';
+  return '<div style="font-size:11px;font-family:var(--fm)"><a href="https://wa.me/'+telWa(c.tel)+'" target="_blank" rel="noopener" style="color:var(--gn);text-decoration:none">'+c.tel+'</a></div>';
+}
+function telWa(t){
+  var d=String(t).replace(/[^0-9]/g,'');
+  if(d.indexOf('54')===0) return d;
+  if(d.indexOf('0')===0) d=d.substring(1);
+  return '54'+d;
+}
+function cargarContactosDesdeSheets() {
+  if(!SHEETS_API_URL) return;
+  fetch(SHEETS_API_URL+'?accion=contactos&t='+Date.now())
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data.contactos||!data.contactos.length) return;
+      contactos={};
+      data.contactos.forEach(function(c){
+        var u=normU(pickCampo(c,'ganamos'));
+        if(!u) return;
+        var tel=pickCampo(c,'tel'); if(!tel) tel=pickCampo(c,'numero');
+        contactos[u]={usuario:pickCampo(c,'ganamos'),multi:pickCampo(c,'multi'),tel:tel};
+      });
+      renderRanking();
+      var det=document.getElementById('retencio-detalle');
+      if(det&&det.style.display==='block'&&retUltJug.length) mostrarDetalleRetencio(retUltFecha,retUltJug);
     }).catch(function(){});
 }
 
@@ -691,6 +768,13 @@ function dash() {
   document.getElementById('d-avg-dep').textContent=ars(Math.round(tD/nd)); document.getElementById('d-avg-n').textContent=nd+' dias';
   document.getElementById('d-avg-ret').textContent=ars(Math.round(tR/nd)); document.getElementById('d-avg-n2').textContent=nd+' dias';
   document.getElementById('d-avg-nw').textContent=ars(Math.round(nw/nd)); document.getElementById('d-avg-n3').textContent=nd+' dias';
+  var nOpDep=deps.length, nOpRet=rets.length, nOpTot=nOpDep+nOpRet;
+  document.getElementById('d-avg-odep').textContent=(nOpDep/nd).toFixed(1);
+  document.getElementById('d-avg-odep-n').textContent=nOpDep.toLocaleString('es-AR')+' operaciones';
+  document.getElementById('d-avg-oret').textContent=(nOpRet/nd).toFixed(1);
+  document.getElementById('d-avg-oret-n').textContent=nOpRet.toLocaleString('es-AR')+' operaciones';
+  document.getElementById('d-avg-otot').textContent=(nOpTot/nd).toFixed(1);
+  document.getElementById('d-avg-otot-n').textContent=nOpTot.toLocaleString('es-AR')+' operaciones';
 }
 
 // MOVIMIENTOS
@@ -719,14 +803,17 @@ function renderGraficas(){
   var d=globalDesde, h=globalHasta; if(!d||!h) return;
   var fil=filtMConAgente(d,h), dm={};
   var cur=new Date(d+'T00:00:00'), end=new Date(h+'T00:00:00');
-  while(cur<=end){dm[fmtD(cur)]={dep:0,ret:0,bon:0};cur.setDate(cur.getDate()+1);}
-  fil.forEach(function(m){var f=m['Fecha']||'';if(!dm[f])return;var mn=pN(m['Monto']||0);if(m['Tipo']==='Deposito')dm[f].dep+=mn;else if(m['Tipo']==='Retiro')dm[f].ret+=mn;else if(m['Tipo']==='Bonificacion')dm[f].bon+=mn;});
+  while(cur<=end){dm[fmtD(cur)]={dep:0,ret:0,bon:0,nDep:0,nRet:0};cur.setDate(cur.getDate()+1);}
+  fil.forEach(function(m){var f=m['Fecha']||'';if(!dm[f])return;var mn=pN(m['Monto']||0);if(m['Tipo']==='Deposito'){dm[f].dep+=mn;dm[f].nDep++;}else if(m['Tipo']==='Retiro'){dm[f].ret+=mn;dm[f].nRet++;}else if(m['Tipo']==='Bonificacion')dm[f].bon+=mn;});
   var lb=Object.keys(dm).sort();
   var deps=lb.map(function(x){return Math.round(dm[x].dep);}), rets=lb.map(function(x){return Math.round(dm[x].ret);}), bons=lb.map(function(x){return Math.round(dm[x].bon);});
   var profs=lb.map(function(x){return Math.round(dm[x].dep-dm[x].ret-dm[x].bon);}); var ac=0, acums=profs.map(function(p){ac+=p;return ac;});
   var cfg={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#9d99cc',font:{family:'Space Grotesk',size:12}}},tooltip:{callbacks:{label:function(c){return '$'+Math.round(Math.abs(c.parsed.y)).toLocaleString('es-AR');}}}},scales:{x:{ticks:{color:'#6b5fa0',font:{size:10},maxTicksLimit:20},grid:{color:'#1c1640'}},y:{ticks:{color:'#6b5fa0',callback:function(v){return '$'+Math.round(Math.abs(v)).toLocaleString('es-AR');},font:{size:10}},grid:{color:'#1c164050'}}}};
   function mk(id,data){if(charts[id])charts[id].destroy();var c=document.getElementById(id);if(c)charts[id]=new Chart(c,data);}
   mk('chart-volumen',{type:'bar',data:{labels:lb,datasets:[{label:'Cargas',data:deps,backgroundColor:'#22d3ee30',borderColor:'#22d3ee',borderWidth:2,borderRadius:4},{label:'Premios',data:rets,backgroundColor:'#f472b630',borderColor:'#f472b6',borderWidth:2,borderRadius:4}]},options:cfg});
+  var nDeps=lb.map(function(x){return dm[x].nDep;}), nRets=lb.map(function(x){return dm[x].nRet;});
+  var cfgN={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#9d99cc',font:{family:'Space Grotesk',size:12}}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y+' operaciones';}}}},scales:{x:{ticks:{color:'#6b5fa0',font:{size:10},maxTicksLimit:20},grid:{color:'#1c1640'}},y:{beginAtZero:true,ticks:{color:'#6b5fa0',precision:0,font:{size:10}},grid:{color:'#1c164050'}}}};
+  mk('chart-ops',{type:'bar',data:{labels:lb,datasets:[{label:'Cargas',data:nDeps,backgroundColor:'#22d3ee30',borderColor:'#22d3ee',borderWidth:2,borderRadius:4},{label:'Premios',data:nRets,backgroundColor:'#f472b630',borderColor:'#f472b6',borderWidth:2,borderRadius:4}]},options:cfgN});
   mk('chart-profit',{type:'bar',data:{labels:lb,datasets:[{label:'Netwing',data:profs,backgroundColor:profs.map(function(v){return v>=0?'#4ade8030':'#f8717130';}),borderColor:profs.map(function(v){return v>=0?'#4ade80':'#f87171';}),borderWidth:2,borderRadius:4}]},options:cfg});
   mk('chart-bonos',{type:'bar',data:{labels:lb,datasets:[{label:'Bonificaciones',data:bons,backgroundColor:'#c084fc30',borderColor:'#c084fc',borderWidth:2,borderRadius:4}]},options:cfg});
   mk('chart-acum',{type:'line',data:{labels:lb,datasets:[{label:'Netwing Acumulado',data:acums,borderColor:'#9d5ff5',backgroundColor:'#7c3aed15',borderWidth:2.5,pointBackgroundColor:'#c084fc',pointRadius:3,fill:true,tension:.35}]},options:cfg});
@@ -750,11 +837,20 @@ function mostrarDetalleRetencio(fecha,jugadores){
   var det=document.getElementById('retencio-detalle'), tit=document.getElementById('retencio-titulo'), lista=document.getElementById('retencio-lista');
   if(!det||!jugadores.length){if(det)det.style.display='none';return;}
   tit.textContent=jugadores.length+' jugadores - ultima carga: '+fecha;
+  retUltFecha=fecha; retUltJug=jugadores;
   lista.innerHTML=jugadores.sort().map(function(j){
     var prom=0, cnt=0;
     movs.forEach(function(m){if(m['Tipo']==='Deposito'&&(m['Hacia']||'')===j){prom+=pN(m['Monto']||0);cnt++;}});
     prom=cnt>0?Math.round(prom/cnt):0;
-    return '<div style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text2);font-family:var(--fm)">'+j+'<br><span style="color:var(--cy)">Prom: '+ars(prom)+'</span></div>';
+    var ct=buscarContacto(j), tel=ct&&ct.tel?ct.tel:'';
+    var telHtml=tel
+      ? '<a href="https://wa.me/'+telWa(tel)+'" target="_blank" rel="noopener" style="color:var(--gn);text-decoration:none">'+tel+'</a>'
+      : '<span style="color:var(--muted)">Sin telefono</span>';
+    return '<div style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text2);font-family:var(--fm)">'
+      +'<div style="color:var(--text)">'+j+'</div>'
+      +'<div style="color:var(--cy)">Prom: '+ars(prom)+'</div>'
+      +'<div style="font-size:11px">'+telHtml+'</div>'
+      +'</div>';
   }).join('');
   det.style.display='block';
 }
@@ -780,7 +876,7 @@ function buildRank(elId,data,tipo,mode,cc){
     var dias=item.ult!=='-'?Math.floor((new Date(hoy)-new Date(item.ult))/(86400000)):999;
     var uc=item.ult!=='-'?item.ult+' ('+dias+'d)':'-';
     var ucColor=dias>30?'var(--rd)':dias>15?'var(--am)':'var(--gn)';
-    return '<div class="rank-row"><div class="rank-pos '+pc+'">'+p+'</div><div class="rank-name">'+item.name+'</div><div><div class="rank-main '+cc+'">'+mv+'</div><div class="rank-sec">'+sv+'</div></div><div style="text-align:right;font-size:11px;color:'+ucColor+';font-family:var(--fm)">'+uc+'</div></div>';
+    return '<div class="rank-row"><div class="rank-pos '+pc+'">'+p+'</div><div style="flex:1;min-width:0"><div class="rank-name">'+item.name+'</div>'+telRank(item.name)+'</div><div><div class="rank-main '+cc+'">'+mv+'</div><div class="rank-sec">'+sv+'</div></div><div style="text-align:right;font-size:11px;color:'+ucColor+';font-family:var(--fm)">'+uc+'</div></div>';
   }).join('');
 }
 function buildProfit(elId,data,order){
@@ -797,7 +893,7 @@ function buildProfit(elId,data,order){
     var dias=item.ult!=='-'?Math.floor((new Date(hoy)-new Date(item.ult))/(86400000)):999;
     var uc=item.ult!=='-'?item.ult+' ('+dias+'d)':'-';
     var ucColor=dias>30?'var(--rd)':dias>15?'var(--am)':'var(--gn)';
-    return '<div class="rank-row"><div class="rank-pos '+pc+'">'+p+'</div><div><div class="rank-name">'+item.name+'</div><div style="font-size:11px;color:var(--muted)">C: '+ars(item.c)+' P: '+ars(item.r)+'</div></div><div style="text-align:right"><div class="rank-main" style="color:'+col+'">'+ars(item.prof)+'</div><div style="font-size:11px;color:'+ucColor+'">'+uc+'</div></div></div>';
+    return '<div class="rank-row"><div class="rank-pos '+pc+'">'+p+'</div><div style="flex:1;min-width:0"><div class="rank-name">'+item.name+'</div><div style="font-size:11px;color:var(--muted)">C: '+ars(item.c)+' P: '+ars(item.r)+'</div>'+telRank(item.name)+'</div><div style="text-align:right"><div class="rank-main" style="color:'+col+'">'+ars(item.prof)+'</div><div style="font-size:11px;color:'+ucColor+'">'+uc+'</div></div></div>';
   }).join('');
 }
 function buildPromedio(elId,data){
@@ -812,7 +908,7 @@ function buildPromedio(elId,data){
     var dias=item.ult!=='-'?Math.floor((new Date(hoy)-new Date(item.ult))/(86400000)):999;
     var uc=item.ult!=='-'?item.ult+' ('+dias+'d)':'-';
     var ucColor=dias>30?'var(--rd)':dias>15?'var(--am)':'var(--gn)';
-    return '<div class="rank-row"><div class="rank-pos '+pc+'">'+p+'</div><div><div class="rank-name">'+item.name+'</div><div style="font-size:11px;color:var(--muted)">'+item.c+' cargas</div></div><div style="text-align:right"><div class="rank-main rank-col-cy">'+ars(item.prom)+'</div><div style="font-size:11px;color:'+ucColor+'">'+uc+'</div></div></div>';
+    return '<div class="rank-row"><div class="rank-pos '+pc+'">'+p+'</div><div style="flex:1;min-width:0"><div class="rank-name">'+item.name+'</div><div style="font-size:11px;color:var(--muted)">'+item.c+' cargas</div>'+telRank(item.name)+'</div><div style="text-align:right"><div class="rank-main rank-col-cy">'+ars(item.prom)+'</div><div style="font-size:11px;color:'+ucColor+'">'+uc+'</div></div></div>';
   }).join('');
 }
 
@@ -959,6 +1055,65 @@ function descargarGastos(){
   Object.keys(cats).forEach(function(cat){(gastos[cat]||[]).forEach(function(g){rows.push([g.fecha,cats[cat],g.det,g.monto,g.billetera||'']);});});
   descargarCSV(rows,'gastos.csv');
 }
+// EXCEL DE RESPALDO (formato SpreadsheetML, lo abre Excel y Google Sheets)
+function xmlEsc(v){
+  return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function xlsHoja(nombre,cols,filas){
+  var x='<Worksheet ss:Name="'+xmlEsc(nombre)+'"><Table>';
+  x+='<Row>'+cols.map(function(c){return '<Cell><Data ss:Type="String">'+xmlEsc(c)+'</Data></Cell>';}).join('')+'</Row>';
+  filas.forEach(function(f){
+    x+='<Row>'+f.map(function(v){
+      var num=(typeof v==='number'&&isFinite(v));
+      return '<Cell><Data ss:Type="'+(num?'Number':'String')+'">'+xmlEsc(v)+'</Data></Cell>';
+    }).join('')+'</Row>';
+  });
+  return x+'</Table></Worksheet>';
+}
+function descargarExcel(){
+  var d=globalDesde, h=globalHasta;
+  var bilNombres={caja:'Caja Principal',mauricio:'Mauricio',santiago:'Santiago',nancy:'Nancy',marcelo:'Marcelo',oficina:'Oficina'};
+  var catNombres={pub:'Publicidad',serv:'Servicios',fichas:'Compra de Fichas',bill:'Billeteras',sus:'Suscripciones'};
+
+  var fil=filtMConAgente(d,h);
+  var fMov=fil.map(function(m){
+    return [m['ID']||'',m['Fecha']||'',m['Hora']||'',m['Tipo']||'',m['Desde']||'',m['Hacia']||'',pN(m['Monto']||0)];
+  });
+
+  var fGas=[];
+  ['pub','serv','fichas','bill','sus'].forEach(function(c){
+    (gastos[c]||[]).forEach(function(g){ fGas.push([g.fecha||'',catNombres[c],g.det||'',g.billetera||'',g.monto||0]); });
+  });
+
+  var fTes=[];
+  ['caja','mauricio','santiago','nancy','marcelo'].forEach(function(b){
+    (tesoro[b]||[]).forEach(function(m){ fTes.push([m.fecha||'',bilNombres[b],m.det||'',m.monto||0]); });
+  });
+
+  var fTr=(movInternos||[]).map(function(m){
+    return [m.fecha||'',bilNombres[m.origen]||m.origen,bilNombres[m.destino]||m.destino,m.monto||0];
+  });
+
+  var fCon=Object.keys(contactos).map(function(k){
+    var c=contactos[k]; return [c.usuario||'',c.multi||'',c.tel||''];
+  });
+
+  var xml='<?xml version="1.0"?>'+
+    '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'+
+    xlsHoja('Movimientos',['ID','Fecha','Hora','Tipo','Desde','Hacia','Monto'],fMov)+
+    xlsHoja('Gastos',['Fecha','Categoria','Detalle','Billetera','Monto'],fGas)+
+    xlsHoja('Tesoro',['Fecha','Billetera','Detalle','Monto'],fTes)+
+    xlsHoja('Transferencias',['Fecha','Origen','Destino','Monto'],fTr)+
+    xlsHoja('Contactos',['Ganamos','MultiPanel','Telefono'],fCon)+
+    '</Workbook>';
+
+  var blob=new Blob([xml],{type:'application/vnd.ms-excel'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='respaldo_pluton_'+(d||'inicio')+'_'+(h||'hoy')+'.xls';
+  a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+}
 function descargarCSV(rows,nombre){
   var csv=rows.map(function(r){return r.join(';');}).join('\n');
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
@@ -975,6 +1130,10 @@ document.getElementById('g-desde-global').value=globalDesde;
 document.getElementById('g-hasta-global').value=globalHasta;
 dash(); renderMov(); renderRanking(); renderTesoro();
 cargarDesdeSheets();
+cargarContactosDesdeSheets();
+// se piden siempre, aunque la hoja Datos falle: son los datos que carga el usuario
+cargarGastosDesdeSheets();
+cargarTesoroDesdeSheets();
 </script>
 </body>
 </html>
